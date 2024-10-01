@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Entretien Robot",
+    "description": "Entretien de votre robot husqvarna ou gardena",
+    "image": "/images/entretien-robot.webp"
+  },
+  {
+    "name": "Réparation Robot",
+    "description": "Réparation de votre robot husqvarna ou gardena",
+    "image": "/images/reparation-robot.jpg"
+  },
+  {
+    "name": "Problème installation",
+    "description": "Installation de votre robot husqvarna ou gardena",
+    "image": "/images/installation-robot.jpg"
+  }
+]
