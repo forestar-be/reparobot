@@ -1,26 +1,77 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import servicesData from '../config/services.json';
+import ServiceForm from './ServiceForm';
 
-interface ServicesProps {
+export interface ServicesProps {
   name: string;
   description: string;
   image: string;
+  formFields: FormField[];
+}
+
+interface FormField {
+  label: string;
+  type: string;
+  options?: string[];
+  optional?: boolean;
+  isRequired: boolean;
+  minFuturDateRange?: number;
 }
 
 const Services = (): JSX.Element => {
   const theme = useTheme();
-
   const [services] = useState<ServicesProps[]>(servicesData);
+  const [selectedService, setSelectedService] = useState<ServicesProps | null>(
+    null,
+  );
+  const [isFormEdited, setIsFormEdited] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  const handleServiceClick = (service: ServicesProps) => {
+    setSelectedService(service);
+  };
+
+  const handleCloseForm = (force?: boolean) => {
+    if (isFormEdited && !force) {
+      setIsConfirmDialogOpen(true);
+    } else {
+      closeForm();
+    }
+  };
+
+  const closeForm = () => {
+    setSelectedService(null);
+    setIsFormEdited(false);
+    setTimeout(() => {
+      topRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleConfirmClose = () => {
+    setIsConfirmDialogOpen(false);
+    closeForm();
+  };
+
+  const handleCancelClose = () => {
+    setIsConfirmDialogOpen(false);
+  };
 
   return (
-    <div id="services">
+    <div id="services" ref={topRef}>
       <Box
         sx={{
           paddingTop: 5,
@@ -72,7 +123,13 @@ const Services = (): JSX.Element => {
                           ? theme.palette.common.white
                           : theme.palette.common.black,
                     },
+                    cursor: 'pointer',
+                    backgroundColor:
+                      selectedService?.name === item.name
+                        ? theme.palette.action.selected
+                        : theme.palette.background.paper,
                   }}
+                  onClick={() => handleServiceClick(item)}
                 >
                   <Box display="flex" flexDirection="column">
                     <Typography
@@ -119,6 +176,36 @@ const Services = (): JSX.Element => {
               </Grid>
             ))}
           </Grid>
+          <Dialog
+            open={!!selectedService}
+            onClose={() => handleCloseForm()}
+            maxWidth={'md'}
+          >
+            {selectedService && (
+              <ServiceForm
+                service={selectedService}
+                onClose={handleCloseForm}
+                onFormEdit={setIsFormEdited}
+              />
+            )}
+          </Dialog>
+          <Dialog open={isConfirmDialogOpen} onClose={handleCancelClose}>
+            <DialogTitle>Confirm Close</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                You have unsaved changes. Are you sure you want to close the
+                form?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmClose} color="primary" autoFocus>
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Container>
       </Box>
     </div>

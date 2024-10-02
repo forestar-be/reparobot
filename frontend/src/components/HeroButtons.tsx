@@ -28,6 +28,7 @@ const HeroButtons = (): JSX.Element => {
           endIcon={<ArrowForwardIcon />}
           disableElevation={true}
           sx={{
+            backdropFilter: 'blur(10px)',
             color:
               theme.palette.mode === 'dark'
                 ? theme.palette.common.black
@@ -73,6 +74,7 @@ const HeroButtons = (): JSX.Element => {
             href="#about"
             disableElevation={true}
             sx={{
+              backdropFilter: 'blur(10px)',
               color:
                 theme.palette.mode === 'dark'
                   ? theme.palette.primary.main
