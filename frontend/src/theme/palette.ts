@@ -41,6 +41,7 @@ export const dark = {
   background: {
     default: 'rgb(0, 0, 0)',
     paper: 'rgb(15, 15, 15)',
+    paperSeeThrough: 'rgba(15, 15, 15, 0.6)',
   },
   divider: 'rgba(145, 158, 171, 0.24)',
 };

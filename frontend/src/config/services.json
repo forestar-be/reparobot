@@ -1,17 +1,49 @@
 [
   {
     "name": "Entretien Robot",
-    "description": "Entretien de votre robot husqvarna ou gardena",
-    "image": "/images/entretien-robot.webp"
+    "description": "Entretien de votre robot Husqvarna ou Gardena",
+    "image": "/images/entretien-robot.webp",
+    "formFields": [
+      { "label": "Marque", "type": "select", "options": ["Husqvarna", "Gardena"], "isRequired": true },
+      { "label": "Type", "type": "text", "isRequired": true },
+      { "label": "Type d’entretien", "type": "select", "options": ["classique 99€ tvac", "Avec enlevement dans les 50km de braine le comte +40€", "Hivernage tout l’hiver dans un entrepôt chauffer +30€", "Redemarage du robot a domicile au printemp + 35€", "Lame carbide  +10€", "Lame classique +7€", "Test et nettoyage station de charge et alimentation +20€"], "isRequired": true },
+      { "label": "Date souhaitée de l’enlevement", "type": "date", "optional": true, "isRequired": true, "minFuturDateRange": 1 },
+      { "label": "Code du robot", "type": "text", "isRequired": true },
+      { "label": "Nom", "type": "text", "isRequired": true },
+      { "label": "Prenom", "type": "text", "isRequired": true },
+      { "label": "Adresse", "type": "text", "isRequired": true },
+      { "label": "Adresse mail", "type": "email", "isRequired": true },
+      { "label": "Telephone", "type": "tel", "isRequired": true },
+      { "label": "Remarque", "type": "textarea", "isRequired": false },
+      { "label": "Conditions generales", "type": "checkbox", "isRequired": true }
+    ]
   },
   {
     "name": "Réparation Robot",
-    "description": "Réparation de votre robot husqvarna ou gardena",
-    "image": "/images/reparation-robot.jpg"
+    "description": "Réparation de votre robot Husqvarna ou Gardena",
+    "image": "/images/reparation-robot.jpg",
+    "formFields": [
+      { "label": "Marque", "type": "select", "options": ["Husqvarna", "Gardena"], "isRequired": true },
+      { "label": "Type", "type": "text", "isRequired": true },
+      { "label": "Probleme a décrire", "type": "textarea", "isRequired": true },
+      { "label": "Enlevement et redemarage a domicile dans les 50km de braine le comte +80€", "type": "checkbox", "isRequired": false },
+      { "label": "Date souhaitée de l’enlevement", "type": "date", "optional": true, "isRequired": true, "minFuturDateRange": 1 },
+      { "label": "Code du robot", "type": "text", "isRequired": true },
+      { "label": "Conditions generales", "type": "checkbox", "isRequired": true }
+    ]
   },
   {
     "name": "Problème installation",
-    "description": "Installation de votre robot husqvarna ou gardena",
-    "image": "/images/installation-robot.jpg"
+    "description": "Installation de votre robot Husqvarna ou Gardena",
+    "image": "/images/installation-robot.jpg",
+    "formFields": [
+      { "label": "Marque", "type": "select", "options": ["Husqvarna", "Gardena"], "isRequired": true },
+      { "label": "Type", "type": "text", "isRequired": true },
+      { "label": "Probleme a décrire", "type": "textarea", "isRequired": true },
+      { "label": "Deplacement dans les 50km +60€", "type": "checkbox", "isRequired": false },
+      { "label": "Date souhaitée de la reparation", "type": "date", "optional": true, "isRequired": true, "minFuturDateRange": 1 },
+      { "label": "Code du robot", "type": "text", "isRequired": true },
+      { "label": "Conditions generales", "type": "checkbox", "isRequired": true }
+    ]
   }
 ]
