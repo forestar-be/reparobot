@@ -27,6 +27,13 @@ import {
 } from '@mui/material';
 import conditions from '../config/conditions.json';
 
+const API_URL = process.env.REACT_APP_API_URL;
+const AUTH_TOKEN = process.env.REACT_APP_AUTH_TOKEN;
+
+if (!API_URL || !AUTH_TOKEN) {
+  throw new Error('API_URL and AUTH_TOKEN must be defined');
+}
+
 const ServiceForm = ({
   service,
   onClose,
@@ -36,6 +43,7 @@ const ServiceForm = ({
   onClose: (force?: boolean) => void;
   onFormEdit: (edited: boolean) => void;
 }) => {
+  console.log(process.env, API_URL, AUTH_TOKEN);
   const [formValues, setFormValues] = useState<{ [key: string]: any }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,7 +73,7 @@ const ServiceForm = ({
     onFormEdit(true);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const newErrors: { [key: string]: string } = {};
     const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
@@ -101,7 +109,21 @@ const ServiceForm = ({
 
       // Submit form
       try {
-        console.log('Form submitted', formattedValues);
+        const response = await fetch(`${API_URL}/submit-form`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${AUTH_TOKEN}`,
+          },
+          body: JSON.stringify(formattedValues),
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        console.log('Form submitted', result);
         setModalMessage('Votre demande a été soumise avec succès');
       } catch (error) {
         console.error('Error submitting form', error);
