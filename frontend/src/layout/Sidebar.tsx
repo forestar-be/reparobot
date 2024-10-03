@@ -23,6 +23,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
   return (
     <>
       <Drawer
+        disableRestoreFocus // to avoid scroll top on close: https://github.com/mui/material-ui/issues/10756
         anchor="left"
         onClose={() => onClose()}
         open={open}
