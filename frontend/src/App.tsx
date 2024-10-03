@@ -9,6 +9,8 @@ import ColorModeContext from './utils/ColorModeContext';
 import Layout from './layout/Layout';
 import Home from './pages/Home';
 
+const defaultTheme = 'light';
+
 const App = (): JSX.Element => {
   const [mode, setMode] = useState('dark');
   const colorMode = useMemo(
@@ -28,9 +30,9 @@ const App = (): JSX.Element => {
   useEffect(() => {
     try {
       const localTheme = window.localStorage.getItem('themeMode');
-      localTheme ? setMode(localTheme) : setMode('light');
+      localTheme ? setMode(localTheme) : setMode(defaultTheme);
     } catch {
-      setMode('dark');
+      setMode(defaultTheme);
     }
   }, []);
 

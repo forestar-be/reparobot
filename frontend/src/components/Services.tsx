@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import servicesData from '../config/services.json';
 import ServiceForm from './ServiceForm';
+import { Tooltip } from '@mui/material';
 
 export interface ServicesProps {
   name: string;
@@ -109,70 +110,74 @@ const Services = (): JSX.Element => {
           <Grid container spacing={4}>
             {services.map((item, i) => (
               <Grid item xs={12} sm={6} key={i}>
-                <Box
-                  component={Card}
-                  padding={4}
-                  width={1}
-                  height={1}
-                  bgcolor={theme.palette.background.paper}
-                  sx={{
-                    '&:hover': {
-                      bgcolor: theme.palette.background.default,
-                      color:
-                        theme.palette.mode === 'dark'
-                          ? theme.palette.common.white
-                          : theme.palette.common.black,
-                    },
-                    cursor: 'pointer',
-                    backgroundColor:
-                      selectedService?.name === item.name
-                        ? theme.palette.action.selected
-                        : theme.palette.background.paper,
-                  }}
-                  onClick={() => handleServiceClick(item)}
-                >
-                  <Box display="flex" flexDirection="column">
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
-                    <Typography color="inherit">{item.description}</Typography>
-                  </Box>
-                  <Box display="block" width={1} height={1}>
-                    <Card
-                      sx={{
-                        width: 1,
-                        height: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        boxShadow: 'none',
-                        bgcolor: 'transparent',
-                        backgroundImage: 'none',
-                      }}
-                    >
-                      <CardMedia
-                        title=""
-                        image={item.image}
+                <Tooltip title="Cliquez pour ouvrir le formulaire" followCursor>
+                  <Box
+                    component={Card}
+                    padding={4}
+                    width={1}
+                    height={1}
+                    bgcolor={theme.palette.background.paper}
+                    sx={{
+                      '&:hover': {
+                        bgcolor: theme.palette.background.default,
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.common.white
+                            : theme.palette.common.black,
+                      },
+                      cursor: 'pointer',
+                      backgroundColor:
+                        selectedService?.name === item.name
+                          ? theme.palette.action.selected
+                          : theme.palette.background.paper,
+                    }}
+                    onClick={() => handleServiceClick(item)}
+                  >
+                    <Box display="flex" flexDirection="column">
+                      <Typography
+                        variant="h6"
+                        gutterBottom
                         sx={{
-                          position: 'relative',
-                          height: 320,
-                          overflow: 'hidden',
-                          borderRadius: 2,
-                          filter:
-                            theme.palette.mode === 'dark'
-                              ? 'brightness(0.7)'
-                              : 'brightness(0.9)',
-                          marginTop: 4,
+                          fontWeight: 600,
                         }}
-                      />
-                    </Card>
+                      >
+                        {item.name}
+                      </Typography>
+                      <Typography color="inherit">
+                        {item.description}
+                      </Typography>
+                    </Box>
+                    <Box display="block" width={1} height={1}>
+                      <Card
+                        sx={{
+                          width: 1,
+                          height: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          boxShadow: 'none',
+                          bgcolor: 'transparent',
+                          backgroundImage: 'none',
+                        }}
+                      >
+                        <CardMedia
+                          title=""
+                          image={item.image}
+                          sx={{
+                            position: 'relative',
+                            height: 320,
+                            overflow: 'hidden',
+                            borderRadius: 2,
+                            filter:
+                              theme.palette.mode === 'dark'
+                                ? 'brightness(0.7)'
+                                : 'brightness(0.9)',
+                            marginTop: 4,
+                          }}
+                        />
+                      </Card>
+                    </Box>
                   </Box>
-                </Box>
+                </Tooltip>
               </Grid>
             ))}
           </Grid>
@@ -180,6 +185,11 @@ const Services = (): JSX.Element => {
             open={!!selectedService}
             onClose={() => handleCloseForm()}
             maxWidth={'md'}
+            sx={{
+              '& .MuiPaper-root': {
+                background: 'transparent',
+              },
+            }}
           >
             {selectedService && (
               <ServiceForm
