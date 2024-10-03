@@ -8,30 +8,37 @@ import footerData from '../config/footer.json';
 
 interface FooterProps {
   copyright: string;
+  TVA: string;
 }
 
 const Footer = (): JSX.Element => {
   const theme = useTheme();
 
-  const [footer] = useState<FooterProps[]>(footerData);
+  const [footer] = useState<FooterProps>(footerData);
 
   return (
     <Grid container spacing={2}>
-      {footer.slice(0, 1).map((item, i) => (
-        <Grid item xs={12} key={i}>
-          <Box sx={{ marginBottom: '20px', textAlign: 'center' }}>
-            <Typography
-              align="center"
-              variant="subtitle2"
-              color={theme.palette.text.secondary}
-              gutterBottom
-              sx={{ marginTop: '25px' }}
-            >
-              Copyright &copy; {new Date().getFullYear()} {item.copyright}.
-            </Typography>
-          </Box>
-        </Grid>
-      ))}
+      <Grid item xs={12}>
+        <Box sx={{ marginBottom: '20px', textAlign: 'center' }}>
+          <Typography
+            align="center"
+            variant="subtitle2"
+            color={theme.palette.text.secondary}
+            gutterBottom
+            sx={{ marginTop: '25px' }}
+          >
+            Copyright &copy; {new Date().getFullYear()} {footer.copyright}.
+          </Typography>
+          <Typography
+            align="center"
+            variant="subtitle2"
+            color={theme.palette.text.secondary}
+            gutterBottom
+          >
+            TVA {footer.TVA}
+          </Typography>
+        </Box>
+      </Grid>
     </Grid>
   );
 };

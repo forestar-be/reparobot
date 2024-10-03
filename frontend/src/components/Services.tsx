@@ -21,6 +21,7 @@ export interface ServicesProps {
   description: string;
   image: string;
   formFields: FormField[];
+  basePrice: number;
 }
 
 interface FormField {
@@ -30,6 +31,7 @@ interface FormField {
   optional?: boolean;
   isRequired: boolean;
   minFuturDateRange?: number;
+  price?: number;
 }
 
 const Services = (): JSX.Element => {

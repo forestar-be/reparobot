@@ -25,7 +25,7 @@ import {
   DialogTitle,
   Link,
 } from '@mui/material';
-import conditions from '../config/conditions.json'; // Import conditions.json
+import conditions from '../config/conditions.json';
 
 const ServiceForm = ({
   service,
@@ -40,10 +40,25 @@ const ServiceForm = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [termsOpen, setTermsOpen] = useState(false); // State for terms dialog
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(service.basePrice);
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+
+  useEffect(() => {
+    let price = service.basePrice;
+    service.formFields.forEach((field) => {
+      if (
+        field.type === 'checkbox_price' &&
+        formValues[field.label] &&
+        field.price
+      ) {
+        price += field.price;
+      }
+    });
+    setTotalPrice(price);
+  }, [formValues, service]);
 
   const handleChange = (label: string, value: any) => {
     setFormValues({ ...formValues, [label]: value });
@@ -53,7 +68,6 @@ const ServiceForm = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const newErrors: { [key: string]: string } = {};
-    const today = new Date();
     const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 
     service.formFields.forEach((field) => {
@@ -72,9 +86,22 @@ const ServiceForm = ({
     } else {
       onFormEdit(false);
 
+      // Convert dates to readable format
+      const formattedValues = { ...formValues };
+      service.formFields.forEach((field) => {
+        if (field.type === 'date' && formValues[field.label]) {
+          formattedValues[field.label] = dayjs(formValues[field.label]).format(
+            'DD/MM/YYYY',
+          );
+        }
+      });
+
+      // Add total price to form values
+      formattedValues['Prix total'] = totalPrice;
+
       // Submit form
       try {
-        console.log('Form submitted', formValues);
+        console.log('Form submitted', formattedValues);
         setModalMessage('Votre demande a été soumise avec succès');
       } catch (error) {
         console.error('Error submitting form', error);
@@ -220,6 +247,7 @@ const ServiceForm = ({
               );
             case 'checkbox':
             case 'checkbox_term':
+            case 'checkbox_price':
               return (
                 <FormControl
                   key={index}
@@ -249,7 +277,7 @@ const ServiceForm = ({
                           </Link>
                         </span>
                       ) : (
-                        field.label
+                        `${field.label} ${field.type === 'checkbox_price' ? `+${field.price} €` : ''}`
                       )
                     }
                   />
@@ -269,6 +297,7 @@ const ServiceForm = ({
                   }
                   key={index}
                   label={field.label}
+                  format={'DD/MM/YYYY'}
                   value={formValues[field.label] || null}
                   onChange={(date) => handleChange(field.label, date)}
                   slotProps={{
@@ -288,6 +317,15 @@ const ServiceForm = ({
           }
         })}
       </LocalizationProvider>
+      <Typography
+        variant="h6"
+        sx={{
+          flex: '1 1 100%',
+          marginTop: 2,
+        }}
+      >
+        Prix total: {totalPrice} €
+      </Typography>
       <Button variant="contained" color="primary" type="submit">
         Envoyer
       </Button>
