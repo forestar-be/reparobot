@@ -8,16 +8,19 @@ const logger = require('./config/logger');
 const authMiddleware = require('./middleware/auth');
 const formRoutes = require('./routes/form');
 const rateLimit = require('express-rate-limit');
+const { initPingIntervals } = require('./helper/pingInterval');
 
 const app = express();
 const port = 3001;
 
 // Middleware CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  methods: 'POST',
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    methods: 'POST',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
 // Middleware pour parser le JSON
 app.use(bodyParser.json());
@@ -32,10 +35,16 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
 
+app.use('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Middleware to log each request
 app.use((req, res, next) => {
   res.on('finish', () => {
-    logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} - ${req.ip}`);
+    logger.info(
+      `${req.method} ${req.originalUrl} ${res.statusCode} - ${req.ip}`,
+    );
   });
   next();
 });
@@ -52,4 +61,6 @@ app.use((err, req, res, next) => {
 // Démarrage du serveur
 app.listen(port, () => {
   logger.info(`Serveur en écoute sur le port ${port}`);
+  // useful to keep the servers awake on render.com
+  initPingIntervals();
 });
