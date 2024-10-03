@@ -43,7 +43,6 @@ const ServiceForm = ({
   onClose: (force?: boolean) => void;
   onFormEdit: (edited: boolean) => void;
 }) => {
-  console.log(process.env, API_URL, AUTH_TOKEN);
   const [formValues, setFormValues] = useState<{ [key: string]: any }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -122,8 +121,7 @@ const ServiceForm = ({
           throw new Error('Network response was not ok');
         }
 
-        const result = await response.json();
-        console.log('Form submitted', result);
+        console.log('Form submitted', response);
         setModalMessage('Votre demande a été soumise avec succès');
       } catch (error) {
         console.error('Error submitting form', error);

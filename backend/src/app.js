@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const logger = require('./config/logger');
 const authMiddleware = require('./middleware/auth');
-const formRoutes = require('./routes/form');
+const routes = require('./routes/routes');
 const rateLimit = require('express-rate-limit');
 const { initPingIntervals } = require('./helper/pingInterval');
 
@@ -35,10 +35,6 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
 
-app.use('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
 // Middleware to log each request
 app.use((req, res, next) => {
   res.on('finish', () => {
@@ -50,7 +46,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/', authMiddleware, formRoutes);
+app.use('/', authMiddleware, routes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {
