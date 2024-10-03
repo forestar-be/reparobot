@@ -245,7 +245,7 @@ const ServiceForm = ({
                             variant="body2"
                             onClick={handleOpenTerms}
                           >
-                            (Ouvrir)
+                            (Lire)
                           </Link>
                         </span>
                       ) : (
@@ -289,7 +289,7 @@ const ServiceForm = ({
         })}
       </LocalizationProvider>
       <Button variant="contained" color="primary" type="submit">
-        Submit
+        Envoyer
       </Button>
 
       <Dialog
@@ -306,7 +306,7 @@ const ServiceForm = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal} color="primary" autoFocus>
-            Close
+            Fermer
           </Button>
         </DialogActions>
       </Dialog>
@@ -318,7 +318,7 @@ const ServiceForm = ({
         aria-describedby="terms-dialog-description"
       >
         <DialogTitle id="terms-dialog-title">
-          {'Conditions Generales'}
+          {'Conditions Générales'}
         </DialogTitle>
         <DialogContent>
           {Object.values(conditions.terms_and_conditions).map(
@@ -332,7 +332,7 @@ const ServiceForm = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseTerms} color="primary" autoFocus>
-            Close
+            Fermer
           </Button>
         </DialogActions>
       </Dialog>
