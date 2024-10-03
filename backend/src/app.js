@@ -38,6 +38,11 @@ app.use(limiter);
 // Middleware to log each request
 app.use((req, res, next) => {
   res.on('finish', () => {
+    // do not log health check
+    if (req.path === '/health') {
+      return;
+    }
+
     logger.info(
       `${req.method} ${req.originalUrl} ${res.statusCode} - ${req.ip}`,
     );

@@ -356,7 +356,9 @@ const ServiceForm = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Form Submission'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {'Envoi du formulaire'}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {modalMessage}
