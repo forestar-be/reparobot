@@ -23,7 +23,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Link,
 } from '@mui/material';
+import conditions from '../config/conditions.json'; // Import conditions.json
 
 const ServiceForm = ({
   service,
@@ -38,6 +40,7 @@ const ServiceForm = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [termsOpen, setTermsOpen] = useState(false); // State for terms dialog
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -55,10 +58,11 @@ const ServiceForm = ({
 
     service.formFields.forEach((field) => {
       if (field.isRequired && !formValues[field.label]) {
-        newErrors[field.label] = `${field.label} is required`;
+        newErrors[field.label] = `${field.label} est requis`;
       }
       if (field.type === 'tel' && !phoneRegex.test(formValues[field.label])) {
-        newErrors[field.label] = `${field.label} must be a valid phone number`;
+        newErrors[field.label] =
+          `${field.label} doit être un numéro de téléphone valide`;
       }
     });
 
@@ -71,10 +75,12 @@ const ServiceForm = ({
       // Submit form
       try {
         console.log('Form submitted', formValues);
-        setModalMessage('Form submitted successfully!');
+        setModalMessage('Votre demande a été soumise avec succès');
       } catch (error) {
         console.error('Error submitting form', error);
-        setModalMessage('Error submitting form');
+        setModalMessage(
+          "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
+        );
       } finally {
         setFormValues({});
         setErrors({});
@@ -86,6 +92,14 @@ const ServiceForm = ({
   const handleCloseModal = () => {
     setModalOpen(false);
     onClose(true);
+  };
+
+  const handleOpenTerms = () => {
+    setTermsOpen(true);
+  };
+
+  const handleCloseTerms = () => {
+    setTermsOpen(false);
   };
 
   return (
@@ -123,7 +137,7 @@ const ServiceForm = ({
           marginBottom: 2,
         }}
       >
-        Service Form for {service.name}
+        Formulaire du service: {service.name}
       </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         {service.formFields.map((field, index) => {
@@ -205,6 +219,7 @@ const ServiceForm = ({
                 </TextField>
               );
             case 'checkbox':
+            case 'checkbox_term':
               return (
                 <FormControl
                   key={index}
@@ -221,7 +236,22 @@ const ServiceForm = ({
                         }
                       />
                     }
-                    label={field.label}
+                    label={
+                      field.type === 'checkbox_term' ? (
+                        <span>
+                          {field.label}{' '}
+                          <Link
+                            component="button"
+                            variant="body2"
+                            onClick={handleOpenTerms}
+                          >
+                            (Ouvrir)
+                          </Link>
+                        </span>
+                      ) : (
+                        field.label
+                      )
+                    }
                   />
                   {!!errors[field.label] && (
                     <FormHelperText>{errors[field.label]}</FormHelperText>
@@ -276,6 +306,32 @@ const ServiceForm = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={termsOpen}
+        onClose={handleCloseTerms}
+        aria-labelledby="terms-dialog-title"
+        aria-describedby="terms-dialog-description"
+      >
+        <DialogTitle id="terms-dialog-title">
+          {'Conditions Generales'}
+        </DialogTitle>
+        <DialogContent>
+          {Object.values(conditions.terms_and_conditions).map(
+            (section, index) => (
+              <div key={index}>
+                <Typography variant="h6">{section.title}</Typography>
+                <DialogContentText>{section.content}</DialogContentText>
+              </div>
+            ),
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTerms} color="primary" autoFocus>
             Close
           </Button>
         </DialogActions>
