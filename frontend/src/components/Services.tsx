@@ -101,7 +101,7 @@ const Services = (): JSX.Element => {
             gutterBottom
             color={theme.palette.text.secondary}
           >
-            Nous vous proposons une large gamme de service pour l'entretien de
+            Nous vous proposons une large gamme de services pour l'entretien de
             votre robot.
           </Typography>
         </Box>
@@ -190,19 +190,19 @@ const Services = (): JSX.Element => {
             )}
           </Dialog>
           <Dialog open={isConfirmDialogOpen} onClose={handleCancelClose}>
-            <DialogTitle>Confirm Close</DialogTitle>
+            <DialogTitle>Confirmer la fermeture</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                You have unsaved changes. Are you sure you want to close the
-                form?
+                Vous avez des modifications non enregistrées. Êtes-vous sûr de
+                vouloir fermer le formulaire ?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancelClose} color="primary">
-                Cancel
+                Annuler
               </Button>
               <Button onClick={handleConfirmClose} color="primary" autoFocus>
-                Confirm
+                Confirmer
               </Button>
             </DialogActions>
           </Dialog>
