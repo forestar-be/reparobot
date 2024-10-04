@@ -43,6 +43,12 @@
         "isRequired": false
       },
       {
+        "label": "Dépose en magasin",
+        "price": 0,
+        "type": "checkbox_price",
+        "isRequired": false
+      },
+      {
         "label": "Test et nettoyage de la station de charge et alimentation",
         "price": 20,
         "type": "checkbox_price",
@@ -72,7 +78,6 @@
     "name": "Réparation de robot",
     "description": "Réparation de votre robot Husqvarna ou Gardena",
     "image": "/images/reparation-robot.jpg",
-    "basePrice": 99,
     "formFields": [
       {
         "label": "Marque du robot",
@@ -111,7 +116,6 @@
     "name": "Problème d'installation",
     "description": "Installation de votre robot Husqvarna ou Gardena",
     "image": "/images/installation-robot.jpg",
-    "basePrice": 99,
     "formFields": [
       {
         "label": "Marque du robot",
