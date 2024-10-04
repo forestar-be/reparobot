@@ -1,8 +1,8 @@
 {
-  "name": "entretien-robot-jardinnage-api",
+  "name": "reparobot-api",
   "version": "1.0.0",
   "author": "Charles HL",
-  "license": "Copyright All Rights Reserved Charles HL",
+  "license": "Copyright © All Rights Reserved Charles HILD LÊ",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

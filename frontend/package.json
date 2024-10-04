@@ -1,8 +1,8 @@
 {
-  "name": "entretien-robot-jardinnage",
-  "version": "0.1.0",
+  "name": "reparobot",
+  "version": "1.0.0",
   "author": "Charles HL",
-  "license": "Copyright All Rights Reserved Charles HL",
+  "license": "Copyright © All Rights Reserved Charles HILD LÊ",
   "private": true,
   "scripts": {
     "start": "react-scripts start",

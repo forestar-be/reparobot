@@ -21,7 +21,7 @@ export interface ServicesProps {
   description: string;
   image: string;
   formFields: FormField[];
-  basePrice: number;
+  basePrice?: number;
 }
 
 interface FormField {

@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -47,24 +48,28 @@ const ServiceForm = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState<'success' | 'error'>('success');
   const [termsOpen, setTermsOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(service.basePrice);
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
-    let price = service.basePrice;
-    service.formFields.forEach((field) => {
-      if (
-        field.type === 'checkbox_price' &&
-        formValues[field.label] &&
-        field.price
-      ) {
-        price += field.price;
-      }
-    });
-    setTotalPrice(price);
+    if (service.basePrice !== undefined) {
+      let price = service.basePrice;
+      service.formFields.forEach((field) => {
+        if (
+          field.type === 'checkbox_price' &&
+          formValues[field.label] &&
+          field.price
+        ) {
+          price += field.price;
+        }
+      });
+      setTotalPrice(price);
+    }
   }, [formValues, service]);
 
   const handleChange = (label: string, value: any) => {
@@ -92,6 +97,7 @@ const ServiceForm = ({
       console.log('Errors', newErrors);
     } else {
       onFormEdit(false);
+      setIsLoading(true);
 
       // Convert dates to readable format
       const formattedValues = { ...formValues };
@@ -104,10 +110,14 @@ const ServiceForm = ({
       });
 
       // Add total price to form values
-      formattedValues['Prix total'] = totalPrice;
+      if (totalPrice !== undefined) {
+        formattedValues['Prix total'] = totalPrice;
+      }
 
       // Submit form
       try {
+        console.log('Submitting', formattedValues);
+
         const response = await fetch(`${API_URL}/submit-form`, {
           method: 'POST',
           headers: {
@@ -122,15 +132,18 @@ const ServiceForm = ({
         }
 
         console.log('Form submitted', response);
+        setFormValues({});
+        setErrors({});
+        setModalType('success');
         setModalMessage('Votre demande a été soumise avec succès');
       } catch (error) {
         console.error('Error submitting form', error);
+        setModalType('error');
         setModalMessage(
           "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
         );
       } finally {
-        setFormValues({});
-        setErrors({});
+        setIsLoading(false);
         setModalOpen(true);
       }
     }
@@ -138,7 +151,9 @@ const ServiceForm = ({
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    onClose(true);
+    if (modalType === 'success') {
+      onClose(true);
+    }
   };
 
   const handleOpenTerms = () => {
@@ -337,17 +352,24 @@ const ServiceForm = ({
           }
         })}
       </LocalizationProvider>
-      <Typography
-        variant="h6"
-        sx={{
-          flex: '1 1 100%',
-          marginTop: 2,
-        }}
+      {totalPrice !== undefined && (
+        <Typography
+          variant="h6"
+          sx={{
+            flex: '1 1 100%',
+            marginTop: 2,
+          }}
+        >
+          Prix total: {totalPrice} €
+        </Typography>
+      )}
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        disabled={isLoading}
       >
-        Prix total: {totalPrice} €
-      </Typography>
-      <Button variant="contained" color="primary" type="submit">
-        Envoyer
+        {isLoading ? <CircularProgress size={24} /> : 'Envoyer'}
       </Button>
 
       <Dialog
