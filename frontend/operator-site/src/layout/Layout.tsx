@@ -10,7 +10,6 @@ import { useTheme } from '@mui/material/styles';
 
 import Header from './Header';
 import Footer from './Footer';
-import Sidebar from './Sidebar';
 
 interface Props {
   children: React.ReactNode;
@@ -18,21 +17,6 @@ interface Props {
 
 const Layout = ({ children }: Props): JSX.Element => {
   const theme = useTheme();
-  const isLg = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true,
-  });
-
-  const [openSidebar, setOpenSidebar] = useState(false);
-
-  const handleSidebarOpen = (): void => {
-    setOpenSidebar(true);
-  };
-
-  const handleSidebarClose = (): void => {
-    setOpenSidebar(false);
-  };
-
-  const open = isLg ? false : openSidebar;
 
   const trigger = useScrollTrigger({
     disableHysteresis: true,
@@ -51,15 +35,14 @@ const Layout = ({ children }: Props): JSX.Element => {
 
   return (
     <Box
-      id='page-top'
+      id="page-top"
       sx={{
         backgroundColor: theme.palette.background.default,
         height: '100%',
       }}
     >
-      <Header onSidebarOpen={handleSidebarOpen} />
-      <Sidebar onClose={handleSidebarClose} open={open} />
-      <Box width={1} margin='0 auto'>
+      <Header onSidebarOpen={() => {}} />
+      <Box width={1} margin="0 auto">
         {children}
       </Box>
       <Footer />
@@ -67,13 +50,13 @@ const Layout = ({ children }: Props): JSX.Element => {
         <Zoom in={trigger}>
           <Box
             onClick={() => scrollTo('page-top')}
-            role='presentation'
+            role="presentation"
             sx={{ position: 'fixed', bottom: 24, right: 32 }}
           >
             <Fab
-              color='primary'
-              size='small'
-              aria-label='scroll back to top'
+              color="primary"
+              size="small"
+              aria-label="scroll back to top"
               sx={{
                 color:
                   theme.palette.mode === 'dark'
