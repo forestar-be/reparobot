@@ -1,0 +1,30 @@
+{
+  "fields": [
+    { "id": "last_name", "label": "Nom", "type": "text", "isRequired": true },
+    { "id": "first_name", "label": "Prénom", "type": "text", "isRequired": true },
+    { "id": "address", "label": "Adresse", "type": "text", "isRequired": true },
+    { "id": "phone", "label": "Téléphone", "type": "tel", "isRequired": true },
+    { "id": "email", "label": "Mail", "type": "email", "isRequired": true },
+    {
+      "id": "machine_type",
+      "label": "Type de machine",
+      "type": "select",
+      "options": [
+        "Tondeuse", "Tronçonneuse", "Débroussailleuse", "Motoculteur",
+        "Tracteur", "Robot Tondeuse", "Autre"
+      ],
+      "isRequired": true
+    },
+    {
+      "id": "repair_or_maintenance",
+      "label": "Choix réparation ou entretien",
+      "type": "select",
+      "options": ["Réparation", "Entretien"],
+      "isRequired": true
+    },
+    { "id": "robot_code", "label": "Code si robot", "type": "text", "isRequired": false },
+    { "id": "fault_description", "label": "Descriptif de la panne", "type": "textarea", "isRequired": true },
+    { "id": "machine_photo", "label": "Photo de la machine", "type": "file", "isRequired": true },
+    { "id": "client_signature", "label": "Signature du client", "type": "signature", "isRequired": true }
+  ]
+}

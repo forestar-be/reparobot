@@ -1,0 +1,25 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MachineRepair {
+  id                   Int      @id @default(autoincrement())
+  first_name           String
+  last_name            String
+  address               String
+  phone                String
+  email                String
+  machine_type         String
+  repair_or_maintenance String
+  robot_code           String?
+  fault_description    String
+  client_signature     String   // URL or path to the PNG file in Supabase storage
+  file_url             String   // URL or path to the WebP file in Supabase storage
+  bucket_name          String   // Supabase storage bucket name
+  createdAt            DateTime @default(now())
+}

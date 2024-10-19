@@ -8,6 +8,9 @@ import getTheme from './theme/theme';
 import ColorModeContext from './utils/ColorModeContext';
 import Layout from './layout/Layout';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import AuthRoute from './components/AuthRoute';
+import AuthProvider from './hooks/AuthProvider';
 
 const defaultTheme = 'light';
 
@@ -15,7 +18,6 @@ const App = (): JSX.Element => {
   const [mode, setMode] = useState('dark');
   const colorMode = useMemo(
     () => ({
-      // The theme mode switch will invoke this method
       toggleColorMode: () => {
         window.localStorage.setItem(
           'themeMode',
@@ -39,18 +41,23 @@ const App = (): JSX.Element => {
   return (
     <HelmetProvider>
       <Helmet
-        titleTemplate="%s | Entretien Robot Husqvarna & Gardena"
-        defaultTitle="Entretien Robot Husqvarna & Gardena"
+        titleTemplate="%s | Form Robot Husqvarna & Gardena"
+        defaultTitle="Form Robot Husqvarna & Gardena"
       />
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={getTheme(mode)}>
           <CssBaseline />
           <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-              </Routes>
-            </Layout>
+            <AuthProvider>
+              <Layout>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route element={<AuthRoute />}>
+                    <Route path="/" element={<Home />} />
+                  </Route>
+                </Routes>
+              </Layout>
+            </AuthProvider>
           </BrowserRouter>
         </ThemeProvider>
       </ColorModeContext.Provider>

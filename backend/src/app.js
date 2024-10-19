@@ -4,10 +4,15 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 const logger = require('./config/logger');
-const authMiddleware = require('./middleware/auth');
-const routes = require('./routes/routes');
-const rateLimit = require('express-rate-limit');
+const publicAuthMiddleware = require('./middleware/publicAuthMiddleware');
+const publicSiteRoutes = require('./routes/publicSiteRoutes');
+const operatorAuthMiddleware = require('./middleware/operatorAuthMiddleware');
+const operatorRoutes = require('./routes/operatorRoutes');
+// const rateLimit = require('express-rate-limit');
 const { initPingIntervals } = require('./helper/pingInterval');
 
 const app = express();
@@ -16,7 +21,7 @@ const port = 3001;
 // Middleware CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: '*',
     methods: 'POST',
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
@@ -26,14 +31,14 @@ app.use(
 app.use(bodyParser.json());
 
 // Rate limiting middleware
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Limit each IP to 100 requests per windowMs
-  message: 'Trop de demandes de votre part, veuillez réessayer plus tard.',
-});
-
-// Apply the rate limiting middleware to all requests
-app.use(limiter);
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 20, // Limit each IP to 100 requests per windowMs
+//   message: 'Trop de demandes de votre part, veuillez réessayer plus tard.',
+// });
+//
+// // Apply the rate limiting middleware to all requests
+// app.use(limiter);
 
 // Middleware to log each request
 app.use((req, res, next) => {
@@ -50,12 +55,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Set up Multer for handling file uploads
+const upload = multer({
+  storage: multer.memoryStorage(), // Store file in memory
+  limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size
+});
+
 // Routes
-app.use('/', authMiddleware, routes);
+app.use('/operator', operatorAuthMiddleware, operatorRoutes);
+app.use('/', publicAuthMiddleware, publicSiteRoutes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {
-  logger.error(`Error occurred: ${err.message} - ${req.ip}`);
+  logger.error(`Error occurred: ${err.message}`);
   res.status(500).send('Internal Server Error');
 });
 
