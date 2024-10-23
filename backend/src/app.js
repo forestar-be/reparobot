@@ -12,6 +12,8 @@ const publicAuthMiddleware = require('./middleware/publicAuthMiddleware');
 const publicSiteRoutes = require('./routes/publicSiteRoutes');
 const operatorAuthMiddleware = require('./middleware/operatorAuthMiddleware');
 const operatorRoutes = require('./routes/operatorRoutes');
+const supervisorAuthMiddleware = require('./middleware/supervisorAuthMiddleware');
+const supervisorRoutes = require('./routes/supervisorRoutes');
 // const rateLimit = require('express-rate-limit');
 const { initPingIntervals } = require('./helper/pingInterval');
 
@@ -22,7 +24,7 @@ const port = 3001;
 app.use(
   cors({
     origin: '*',
-    methods: 'POST',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
@@ -63,6 +65,7 @@ const upload = multer({
 
 // Routes
 app.use('/operator', operatorAuthMiddleware, operatorRoutes);
+app.use('/supervisor', supervisorAuthMiddleware, supervisorRoutes);
 app.use('/', publicAuthMiddleware, publicSiteRoutes);
 
 // Error-handling middleware
