@@ -12,11 +12,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import '../styles/MachineRepairsTable.css';
 import { getAllMachineRepairs } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+import _colorByState from '../config/color_state.json';
+
+const colorByState: { [key: string]: string } = _colorByState;
 
 interface MachineRepair {
   id: string;
   first_name: string;
   last_name: string;
+  state: string | null;
   address: string;
   phone: string;
   email: string;
@@ -107,6 +111,17 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       width: 80,
+    },
+    {
+      headerName: 'État',
+      field: 'state' as keyof MachineRepair,
+      sortable: true,
+      filter: true,
+      valueFormatter: (params: any) =>
+        !params.value ? 'Non commencé' : params.value,
+      cellStyle: (params: any) => ({
+        backgroundColor: colorByState[params.value || 'Non commencé'],
+      }),
     },
     {
       headerName: 'Type',
