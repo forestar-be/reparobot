@@ -37,7 +37,7 @@ const AuthProvider = ({ children }: any) => {
   const loginAction = async (
     data: any,
   ): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(`${API_URL}/operator/login`, {
+    const response = await fetch(`${API_URL}/supervisor/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

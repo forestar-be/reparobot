@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import AuthRoute from './components/AuthRoute';
 import AuthProvider from './hooks/AuthProvider';
+import SingleRepair from './pages/SingleRepair';
 
 const defaultTheme = 'light';
 
@@ -41,8 +42,8 @@ const App = (): JSX.Element => {
   return (
     <HelmetProvider>
       <Helmet
-        titleTemplate="%s | Opérateur Reparobot.be"
-        defaultTitle="Opérateur Reparobot.be"
+        titleTemplate="%s | Superviseur Reparobot.be"
+        defaultTitle="Superviseur Reparobot.be"
       />
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={getTheme(mode)}>
@@ -54,6 +55,7 @@ const App = (): JSX.Element => {
                   <Route path="/login" element={<Login />} />
                   <Route element={<AuthRoute />}>
                     <Route path="/" element={<Home />} />
+                    <Route path="/reparation/:id" element={<SingleRepair />} />
                   </Route>
                 </Routes>
               </Layout>
