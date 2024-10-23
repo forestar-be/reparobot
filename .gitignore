@@ -27,3 +27,5 @@ yarn-error.log*
 
 .idea
 backend/logs/
+
+frontend/public-site/build/
