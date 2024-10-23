@@ -106,6 +106,26 @@ const DynamicForm = () => {
     }));
   };
 
+  const handleNewForm = (noCheck = false) => {
+    if (
+      !noCheck &&
+      (Object.keys(formData).length > 0 || signatureData || imagePreviewUrl)
+    ) {
+      if (
+        !window.confirm(
+          'Le formulaire actuel contient des données. Voulez-vous vraiment créer un nouveau formulaire ?',
+        )
+      ) {
+        return;
+      }
+    }
+    console.debug('Creating new form');
+    setFormData({});
+    setSignatureData(null);
+    setImagePreviewUrl(null);
+    signaturePadRef.current?.clear();
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -159,6 +179,7 @@ const DynamicForm = () => {
       const result = await response.json();
       console.log('Form data submitted successfully:', result);
       alert('Formulaire envoyé avec succès');
+      handleNewForm(true);
     } catch (error) {
       alert("Erreur lors de l'envoi du formulaire");
     } finally {
@@ -180,6 +201,7 @@ const DynamicForm = () => {
             required={field.isRequired}
             fullWidth
             onChange={handleChange}
+            value={formData[field.id] || ''}
           />
         );
       case 'textarea':
@@ -193,6 +215,7 @@ const DynamicForm = () => {
             multiline
             rows={4}
             onChange={handleChange}
+            value={formData[field.id] || ''}
           />
         );
       case 'select':
@@ -205,6 +228,7 @@ const DynamicForm = () => {
             required={field.isRequired}
             fullWidth
             onChange={handleChange}
+            value={formData[field.id] || ''}
           >
             {field.options.map((option: string) => (
               <MenuItem key={option} value={option}>
@@ -306,22 +330,6 @@ const DynamicForm = () => {
 
   const handleCloseModal = () => setModalOpen(false);
 
-  const handleNewForm = () => {
-    if (Object.keys(formData).length > 0 || signatureData || imagePreviewUrl) {
-      if (
-        !window.confirm(
-          'Le formulaire actuel contient des données. Voulez-vous vraiment créer un nouveau formulaire ?',
-        )
-      ) {
-        return;
-      }
-    }
-    setFormData({});
-    setSignatureData(null);
-    setImagePreviewUrl(null);
-    signaturePadRef.current?.clear();
-  };
-
   return (
     <Box
       sx={{
@@ -354,7 +362,7 @@ const DynamicForm = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleNewForm}
+            onClick={() => handleNewForm()}
             endIcon={<AddCircleOutlineIcon />}
           >
             Nouveau

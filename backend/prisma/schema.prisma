@@ -8,18 +8,39 @@ generator client {
 }
 
 model MachineRepair {
-  id                   Int      @id @default(autoincrement())
-  first_name           String
-  last_name            String
+  id                    Int      @id @default(autoincrement())
+  first_name            String
+  last_name             String
   address               String
-  phone                String
-  email                String
-  machine_type         String
+  phone                 String
+  email                 String
+  machine_type          String
   repair_or_maintenance String
-  robot_code           String?
-  fault_description    String
-  client_signature     String   // URL or path to the PNG file in Supabase storage
-  file_url             String   // URL or path to the WebP file in Supabase storage
-  bucket_name          String   // Supabase storage bucket name
-  createdAt            DateTime @default(now())
+  robot_code            String?
+  fault_description     String
+  client_signature      String // URL or path to the PNG file in Supabase storage
+  bucket_name           String // Supabase storage bucket name
+  working_time_hour     Int?
+  working_time_minute   Int?
+  replaced_part_list    String[] // List of replaced parts
+  state                 String? // Current state of the repair (e.g., 'pending', 'in-progress', 'completed')
+  image_path_list       String[] // List of URLs or paths to additional files in Supabase storage
+  createdAt             DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      Role     @default(OPERATOR)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  OPERATOR
+  SUPERVISOR
+}
+
+model ReplacedParts {
+  name String @id @unique
 }
