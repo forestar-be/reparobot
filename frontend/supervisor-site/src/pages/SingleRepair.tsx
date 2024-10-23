@@ -213,7 +213,9 @@ const SingleRepair = () => {
           <Typography variant="subtitle1" noWrap>
             {label} :
           </Typography>
-          <Typography variant="subtitle1">{value || ''}</Typography>
+          <Typography variant="subtitle1" sx={{ overflowWrap: 'break-word' }}>
+            {value || ''}
+          </Typography>
         </Box>
       )}
     </Grid>
