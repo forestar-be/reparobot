@@ -22,7 +22,9 @@
       "options": ["Réparation", "Entretien"],
       "isRequired": true
     },
-    { "id": "robot_code", "label": "Code si robot", "type": "text", "isRequired": false },
+    { "id": "machine_brand", "label": "Marque", "type": "text", "isRequired": true },
+    { "id": "robot_code", "label": "Code (si robot)", "type": "text", "isRequired": false },
+    { "id": "warranty", "label": "Garantie", "type": "checkbox", "isRequired": false },
     { "id": "fault_description", "label": "Descriptif de la panne", "type": "textarea", "isRequired": true },
     { "id": "machine_photo", "label": "Photo de la machine", "type": "file", "isRequired": true },
     { "id": "client_signature", "label": "Signature du client", "type": "signature", "isRequired": true }

@@ -175,4 +175,12 @@ router.get(
   }),
 );
 
+router.get(
+  '/repairer_names',
+  asyncHandler(async (req, res) => {
+    const repairerNames = await prisma.repairer.findMany();
+    res.json(repairerNames.map((repairer) => repairer.name));
+  }),
+);
+
 module.exports = router;

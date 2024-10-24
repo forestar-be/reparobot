@@ -15,6 +15,7 @@ import ColorModeContext from '../utils/ColorModeContext';
 import headerData from '../config/header.json';
 import { Logo } from '../components/Logo';
 import { useAuth } from '../hooks/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   onSidebarOpen: () => void;
@@ -29,6 +30,7 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
   const auth = useAuth();
   const colorMode = useContext(ColorModeContext);
   const [header] = useState<HeaderProps>(headerData);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -44,7 +46,14 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
         }}
       >
         <Toolbar sx={{ minHeight: 70 }}>
-          <Link href="/" sx={{ textDecoration: 'none' }}>
+          <Link
+            href="/"
+            sx={{ textDecoration: 'none' }}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
+          >
             <IconButton size="large" disabled>
               <Logo isDark={theme.palette.mode === 'dark'} />
               <Box sx={{ display: { md: 'inline', xs: 'none' } }}>

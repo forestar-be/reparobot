@@ -18,10 +18,13 @@ model MachineRepair {
   repair_or_maintenance String
   robot_code            String?
   fault_description     String
+  machine_brand         String
+  warranty              Boolean?
   client_signature      String // URL or path to the PNG file in Supabase storage
   bucket_name           String // Supabase storage bucket name
   working_time_hour     Int?
   working_time_minute   Int?
+  repairer_name         String? // Name of the repairer
   replaced_part_list    String[] // List of replaced parts
   state                 String? // Current state of the repair (e.g., 'pending', 'in-progress', 'completed')
   image_path_list       String[] // List of URLs or paths to additional files in Supabase storage
@@ -44,3 +47,10 @@ enum Role {
 model ReplacedParts {
   name String @id @unique
 }
+
+model Repairer {
+  name String @id @unique
+}
+
+// command to add migration:
+// npx prisma migrate dev --name xxxxxxxx

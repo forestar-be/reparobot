@@ -18,10 +18,13 @@ import {
   InputLabel,
   Checkbox,
   ListItemText,
+  FormControlLabel,
+  CircularProgress,
 } from '@mui/material';
 import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 import {
   fetchRepairById,
+  fetchRepairers,
   fetchReplacedParts,
   updateRepair,
 } from '../utils/api';
@@ -31,6 +34,9 @@ import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useTheme } from '@mui/material/styles';
 import { getKeys } from '../utils/common.utils';
 import Divider from '@mui/material/Divider';
+import _colorByState from '../config/color_state.json';
+
+const colorByState: { [key: string]: string } = _colorByState;
 
 interface MachineRepair {
   id: number;
@@ -50,6 +56,9 @@ interface MachineRepair {
   createdAt: string;
   imageUrls: string[];
   signatureUrl: string;
+  machine_brand: string;
+  warranty?: boolean;
+  repairer_name: string | null;
 }
 
 const SingleRepair = () => {
@@ -68,6 +77,7 @@ const SingleRepair = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [replacedParts, setReplacedParts] = useState<string[]>([]);
+  const [repairers, setRepairers] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,6 +92,19 @@ const SingleRepair = () => {
       }
     };
     fetchData();
+
+    const fetchRepairersData = async () => {
+      try {
+        const repairersData = await fetchRepairers(auth.token);
+        setRepairers(repairersData);
+      } catch (error) {
+        console.error('Error fetching repairers:', error);
+        alert(
+          `Une erreur s'est produite lors de la récupération des données ${error}`,
+        );
+      }
+    };
+    fetchRepairersData();
   }, []);
 
   useEffect(() => {
@@ -120,6 +143,13 @@ const SingleRepair = () => {
     setRepair({ ...repair, [e.target.name]: e.target.value } as MachineRepair);
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRepair({
+      ...repair,
+      [e.target.name]: e.target.checked,
+    } as MachineRepair);
+  };
+
   const handleMultipleSelectChange = (event: SelectChangeEvent<String[]>) => {
     setRepair({
       ...repair,
@@ -153,11 +183,19 @@ const SingleRepair = () => {
     });
   };
 
+  const closeAllEditableSections = () => {
+    setEditableSections({});
+    setEditableFields({});
+  };
+
   const handleUpdate = async () => {
     if (!repair) {
       console.error('No repair data found');
       return;
     }
+
+    setLoading(true);
+
     const updatedData: Record<keyof MachineRepair, any> = getKeys(
       repair,
     ).reduce((acc: any, key: keyof MachineRepair) => {
@@ -169,21 +207,42 @@ const SingleRepair = () => {
 
     try {
       await updateRepair(id!, updatedData);
-      alert('Fiche mise à jour avec succès');
+      // alert('Fiche mise à jour avec succès');
       setInitialRepair(repair);
     } catch (error) {
       console.error('Error updating repair:', error);
       alert(
         "Une erreur s'est produite lors de la mise à jour de la réparation",
       );
+    } finally {
+      setLoading(false);
+      closeAllEditableSections();
     }
   };
 
   const hasChanges = JSON.stringify(repair) !== JSON.stringify(initialRepair);
 
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
+  const renderCheckbox = (label: string, name: string, value: boolean) => (
+    <Grid item xs={6}>
+      {editableFields[name] ? (
+        <FormControlLabel
+          label={label}
+          control={
+            <Checkbox
+              name={name}
+              onChange={handleCheckboxChange}
+              checked={value}
+            />
+          }
+        />
+      ) : (
+        <Box display={'flex'} gap={'10px'}>
+          <Typography variant="subtitle1">{label} :</Typography>
+          <Typography variant="subtitle1">{value ? 'Oui' : 'Non'}</Typography>
+        </Box>
+      )}
+    </Grid>
+  );
 
   const renderField = (
     label: string,
@@ -271,26 +330,44 @@ const SingleRepair = () => {
     name: string,
     value: string,
     possibleValues: string[],
+    colorByValue: { [key: string]: string } = {},
   ) => {
     return (
       <Grid item xs={12}>
-        <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
-          <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            value={value}
-            name={name}
-            onChange={handleSelectChange}
-            input={<OutlinedInput id="select-multiple-chip" label={label} />}
-          >
-            {possibleValues.map((val) => (
-              <MenuItem key={val} value={val}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {editableFields[name] ? (
+          <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
+            <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              value={value}
+              name={name}
+              onChange={handleSelectChange}
+              input={<OutlinedInput id="select-multiple-chip" label={label} />}
+              // sx={{ backgroundColor: colorByValue[value] }}
+            >
+              {possibleValues.map((val) => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
+            <Typography variant="subtitle1">{label} :</Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                backgroundColor: colorByValue[value],
+                paddingLeft: colorByValue[value] && 2,
+                paddingRight: colorByValue[value] && 2,
+              }}
+            >
+              {value}
+            </Typography>
+          </Box>
+        )}
       </Grid>
     );
   };
@@ -303,38 +380,70 @@ const SingleRepair = () => {
   ) => {
     return (
       <Grid item xs={12}>
-        <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
-          <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={values}
-            name={name}
-            onChange={handleMultipleSelectChange}
-            input={<OutlinedInput id="select-multiple-chip" label={label} />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((val) => (
-                  <Chip key={val} label={val} />
-                ))}
-              </Box>
-            )}
+        {editableFields[name] ? (
+          <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
+            <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={values}
+              name={name}
+              onChange={handleMultipleSelectChange}
+              input={<OutlinedInput id="select-multiple-chip" label={label} />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((val) => (
+                    <Chip key={val} label={val} />
+                  ))}
+                </Box>
+              )}
+            >
+              {possibleValues.map((val) => (
+                <MenuItem key={val} value={val}>
+                  <Checkbox checked={values.includes(val)} />
+                  <ListItemText primary={val} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            gap={'10px'}
+            margin={'5px 0'}
           >
-            {possibleValues.map((val) => (
-              <MenuItem key={val} value={val}>
-                <Checkbox checked={values.includes(val)} />
-                <ListItemText primary={val} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <Typography variant="subtitle1">{label} :</Typography>
+            <Typography variant="subtitle1">
+              {values.length ? values.join(', ') : 'Aucune'}
+            </Typography>
+          </Box>
+        )}
       </Grid>
     );
   };
 
   return (
     <Box sx={{ padding: 4 }}>
+      {loading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            zIndex: 100,
+            width: '100vw',
+            top: 0,
+            right: 0,
+          }}
+        >
+          <CircularProgress size={'4rem'} />
+        </Box>
+      )}
       <Grid container spacing={2} display={'flex'}>
         <Grid item xs={6}>
           <Typography variant="h4" gutterBottom>
@@ -362,6 +471,8 @@ const SingleRepair = () => {
                       'repair_or_maintenance',
                       'fault_description',
                       'robot_code',
+                      'machine_brand',
+                      'warranty',
                     ])
                   }
                 >
@@ -384,6 +495,10 @@ const SingleRepair = () => {
                 'repair_or_maintenance',
                 repair.repair_or_maintenance,
               )}
+            </Grid>
+            <Grid item xs={12} display={'flex'} gap={'10px'}>
+              {renderField('Marque', 'machine_brand', repair.machine_brand)}
+              {renderCheckbox('Garantie', 'warranty', repair.warranty ?? false)}
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
               {renderField(
@@ -450,13 +565,16 @@ const SingleRepair = () => {
           <Grid item xs={6}>
             <Grid item xs={12}>
               <Box display="flex" alignItems="center">
-                <Typography variant="h6">Technical Information</Typography>
+                <Typography variant="h6">Information techniques</Typography>
                 <IconButton
                   onClick={() =>
                     toggleEditableSection('technicalInfo', [
                       'file_url',
                       'bucket_name',
                       'working_time',
+                      'replaced_part_list',
+                      'repairer_name',
+                      'state',
                       'replaced_part_list',
                     ])
                   }
@@ -470,12 +588,19 @@ const SingleRepair = () => {
               </Box>
             </Grid>
             {renderTimePicker()}
-            {renderSelect('État', 'state', repair.state || 'Non commencé', [
-              'Non commencé',
-              'En cours',
-              'Terminé',
-              'Hors service',
-            ])}
+            {renderSelect(
+              'État',
+              'state',
+              repair.state || 'Non commencé',
+              ['Non commencé', 'En cours', 'Terminé', 'Hors service'],
+              colorByState,
+            )}
+            {renderSelect(
+              'Réparateur',
+              'repairer_name',
+              repair.repairer_name || 'Non attribué',
+              repairers,
+            )}
             {renderMultiSelect(
               'Pièces remplacées',
               'replaced_part_list',
