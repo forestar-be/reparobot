@@ -27,6 +27,7 @@ interface MachineRepair {
   machine_type: string;
   repair_or_maintenance: string;
   createdAt: string;
+  repairer_name: string | null;
 }
 const rowHeight = 40;
 
@@ -121,6 +122,7 @@ const MachineRepairsTable: React.FC = () => {
         !params.value ? 'Non commencé' : params.value,
       cellStyle: (params: any) => ({
         backgroundColor: colorByState[params.value || 'Non commencé'],
+        color: 'black',
       }),
     },
     {
@@ -133,6 +135,15 @@ const MachineRepairsTable: React.FC = () => {
     {
       headerName: 'Type de machine',
       field: 'machine_type' as keyof MachineRepair,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Réparateur',
+      field: 'repairer_name' as keyof MachineRepair,
+      sortable: true,
+      filter: true,
+      valueFormatter: (params: any) => params.value || 'Non affecté',
     },
     {
       headerName: 'Prénom',
@@ -149,11 +160,6 @@ const MachineRepairsTable: React.FC = () => {
     {
       headerName: 'Téléphone',
       field: 'phone' as keyof MachineRepair,
-      filter: true,
-    },
-    {
-      headerName: 'Email',
-      field: 'email' as keyof MachineRepair,
       filter: true,
     },
     {

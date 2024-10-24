@@ -9,6 +9,8 @@ import {
   Typography,
   Modal,
   CircularProgress,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import formConfig from '../config/form.json';
 import '../styles/Form.css';
@@ -46,6 +48,14 @@ const DynamicForm = () => {
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    setFormData({
+      ...formData,
+      [name]: checked,
     });
   };
 
@@ -236,6 +246,21 @@ const DynamicForm = () => {
               </MenuItem>
             ))}
           </TextField>
+        );
+      case 'checkbox':
+        return (
+          <FormControlLabel
+            key={field.label}
+            label={field.label}
+            required={field.isRequired}
+            control={
+              <Checkbox
+                name={field.id}
+                onChange={handleCheckboxChange}
+                checked={formData[field.id] || false}
+              />
+            }
+          />
         );
       case 'file':
         return (

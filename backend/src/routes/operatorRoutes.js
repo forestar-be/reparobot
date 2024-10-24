@@ -65,6 +65,8 @@ router.post(
         repair_or_maintenance,
         robot_code,
         fault_description,
+        machine_brand,
+        warranty,
         signature, // Base64 string
       } = req.body;
 
@@ -77,6 +79,7 @@ router.post(
         machine_type,
         repair_or_maintenance,
         fault_description,
+        machine_brand,
         signature,
       ];
 
@@ -151,6 +154,8 @@ router.post(
           client_signature: signaturePath,
           image_path_list: [imagePath],
           bucket_name: bucketName,
+          machine_brand,
+          warranty: Boolean(warranty),
         },
       });
 

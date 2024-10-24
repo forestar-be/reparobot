@@ -43,6 +43,21 @@ export const fetchReplacedParts = async (token: string) => {
   return await response.json();
 };
 
+export const fetchRepairers = async (token: string) => {
+  const response = await fetch(`${API_URL}/supervisor/repairer_names`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 export const updateRepair = async (id: string, data: any) => {
   const response = await fetch(`${API_URL}/supervisor/machine-repairs/${id}`, {
     method: 'PATCH',
