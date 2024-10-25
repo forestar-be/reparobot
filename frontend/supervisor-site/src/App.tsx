@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import getTheme from './theme/theme';
 import ColorModeContext from './utils/ColorModeContext';
 import Layout from './layout/Layout';
@@ -12,6 +13,7 @@ import Login from './pages/Login';
 import AuthRoute from './components/AuthRoute';
 import AuthProvider from './hooks/AuthProvider';
 import SingleRepair from './pages/SingleRepair';
+import Settings from './pages/Settings';
 
 const defaultTheme = 'light';
 
@@ -51,11 +53,13 @@ const App = (): JSX.Element => {
           <BrowserRouter>
             <AuthProvider>
               <Layout>
+                <ToastContainer />
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route element={<AuthRoute />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/reparation/:id" element={<SingleRepair />} />
+                    <Route path="/parametres" element={<Settings />} />
                   </Route>
                 </Routes>
               </Layout>

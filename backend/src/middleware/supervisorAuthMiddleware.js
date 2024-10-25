@@ -3,9 +3,9 @@ const { verify } = require('jsonwebtoken');
 const SUPERVISOR_SECRET_KEY = process.env.OPERATOR_SECRET_KEY;
 
 function authenticateToken(req, res, next) {
-  // if (req.path === '/login') {
-  return next();
-  // }
+  if (req.path === '/login') {
+    return next();
+  }
 
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
