@@ -35,6 +35,7 @@ import { useTheme } from '@mui/material/styles';
 import { getKeys } from '../utils/common.utils';
 import Divider from '@mui/material/Divider';
 import _colorByState from '../config/color_state.json';
+import { toast } from 'react-toastify';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
@@ -206,12 +207,13 @@ const SingleRepair = () => {
     }, {});
 
     try {
-      await updateRepair(id!, updatedData);
+      await updateRepair(auth.token, id!, updatedData);
       // alert('Fiche mise à jour avec succès');
+      toast.success('Fiche mise à jour avec succès');
       setInitialRepair(repair);
     } catch (error) {
       console.error('Error updating repair:', error);
-      alert(
+      toast.error(
         "Une erreur s'est produite lors de la mise à jour de la réparation",
       );
     } finally {
@@ -360,6 +362,7 @@ const SingleRepair = () => {
               variant="subtitle1"
               sx={{
                 backgroundColor: colorByValue[value],
+                color: colorByValue[value] && 'black',
                 paddingLeft: colorByValue[value] && 2,
                 paddingRight: colorByValue[value] && 2,
               }}

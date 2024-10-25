@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -11,6 +11,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useTheme } from '@mui/material/styles';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ColorModeContext from '../utils/ColorModeContext';
 import headerData from '../config/header.json';
 import { Logo } from '../components/Logo';
@@ -81,7 +82,21 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
             }}
           ></Box>
           {auth.token && (
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <IconButton
+                component="a"
+                href={`/parametres`}
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  e.preventDefault();
+                  navigate(`/parametres`);
+                }}
+                aria-label="Paramètres"
+                color={theme.palette.mode === 'dark' ? 'warning' : 'inherit'}
+              >
+                <Tooltip title="Paramètres">
+                  <SettingsIcon fontSize="medium" />
+                </Tooltip>
+              </IconButton>
               <IconButton
                 onClick={auth.logOut}
                 aria-label="Déconnexion"
