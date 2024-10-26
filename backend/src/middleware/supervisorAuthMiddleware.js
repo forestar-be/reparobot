@@ -1,4 +1,5 @@
 const { verify } = require('jsonwebtoken');
+const logger = require('../config/logger');
 
 const SUPERVISOR_SECRET_KEY = process.env.OPERATOR_SECRET_KEY;
 
@@ -13,7 +14,10 @@ function authenticateToken(req, res, next) {
   if (token == null) return res.sendStatus(401);
 
   verify(token, SUPERVISOR_SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      logger.error(err);
+      return res.sendStatus(403);
+    }
     req.user = user;
     next();
   });
