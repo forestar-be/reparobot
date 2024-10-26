@@ -154,12 +154,14 @@ const EditUser = () => {
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <form onSubmit={handleSave}>
-          <DialogTitle>{selectedUser ? 'Edit User' : 'Add User'}</DialogTitle>
+          <DialogTitle>
+            {selectedUser ? 'Modifier' : 'Ajouter'} un utilisateur
+          </DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
               margin="dense"
-              label="Username"
+              label="Nom d'utilisateur"
               type="text"
               required
               fullWidth
@@ -169,7 +171,7 @@ const EditUser = () => {
             />
             <TextField
               margin="dense"
-              label="Password"
+              label="Mot de passe"
               type="password"
               required
               fullWidth
@@ -180,7 +182,7 @@ const EditUser = () => {
             <TextField
               select
               margin="dense"
-              label="Role"
+              label="Rôle"
               fullWidth
               value={role}
               required
@@ -193,11 +195,11 @@ const EditUser = () => {
             </TextField>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">
-              Cancel
+            <Button onClick={() => setOpen(false)} color="secondary">
+              Annuler
             </Button>
             <Button type="submit" color="primary">
-              Save
+              Sauvegarder
             </Button>
           </DialogActions>
         </form>
