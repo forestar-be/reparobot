@@ -52,7 +52,7 @@ interface MachineRepair {
   fault_description: string;
   working_time_hour: number | null;
   working_time_minute: number | null;
-  replaced_part_list: string[];
+  replaced_part_list: { name: string; price: number }[];
   state: string | null;
   createdAt: string;
   imageUrls: string[];
@@ -61,6 +61,13 @@ interface MachineRepair {
   warranty?: boolean;
   repairer_name: string | null;
 }
+
+export const replacedPartToString = (replacedPart: {
+  name: string;
+  price: number;
+}) => {
+  return `${replacedPart.name} - ${replacedPart.price}€`;
+};
 
 const SingleRepair = () => {
   const theme = useTheme();
@@ -77,7 +84,9 @@ const SingleRepair = () => {
   }>({});
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [replacedParts, setReplacedParts] = useState<string[]>([]);
+  const [replacedParts, setReplacedParts] = useState<
+    { name: string; price: number }[]
+  >([]);
   const [repairers, setRepairers] = useState<string[]>([]);
 
   useEffect(() => {
@@ -151,10 +160,17 @@ const SingleRepair = () => {
     } as MachineRepair);
   };
 
-  const handleMultipleSelectChange = (event: SelectChangeEvent<String[]>) => {
+  const handleReplacedPartSelectChange = (
+    event: SelectChangeEvent<String[]>,
+  ) => {
     setRepair({
       ...repair,
-      [event.target.name]: event.target.value,
+      [event.target.name]: (event.target.value as string[]).map(
+        (partString) => {
+          const [name, price] = partString.split(' - ');
+          return { name, price: Number(price.replace('€', '')) };
+        },
+      ),
     } as MachineRepair);
   };
 
@@ -375,11 +391,11 @@ const SingleRepair = () => {
     );
   };
 
-  const renderMultiSelect = (
+  const renderReplacedPartSelect = (
     label: string,
     name: string,
-    values: string[],
-    possibleValues: string[],
+    values: { name: string; price: number }[],
+    possibleValues: { name: string; price: number }[],
   ) => {
     return (
       <Grid item xs={12}>
@@ -390,9 +406,9 @@ const SingleRepair = () => {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={values}
+              value={values.map(replacedPartToString)}
               name={name}
-              onChange={handleMultipleSelectChange}
+              onChange={handleReplacedPartSelectChange}
               input={<OutlinedInput id="select-multiple-chip" label={label} />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -402,12 +418,17 @@ const SingleRepair = () => {
                 </Box>
               )}
             >
-              {possibleValues.map((val) => (
-                <MenuItem key={val} value={val}>
-                  <Checkbox checked={values.includes(val)} />
-                  <ListItemText primary={val} />
-                </MenuItem>
-              ))}
+              {possibleValues.map((val) => {
+                const replacedPartString = replacedPartToString(val);
+                return (
+                  <MenuItem key={replacedPartString} value={replacedPartString}>
+                    <Checkbox
+                      checked={values.some((v) => v.name === val.name)}
+                    />
+                    <ListItemText primary={replacedPartString} />
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         ) : (
@@ -419,7 +440,9 @@ const SingleRepair = () => {
           >
             <Typography variant="subtitle1">{label} :</Typography>
             <Typography variant="subtitle1">
-              {values.length ? values.join(', ') : 'Aucune'}
+              {values.length
+                ? values.map(replacedPartToString).join(', ')
+                : 'Aucune'}
             </Typography>
           </Box>
         )}
@@ -604,12 +627,22 @@ const SingleRepair = () => {
               repair.repairer_name || 'Non attribué',
               repairers,
             )}
-            {renderMultiSelect(
+            {renderReplacedPartSelect(
               'Pièces remplacées',
               'replaced_part_list',
               repair.replaced_part_list || [],
               replacedParts,
             )}
+            <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
+              <Typography variant="subtitle1">Total pièces :</Typography>
+              <Typography variant="subtitle1">
+                {repair.replaced_part_list.reduce(
+                  (acc, part) => acc + part.price,
+                  0,
+                )}
+                €
+              </Typography>
+            </Box>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h6" gutterBottom>

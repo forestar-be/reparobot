@@ -86,6 +86,9 @@ router.get(
     const { id } = req.params;
     const machineRepair = await prisma.machineRepair.findUnique({
       where: { id: parseInt(id) },
+      include: {
+        replaced_part_list: true,
+      },
     });
 
     if (!machineRepair) {
@@ -128,7 +131,18 @@ router.patch(
 
     const updatedMachineRepair = await prisma.machineRepair.update({
       where: { id: parseInt(id) },
-      data,
+      data: {
+        ...data,
+        ...(data.replaced_part_list
+          ? {
+              replaced_part_list: {
+                set: data.replaced_part_list.map((part) => ({
+                  name: part.name,
+                })),
+              },
+            }
+          : {}),
+      },
     });
 
     res.json(updatedMachineRepair);
@@ -171,7 +185,7 @@ router.get(
   '/replaced-parts',
   asyncHandler(async (req, res) => {
     const replacedParts = await prisma.replacedParts.findMany();
-    res.json(replacedParts.map((part) => part.name));
+    res.json(replacedParts);
   }),
 );
 
@@ -179,11 +193,24 @@ router.put(
   '/replaced-parts',
   asyncHandler(async (req, res) => {
     const newReplacedParts = req.body;
+    // check if newReplacedParts is array of object if key name string and price float
+    if (
+      !Array.isArray(newReplacedParts) ||
+      !newReplacedParts.every(
+        (part) =>
+          typeof part.name === 'string' && typeof part.price === 'number',
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'Veuillez fournir une liste valide de pièces.' });
+    }
+
     // drop all replaced parts
     await prisma.replacedParts.deleteMany();
     // create new replaced parts
     const replacedParts = await prisma.replacedParts.createMany({
-      data: newReplacedParts.map((part) => ({ name: part })),
+      data: newReplacedParts,
     });
     res.json(replacedParts);
   }),
