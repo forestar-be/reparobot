@@ -30,7 +30,9 @@ export const fetchRepairById = async (id: string, token: string) => {
   return await response.json();
 };
 
-export const fetchReplacedParts = async (token: string) => {
+export const fetchReplacedParts = async (
+  token: string,
+): Promise<{ name: string; price: number }[]> => {
   const response = await fetch(`${API_URL}/supervisor/replaced-parts`, {
     method: 'GET',
     headers: {
@@ -45,7 +47,10 @@ export const fetchReplacedParts = async (token: string) => {
   return await response.json();
 };
 
-export const putReplacedParts = async (token: string, data: string[]) => {
+export const putReplacedParts = async (
+  token: string,
+  data: { name: string; price: number }[],
+) => {
   const response = await fetch(`${API_URL}/supervisor/replaced-parts`, {
     method: 'PUT',
     headers: {

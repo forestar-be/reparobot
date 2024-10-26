@@ -8,7 +8,7 @@ generator client {
 }
 
 model MachineRepair {
-  id                    Int      @id @default(autoincrement())
+  id                    Int             @id @default(autoincrement())
   first_name            String
   last_name             String
   address               String
@@ -25,10 +25,10 @@ model MachineRepair {
   working_time_hour     Int?
   working_time_minute   Int?
   repairer_name         String? // Name of the repairer
-  replaced_part_list    String[] // List of replaced parts
+  replaced_part_list    ReplacedParts[] @relation("MachineRepairReplacedParts")
   state                 String? // Current state of the repair (e.g., 'pending', 'in-progress', 'completed')
   image_path_list       String[] // List of URLs or paths to additional files in Supabase storage
-  createdAt             DateTime @default(now())
+  createdAt             DateTime        @default(now())
 }
 
 model User {
@@ -45,7 +45,9 @@ enum Role {
 }
 
 model ReplacedParts {
-  name String @id @unique
+  name           String          @id @unique
+  price          Float           @default(0)
+  machineRepairs MachineRepair[] @relation("MachineRepairReplacedParts")
 }
 
 model Repairer {

@@ -16,13 +16,16 @@ import {
   AttachFile as AttachFileIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
+import { replacedPartToString } from '../../pages/SingleRepair';
 
 const EditRepairedPart = () => {
   const auth = useAuth();
-  const [replacedParts, setReplacedParts] = useState<string[]>([]);
-  const [initialReplacedParts, setInitialReplacedParts] = useState<string[]>(
-    [],
-  );
+  const [replacedParts, setReplacedParts] = useState<
+    { name: string; price: number }[]
+  >([]);
+  const [initialReplacedParts, setInitialReplacedParts] = useState<
+    { name: string; price: number }[]
+  >([]);
   const [file, setFile] = useState<File | null>(null);
 
   const fetchData = async () => {
@@ -48,13 +51,23 @@ const EditRepairedPart = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = XLSX.read(data);
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json<string[]>(worksheet, {
-          header: 1,
-        });
-        const parts = json.flat();
+        const json = XLSX.utils.sheet_to_json<{ Nom: string; Prix: number }>(
+          worksheet,
+        );
+        if (!json[0]?.Nom || !json[0]?.Prix) {
+          toast.error(
+            'Le fichier Excel doit contenir les colonnes Nom et Prix',
+          );
+          setFile(null);
+          return;
+        }
+        const parts = json.map((row) => ({
+          name: row.Nom,
+          price: row.Prix,
+        }));
         setReplacedParts(parts);
       };
       reader.readAsArrayBuffer(newFile);
@@ -99,18 +112,23 @@ const EditRepairedPart = () => {
         )}
       </Box>
       <List>
-        {replacedParts.map((part, index) => (
-          <ListItem
-            key={part}
-            sx={{
-              borderTop: '1px solid #ccc',
-              borderBottom:
-                index === replacedParts.length - 1 ? '1px solid #ccc' : 'none',
-            }}
-          >
-            <ListItemText primary={part} />
-          </ListItem>
-        ))}
+        {replacedParts.map((part, index) => {
+          const partStr = replacedPartToString(part);
+          return (
+            <ListItem
+              key={partStr}
+              sx={{
+                borderTop: '1px solid #ccc',
+                borderBottom:
+                  index === replacedParts.length - 1
+                    ? '1px solid #ccc'
+                    : 'none',
+              }}
+            >
+              <ListItemText primary={partStr} />
+            </ListItem>
+          );
+        })}
       </List>
     </div>
   );
