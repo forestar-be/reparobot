@@ -149,6 +149,26 @@ router.patch(
   }),
 );
 
+router.delete(
+  '/machine-repairs/:id',
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const machineRepair = await prisma.machineRepair.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!machineRepair) {
+      return res.status(404).json({ message: 'Réparation non trouvée.' });
+    }
+
+    await prisma.machineRepair.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.json(machineRepair);
+  }),
+);
+
 router.post(
   '/login',
   asyncHandler(async (req, res) => {
@@ -221,6 +241,64 @@ router.get(
   asyncHandler(async (req, res) => {
     const repairerNames = await prisma.repairer.findMany();
     res.json(repairerNames.map((repairer) => repairer.name));
+  }),
+);
+
+router.put(
+  '/repairer_names',
+  asyncHandler(async (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'Veuillez fournir un nom.' });
+    }
+    const repairer = await prisma.repairer.create({ data: { name } });
+    res.json(repairer);
+  }),
+);
+
+router.delete(
+  '/repairer_names/:name',
+  asyncHandler(async (req, res) => {
+    const { name } = req.params;
+    const repairer = await prisma.repairer.findUnique({ where: { name } });
+    if (!repairer) {
+      return res.status(404).json({ message: 'Réparateur non trouvé.' });
+    }
+    await prisma.repairer.delete({ where: { name } });
+    res.json(repairer);
+  }),
+);
+
+router.get(
+  '/brands',
+  asyncHandler(async (req, res) => {
+    const brands = await prisma.brand.findMany();
+    res.json(brands.map((brand) => brand.name));
+  }),
+);
+
+router.put(
+  '/brands',
+  asyncHandler(async (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'Veuillez fournir un nom.' });
+    }
+    const brand = await prisma.brand.create({ data: { name } });
+    res.json(brand);
+  }),
+);
+
+router.delete(
+  '/brands/:name',
+  asyncHandler(async (req, res) => {
+    const { name } = req.params;
+    const brand = await prisma.brand.findUnique({ where: { name } });
+    if (!brand) {
+      return res.status(404).json({ message: 'Marque non trouvée.' });
+    }
+    await prisma.brand.delete({ where: { name } });
+    res.json(brand);
   }),
 );
 

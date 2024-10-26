@@ -24,7 +24,11 @@ model MachineRepair {
   bucket_name           String // Supabase storage bucket name
   working_time_hour     Int?
   working_time_minute   Int?
-  repairer_name         String? // Name of the repairer
+  repairer_id           Repairer?       @relation("MachineRepairRepairer", fields: [repairer_name], references: [name], onDelete: SetNull)
+  repairer_name         String?
+  brand_id              Brand?          @relation("MachineRepairBrand", fields: [brand_name], references: [name], onDelete: SetNull)
+  brand_name            String?
+  remark                String?
   replaced_part_list    ReplacedParts[] @relation("MachineRepairReplacedParts")
   state                 String? // Current state of the repair (e.g., 'pending', 'in-progress', 'completed')
   image_path_list       String[] // List of URLs or paths to additional files in Supabase storage
@@ -51,7 +55,13 @@ model ReplacedParts {
 }
 
 model Repairer {
-  name String @id @unique
+  name           String          @id @unique
+  machineRepairs MachineRepair[] @relation("MachineRepairRepairer")
+}
+
+model Brand {
+  name           String          @id @unique
+  machineRepairs MachineRepair[] @relation("MachineRepairBrand")
 }
 
 // command to add migration:

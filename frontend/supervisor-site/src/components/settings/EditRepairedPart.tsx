@@ -55,18 +55,18 @@ const EditRepairedPart = () => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const json = XLSX.utils.sheet_to_json<{
-          Descriptif: string;
+          Nom: string;
           Prix: number;
         }>(worksheet);
-        if (!json[0]?.Descriptif || !json[0]?.Prix) {
+        if (!json[0]?.Nom || !json[0]?.Prix) {
           toast.error(
-            'Le fichier Excel doit contenir les colonnes "Descriptif" et "Prix"',
+            'Le fichier Excel doit contenir les colonnes "Nom" et "Prix"',
           );
           setFile(null);
           return;
         }
         const parts = json.map((row) => ({
-          name: row.Descriptif,
+          name: row.Nom,
           price: row.Prix,
         }));
         setReplacedParts(parts);
