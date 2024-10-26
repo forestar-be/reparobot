@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -20,9 +20,20 @@ import {
   ListItemText,
   FormControlLabel,
   CircularProgress,
+  SxProps,
+  Theme,
+  Tooltip,
 } from '@mui/material';
-import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 import {
+  Edit as EditIcon,
+  Save as SaveIcon,
+  Delete as DeleteIcon,
+  FileDownload as FileDownloadIcon,
+  AttachEmail as AttachEmailIcon,
+} from '@mui/icons-material';
+import {
+  deleteRepair,
+  fetchBrands,
   fetchRepairById,
   fetchRepairers,
   fetchReplacedParts,
@@ -36,6 +47,7 @@ import { getKeys } from '../utils/common.utils';
 import Divider from '@mui/material/Divider';
 import _colorByState from '../config/color_state.json';
 import { toast } from 'react-toastify';
+import RepairField from '../components/repair/RepairField';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
@@ -57,9 +69,10 @@ interface MachineRepair {
   createdAt: string;
   imageUrls: string[];
   signatureUrl: string;
-  machine_brand: string;
+  brand_name: string;
   warranty?: boolean;
   repairer_name: string | null;
+  remark: string | null;
 }
 
 export const replacedPartToString = (replacedPart: {
@@ -71,6 +84,7 @@ export const replacedPartToString = (replacedPart: {
 
 const SingleRepair = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const auth = useAuth();
   const { id } = useParams<{ id: string }>();
   const [repair, setRepair] = useState<null | MachineRepair>(null);
@@ -87,6 +101,7 @@ const SingleRepair = () => {
   const [replacedParts, setReplacedParts] = useState<
     { name: string; price: number }[]
   >([]);
+  const [brands, setBrands] = useState<string[]>([]);
   const [repairers, setRepairers] = useState<string[]>([]);
 
   useEffect(() => {
@@ -115,6 +130,20 @@ const SingleRepair = () => {
       }
     };
     fetchRepairersData();
+
+    const fetchBrandsData = async () => {
+      try {
+        const brands = await fetchBrands(auth.token);
+        setBrands(brands);
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+        alert(
+          `Une erreur s'est produite lors de la récupération des données ${error}`,
+        );
+      }
+    };
+
+    fetchBrandsData();
   }, []);
 
   useEffect(() => {
@@ -163,14 +192,20 @@ const SingleRepair = () => {
   const handleReplacedPartSelectChange = (
     event: SelectChangeEvent<String[]>,
   ) => {
+    const newReplacedParts = Array.isArray(event.target.value)
+      ? event.target.value.map((partName) => {
+          const part = replacedParts.find((p) => p.name === partName);
+          if (!part) {
+            toast.error(`Pièce ${partName} non trouvée`);
+            throw new Error(`Pièce ${partName} non trouvée`);
+          }
+          return part;
+        })
+      : [];
+
     setRepair({
       ...repair,
-      [event.target.name]: (event.target.value as string[]).map(
-        (partString) => {
-          const [name, price] = partString.split(' - ');
-          return { name, price: Number(price.replace('€', '')) };
-        },
-      ),
+      [event.target.name]: newReplacedParts,
     } as MachineRepair);
   };
 
@@ -188,21 +223,52 @@ const SingleRepair = () => {
     }
   };
 
-  const toggleEditableField = (field: string) => {
-    setEditableFields({ ...editableFields, [field]: !editableFields[field] });
-  };
-
   const toggleEditableSection = (section: string, fields: string[]) => {
     const isSectionEditable = !editableSections[section];
     setEditableSections({ ...editableSections, [section]: isSectionEditable });
     fields.forEach((field) => {
       setEditableFields((prev) => ({ ...prev, [field]: isSectionEditable }));
     });
+    const hasChanges = JSON.stringify(repair) !== JSON.stringify(initialRepair);
+    if (hasChanges && !isSectionEditable) {
+      // save action
+      handleUpdate();
+    }
   };
 
   const closeAllEditableSections = () => {
     setEditableSections({});
     setEditableFields({});
+  };
+
+  const handleDelete = async () => {
+    if (!repair || !id) {
+      console.error('No repair data or id found');
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      'Êtes-vous sûr de vouloir supprimer cette fiche ? Cette action est irréversible',
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await deleteRepair(auth.token, id);
+      // redirect to home
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting repair:', error);
+      toast.error(
+        "Une erreur s'est produite lors de la suppression de la réparation",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdate = async () => {
@@ -238,8 +304,6 @@ const SingleRepair = () => {
     }
   };
 
-  const hasChanges = JSON.stringify(repair) !== JSON.stringify(initialRepair);
-
   const renderCheckbox = (label: string, name: string, value: boolean) => (
     <Grid item xs={6}>
       {editableFields[name] ? (
@@ -268,34 +332,14 @@ const SingleRepair = () => {
     value: string,
     isMultiline: boolean = false,
   ) => (
-    <Grid item xs={isMultiline ? 12 : 6}>
-      {editableFields[name] ? (
-        <TextField
-          sx={{ margin: '5px 0' }}
-          fullWidth
-          label={label}
-          name={name}
-          value={value || ''}
-          onChange={handleChange}
-          multiline={isMultiline}
-          rows={isMultiline ? 4 : 1}
-        />
-      ) : (
-        <Box
-          display={'flex'}
-          flexDirection={isMultiline ? 'column' : 'row'}
-          gap={isMultiline ? '0' : '10px'}
-          margin={'5px 0'}
-        >
-          <Typography variant="subtitle1" noWrap>
-            {label} :
-          </Typography>
-          <Typography variant="subtitle1" sx={{ overflowWrap: 'break-word' }}>
-            {value || ''}
-          </Typography>
-        </Box>
-      )}
-    </Grid>
+    <RepairField
+      label={label}
+      name={name}
+      value={value}
+      isMultiline={isMultiline}
+      editableFields={editableFields}
+      handleChange={handleChange}
+    />
   );
 
   const renderTimePicker = () => {
@@ -348,12 +392,14 @@ const SingleRepair = () => {
     name: string,
     value: string,
     possibleValues: string[],
-    colorByValue: { [key: string]: string } = {},
+    sxFormControl: SxProps<Theme>,
+    gridSize: 6 | 12,
+    colorByValue: { [p: string]: string } = {},
   ) => {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={gridSize}>
         {editableFields[name] ? (
-          <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
+          <FormControl sx={sxFormControl}>
             <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
@@ -406,7 +452,7 @@ const SingleRepair = () => {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={values.map(replacedPartToString)}
+              value={values.map((val) => val.name)}
               name={name}
               onChange={handleReplacedPartSelectChange}
               input={<OutlinedInput id="select-multiple-chip" label={label} />}
@@ -421,7 +467,7 @@ const SingleRepair = () => {
               {possibleValues.map((val) => {
                 const replacedPartString = replacedPartToString(val);
                 return (
-                  <MenuItem key={replacedPartString} value={replacedPartString}>
+                  <MenuItem key={val.name} value={val.name}>
                     <Checkbox
                       checked={values.some((v) => v.name === val.name)}
                     />
@@ -476,12 +522,38 @@ const SingleRepair = () => {
             Fiche n°{id}
           </Typography>
         </Grid>
-        <Grid item xs={6} display={'flex'} flexDirection={'row-reverse'}>
-          {hasChanges && (
-            <Button variant="contained" onClick={handleUpdate}>
-              Sauvegarder les modifications
-            </Button>
-          )}
+        <Grid
+          item
+          xs={6}
+          display={'flex'}
+          flexDirection={'row-reverse'}
+          gap={4}
+        >
+          <Button
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDelete}
+          >
+            Supprimer
+          </Button>
+          <Button
+            color="secondary"
+            startIcon={<AttachEmailIcon />}
+            onClick={() => {
+              // Add your send email logic here
+            }}
+          >
+            Envoyer par email
+          </Button>
+          <Button
+            color="primary"
+            startIcon={<FileDownloadIcon />}
+            onClick={() => {
+              // Add your send email logic here
+            }}
+          >
+            Télécharger
+          </Button>
         </Grid>
       </Grid>
       {repair && (
@@ -497,7 +569,7 @@ const SingleRepair = () => {
                       'repair_or_maintenance',
                       'fault_description',
                       'robot_code',
-                      'machine_brand',
+                      'brand_name',
                       'warranty',
                     ])
                   }
@@ -523,15 +595,22 @@ const SingleRepair = () => {
               )}
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
-              {renderField('Marque', 'machine_brand', repair.machine_brand)}
-              {renderCheckbox('Garantie', 'warranty', repair.warranty ?? false)}
-            </Grid>
-            <Grid item xs={12} display={'flex'} gap={'10px'}>
+              {renderSelect(
+                'Marque',
+                'brand_name',
+                repair.brand_name,
+                brands,
+                { width: '100%', margin: '5px 0' },
+                6,
+              )}
               {renderField(
                 'Code du robot',
                 'robot_code',
                 repair.robot_code || '',
               )}
+            </Grid>
+            <Grid item xs={12} display={'flex'} gap={'10px'}>
+              {renderCheckbox('Garantie', 'warranty', repair.warranty ?? false)}
             </Grid>
             <Grid item xs={12} display={'flex'}>
               {renderField(
@@ -601,7 +680,7 @@ const SingleRepair = () => {
                       'replaced_part_list',
                       'repairer_name',
                       'state',
-                      'replaced_part_list',
+                      'remark',
                     ])
                   }
                 >
@@ -619,6 +698,8 @@ const SingleRepair = () => {
               'state',
               repair.state || 'Non commencé',
               ['Non commencé', 'En cours', 'Terminé', 'Hors service'],
+              { marginTop: 2, marginBottom: 1, width: '80%' },
+              12,
               colorByState,
             )}
             {renderSelect(
@@ -626,22 +707,34 @@ const SingleRepair = () => {
               'repairer_name',
               repair.repairer_name || 'Non attribué',
               repairers,
+              { marginTop: 2, marginBottom: 1, width: '80%' },
+              12,
             )}
-            {renderReplacedPartSelect(
-              'Pièces remplacées',
-              'replaced_part_list',
-              repair.replaced_part_list || [],
-              replacedParts,
-            )}
-            <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
-              <Typography variant="subtitle1">Total pièces :</Typography>
-              <Typography variant="subtitle1">
-                {repair.replaced_part_list.reduce(
-                  (acc, part) => acc + part.price,
-                  0,
-                )}
-                €
-              </Typography>
+            <Box width={'80%'}>
+              {renderField(
+                'Remarques atelier',
+                'remark',
+                repair.remark ?? '',
+                true,
+              )}
+            </Box>
+            <Box margin={'20px 0'}>
+              {renderReplacedPartSelect(
+                'Pièces remplacées',
+                'replaced_part_list',
+                repair.replaced_part_list || [],
+                replacedParts,
+              )}
+              <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
+                <Typography variant="subtitle1">Total pièces :</Typography>
+                <Typography variant="subtitle1">
+                  {repair.replaced_part_list.reduce(
+                    (acc, part) => acc + part.price,
+                    0,
+                  )}
+                  €
+                </Typography>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={6}>

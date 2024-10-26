@@ -1,29 +1,16 @@
-import {
-  Box,
-  TextField,
-  Button,
-  Grid,
-  Typography,
-  IconButton,
-  Modal,
-  ImageList,
-  ImageListItem,
-  Select,
-  OutlinedInput,
-  Chip,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Checkbox,
-  ListItemText,
-  FormControlLabel,
-  CircularProgress,
-  Tabs,
-  Tab,
-} from '@mui/material';
+import { Box, Tabs, Tab } from '@mui/material';
 import React from 'react';
 import EditRepairedPart from '../components/settings/EditRepairedPart';
 import EditUser from '../components/settings/EditUser';
+import EditEntity from '../components/settings/EditEntity';
+import {
+  addBrand,
+  addRepairer,
+  deleteBrand,
+  deleteRepairer,
+  fetchBrands,
+  fetchRepairers,
+} from '../utils/api';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,7 +56,9 @@ const Settings = (): JSX.Element => {
           aria-label="Onglets des paramètres"
         >
           <Tab label="Pièces à remplacer" {...a11yProps(0)} />
-          <Tab label="Gestion des utilisateurs" {...a11yProps(1)} />
+          <Tab label="Utilisateurs" {...a11yProps(1)} />
+          <Tab label="Réparateur" {...a11yProps(2)} />
+          <Tab label="Marques" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -77,6 +66,22 @@ const Settings = (): JSX.Element => {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <EditUser />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <EditEntity
+          entityName="Réparateur"
+          fetchEntities={fetchRepairers}
+          addEntity={addRepairer}
+          deleteEntity={deleteRepairer}
+        />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <EditEntity
+          entityName="Marque"
+          fetchEntities={fetchBrands}
+          addEntity={addBrand}
+          deleteEntity={deleteBrand}
+        />
       </CustomTabPanel>
     </Box>
   );

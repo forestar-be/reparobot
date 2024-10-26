@@ -103,7 +103,12 @@ const EditUser = () => {
 
   const columns: any = [
     { headerName: 'Utilisateur', field: 'username' },
-    { headerName: 'Rôle', field: 'role' },
+    {
+      headerName: 'Rôle',
+      field: 'role',
+      valueFormatter: (params: any) =>
+        params.value === 'OPERATOR' ? 'OPERATEUR' : 'SUPERVISEUR',
+    },
     {
       headerName: 'Actions',
       field: 'id',
@@ -119,7 +124,7 @@ const EditUser = () => {
           </Button>
           <Button
             variant="contained"
-            color="secondary"
+            color="error"
             onClick={() => handleDeleteUser(params.data)}
           >
             Supprimer
