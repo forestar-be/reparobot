@@ -103,7 +103,7 @@ const EditRepairedPart = () => {
           InputProps={{
             startAdornment: <AttachFileIcon />,
           }}
-          inputProps={{ accept: '.xlsx, .xls' }}
+          inputProps={{ accept: '.xlsx, .xls, .csv' }}
           sx={{ margin: '16px 0' }}
         />
         {isModified && (
