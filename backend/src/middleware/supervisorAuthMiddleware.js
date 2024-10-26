@@ -1,7 +1,7 @@
 const { verify } = require('jsonwebtoken');
 const logger = require('../config/logger');
 
-const SUPERVISOR_SECRET_KEY = process.env.OPERATOR_SECRET_KEY;
+const SUPERVISOR_SECRET_KEY = process.env.SUPERVISOR_SECRET_KEY;
 
 function authenticateToken(req, res, next) {
   if (req.path === '/login') {
