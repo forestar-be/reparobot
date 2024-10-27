@@ -2,34 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
-  TextField,
   Button,
+  Checkbox,
+  Chip,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
   Grid,
-  Typography,
   IconButton,
-  Modal,
   ImageList,
   ImageListItem,
-  Select,
-  OutlinedInput,
-  Chip,
-  MenuItem,
-  FormControl,
   InputLabel,
-  Checkbox,
   ListItemText,
-  FormControlLabel,
-  CircularProgress,
+  MenuItem,
+  Modal,
+  OutlinedInput,
+  Select,
   SxProps,
+  TextField,
   Theme,
-  Tooltip,
+  Typography,
 } from '@mui/material';
 import {
-  Edit as EditIcon,
-  Save as SaveIcon,
-  Delete as DeleteIcon,
-  FileDownload as FileDownloadIcon,
   AttachEmail as AttachEmailIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  FileDownload as FileDownloadIcon,
+  Save as SaveIcon,
 } from '@mui/icons-material';
 import {
   deleteRepair,
@@ -37,6 +36,7 @@ import {
   fetchRepairById,
   fetchRepairers,
   fetchReplacedParts,
+  sendEmailApi,
   updateRepair,
 } from '../utils/api';
 import { useAuth } from '../hooks/AuthProvider';
@@ -48,6 +48,8 @@ import Divider from '@mui/material/Divider';
 import _colorByState from '../config/color_state.json';
 import { toast } from 'react-toastify';
 import RepairField from '../components/repair/RepairField';
+import ReactPDF from '@react-pdf/renderer';
+import MyDocument from '../components/repair/Document';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
@@ -82,6 +84,33 @@ export const replacedPartToString = (replacedPart: {
   return `${replacedPart.name} - ${replacedPart.price}€`;
 };
 
+const getPdfDocumentProps = (repair: MachineRepair) => {
+  return (
+    <MyDocument
+      dateDuDepot={repair.createdAt}
+      gSMClient={repair.phone}
+      nom={`${repair.first_name} ${repair.last_name}`}
+      code={repair.id.toString()}
+      type={repair.machine_type}
+      codeRobot={repair.robot_code}
+      modele={repair.brand_name}
+      typeReparation={repair.repair_or_maintenance}
+      avecGarantie={repair.warranty ? 'Oui' : 'Non'}
+      remarques={repair.fault_description}
+      prix={
+        repair.replaced_part_list
+          .reduce((acc, part) => acc + part.price, 0)
+          .toString() + '€'
+      }
+      tempsPasse={`${repair.working_time_hour ?? 0}h ${repair.working_time_minute ?? 0}m`}
+      piecesRemplacees={repair.replaced_part_list
+        .map(replacedPartToString)
+        .join(', ')}
+      travailEffectue={repair.remark ?? ''}
+    />
+  );
+};
+
 const SingleRepair = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -90,6 +119,7 @@ const SingleRepair = () => {
   const [repair, setRepair] = useState<null | MachineRepair>(null);
   const [initialRepair, setInitialRepair] = useState<null | any>(null);
   const [loading, setLoading] = useState(true);
+  const [isLoadingSendEmail, setIsLoadingSendEmail] = useState(false);
   const [editableFields, setEditableFields] = useState<{
     [key: string]: boolean;
   }>({});
@@ -103,6 +133,9 @@ const SingleRepair = () => {
   >([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [repairers, setRepairers] = useState<string[]>([]);
+  const [instance, updateInstance] = ReactPDF.usePDF({
+    document: undefined,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -167,6 +200,12 @@ const SingleRepair = () => {
     };
     fetchData();
   }, [id, auth.token]);
+
+  useEffect(() => {
+    if (repair) {
+      updateInstance(getPdfDocumentProps(repair));
+    }
+  }, [repair]);
 
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -301,6 +340,28 @@ const SingleRepair = () => {
     } finally {
       setLoading(false);
       closeAllEditableSections();
+    }
+  };
+
+  const sendEmail = async () => {
+    setIsLoadingSendEmail(true);
+    try {
+      // send pdf to email api
+      const pdfBlob = instance.blob;
+      if (!pdfBlob) {
+        console.error('No pdf blob found');
+        toast.error("Une erreur s'est produite lors de la création du PDF");
+        return;
+      }
+      const formData = new FormData();
+      formData.append('attachment', pdfBlob, `fiche_reparation_${id}.pdf`);
+      await sendEmailApi(auth.token, id!, formData);
+      toast.success('Email envoyé avec succès');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error("Une erreur s'est produite lors de l'envoi de l'email");
+    } finally {
+      setIsLoadingSendEmail(false);
     }
   };
 
@@ -539,18 +600,21 @@ const SingleRepair = () => {
           <Button
             color="secondary"
             startIcon={<AttachEmailIcon />}
-            onClick={() => {
-              // Add your send email logic here
-            }}
+            onClick={sendEmail}
+            disabled={isLoadingSendEmail}
           >
-            Envoyer par email
+            {isLoadingSendEmail ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Envoyer par email'
+            )}
           </Button>
           <Button
             color="primary"
             startIcon={<FileDownloadIcon />}
-            onClick={() => {
-              // Add your send email logic here
-            }}
+            component="a"
+            href={instance.url ?? undefined}
+            download={`fiche_reparation_${id}.pdf`}
           >
             Télécharger
           </Button>

@@ -260,3 +260,26 @@ export const deleteRepair = async (token: string, id: string) => {
 
   return await response.json();
 };
+
+export const sendEmailApi = async (
+  token: string,
+  id: number | string,
+  data: FormData,
+) => {
+  const response = await fetch(
+    `${API_URL}/supervisor/machine-repairs/email/${id}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
