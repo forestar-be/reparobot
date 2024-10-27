@@ -10,6 +10,7 @@ const logger = require('../config/logger');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const asyncHandler = require('../helper/asyncHandler');
+const { sendEmail } = require('../helper/mailer');
 
 const SUPERVISOR_SECRET_KEY = process.env.SUPERVISOR_SECRET_KEY;
 
@@ -369,6 +370,45 @@ router.put(
       data: { username, password: hashedPassword, role },
     });
     res.json(newUser);
+  }),
+);
+
+router.put(
+  '/machine-repairs/email/:id',
+  upload.single('attachment'),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const machineRepair = await prisma.machineRepair.findUnique({
+      where: { id: parseInt(id) },
+      select: { repair_or_maintenance: true, email: true },
+    });
+
+    if (!machineRepair) {
+      return res.status(404).json({ message: 'Réparation non trouvée.' });
+    }
+
+    const { repair_or_maintenance, email } = machineRepair;
+    const type = String(repair_or_maintenance).toLowerCase();
+    const options = {
+      to: email,
+      subject: `Bon de ${type} - ${id}`,
+      html: `Bonjour,<br>Vous trouverez ci-joint le bon pour ${type} n°${id}.
+        <br><br>En vous remerciant,
+        <br>Cordialement.
+        <br><br>L'équipe de Forestar.`,
+      attachments: [
+        {
+          filename: `bon_de_${type}_${id}.pdf`,
+          content: req.file.buffer.toString('base64'),
+          encoding: 'base64',
+        },
+      ],
+      replyTo: process.env.REPLY_TO,
+    };
+
+    await sendEmail(options);
+
+    res.json({ message: 'Email envoyé avec succès.' });
   }),
 );
 

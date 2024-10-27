@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const logger = require('../config/logger');
+const { sendEmail } = require('../helper/mailer');
 
 const router = express.Router();
 
@@ -22,24 +23,14 @@ router.post('/submit-form', async (req, res) => {
     }
     emailContent += '</ul>';
 
-    const emailData = {
-      sender: { name: process.env.SENDER, email: process.env.SENDER_EMAIL },
-      to: [{ email: process.env.TO_EMAIL, name: process.env.TO }],
+    const options = {
+      to: process.env.TO_EMAIL,
       subject: 'Nouvelle demande de service',
-      htmlContent: emailContent,
+      html: emailContent,
+      replyTo: process.env.REPLY_TO,
     };
 
-    const response = await axios.post(
-      'https://api.brevo.com/v3/smtp/email',
-      emailData,
-      {
-        headers: {
-          accept: 'application/json',
-          'api-key': process.env.API_KEY_BREVO,
-          'content-type': 'application/json',
-        },
-      },
-    );
+    await sendEmail(options);
 
     logger.info(`Email successfully sent to admin for form from ${req.ip}`);
     res.status(200).send('Form received and email sent.');
