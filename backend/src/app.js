@@ -57,12 +57,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Set up Multer for handling file uploads
-const upload = multer({
-  storage: multer.memoryStorage(), // Store file in memory
-  limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size
-});
-
 // Routes
 app.use('/operator', operatorAuthMiddleware, operatorRoutes);
 app.use('/supervisor', supervisorAuthMiddleware, supervisorRoutes);
@@ -77,6 +71,6 @@ app.use((err, req, res, next) => {
 // Démarrage du serveur
 app.listen(port, () => {
   logger.info(`Serveur en écoute sur le port ${port}`);
-  // useful to keep the servers awake on render.com
+  // useful to keep the servers awake
   initPingIntervals();
 });

@@ -17,13 +17,14 @@ model MachineRepair {
   machine_type          String
   repair_or_maintenance String
   robot_code            String?
+  devis                 Boolean         @default(false)
   fault_description     String
   machine_brand         String
   warranty              Boolean?
   client_signature      String // URL or path to the PNG file in Supabase storage
   bucket_name           String // Supabase storage bucket name
-  working_time_hour     Int?
-  working_time_minute   Int?
+  start_timer           DateTime? // null when timer stopped
+  working_time_in_sec   Int             @default(0)
   repairer_id           Repairer?       @relation("MachineRepairRepairer", fields: [repairer_name], references: [name], onDelete: SetNull)
   repairer_name         String?
   brand_id              Brand?          @relation("MachineRepairBrand", fields: [brand_name], references: [name], onDelete: SetNull)

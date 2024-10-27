@@ -19,6 +19,7 @@ interface MyDocumentProps {
   modele: string;
   typeReparation: string;
   avecGarantie: string;
+  avecDevis: string;
   remarques: string;
   prix: string;
   tempsPasse: string;
@@ -93,6 +94,7 @@ const MyDocument = ({
   modele,
   typeReparation,
   avecGarantie,
+  avecDevis,
   remarques,
   prix,
   tempsPasse,
@@ -160,7 +162,16 @@ const MyDocument = ({
                 borderTop: 'unset',
               }}
             >
-              Type de réparation: {typeReparation}
+              Type: {typeReparation}
+            </Text>
+            <Text
+              style={{
+                ...styles.textBox,
+                borderTop: 'unset',
+                borderRight: 'unset',
+              }}
+            >
+              Garantie: {avecGarantie}
             </Text>
             <Text
               style={{
@@ -168,7 +179,7 @@ const MyDocument = ({
                 borderTop: 'unset',
               }}
             >
-              Garantie: {avecGarantie}
+              Devis: {avecDevis}
             </Text>
           </div>
           <Text style={styles.header}>Remarques</Text>

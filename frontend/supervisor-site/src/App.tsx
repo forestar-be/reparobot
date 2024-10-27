@@ -18,27 +18,28 @@ import { PDFViewer } from '@react-pdf/renderer';
 import MyDocument from './components/repair/Document';
 
 const defaultTheme = 'light';
-
-const AppTestPdf = () => (
-  <PDFViewer width={'100%'} height={'100%'}>
-    <MyDocument
-      dateDuDepot="2021-10-10"
-      gSMClient="123456789"
-      nom="John Doe"
-      code="123456"
-      type="dkhdehsdjkfh"
-      codeRobot="123456"
-      modele="hgfhgfj"
-      typeReparation="sdghggh"
-      avecGarantie="Oui"
-      remarques="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      prix="100€"
-      tempsPasse="10h"
-      piecesRemplacees="fedioiifjefe, feoifjef, fjdsiofjdsf, fdsiofsdf, fdsjfh"
-      travailEffectue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    />
-  </PDFViewer>
-);
+//
+// const AppTestPdf = () => (
+//   <PDFViewer width={'100%'} height={'100%'}>
+//     <MyDocument
+//       dateDuDepot="2021-10-10"
+//       gSMClient="123456789"
+//       nom="John Doe"
+//       code="123456"
+//       type="dkhdehsdjkfh"
+//       codeRobot="123456"
+//       avecDevis="Oui"
+//       modele="hgfhgfj"
+//       typeReparation="sdghggh"
+//       avecGarantie="Oui"
+//       remarques="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+//       prix="100€"
+//       tempsPasse="10h"
+//       piecesRemplacees="fedioiifjefe, feoifjef, fjdsiofjdsf, fdsiofsdf, fdsjfh"
+//       travailEffectue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+//     />
+//   </PDFViewer>
+// );
 
 const App = (): JSX.Element => {
   const [mode, setMode] = useState('dark');
