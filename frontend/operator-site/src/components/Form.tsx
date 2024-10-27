@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -40,6 +40,39 @@ const DynamicForm = () => {
   const [loadingImage, setLoadingImage] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const signaturePadRef = useRef<SignatureCanvas>(null);
+  const [optionsListByName, setOptionsListByName] = useState<
+    Record<string, string[]>
+  >({});
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const response = await fetch(`${API_URL}/operator/brands`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+
+        // check if status 401 or 403
+        if (response.status === 401 || response.status === 403) {
+          auth.logOut();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        setOptionsListByName({ brands: result });
+      } catch (error) {
+        console.error('Error fetching options:', error);
+        alert('Erreur lors de la récupération des options');
+      }
+    };
+
+    fetchOptions();
+  }, []);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -240,7 +273,10 @@ const DynamicForm = () => {
             onChange={handleChange}
             value={formData[field.id] || ''}
           >
-            {field.options.map((option: string) => (
+            {(!field.optionsListName
+              ? field.options
+              : (optionsListByName[field.optionsListName] ?? [])
+            ).map((option: string) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>

@@ -52,6 +52,7 @@ router.post(
   asyncHandler(async (req, res) => {
     try {
       if (!req.file) {
+        logger.error('No file received');
         return res.status(400).send('Aucun fichier reçu.');
       }
 
@@ -85,6 +86,7 @@ router.post(
 
       for (const field of requiredFields) {
         if (!field || field === '') {
+          logger.error('Missing required fields');
           return res.status(400).send('Veuillez remplir tous les champs.');
         }
       }
@@ -175,6 +177,7 @@ router.post(
     const { username, password } = req.body;
 
     if (!username || !password) {
+      logger.error('Missing required fields');
       return res
         .status(400)
         .json({ message: 'Veuillez remplir tous les champs.' });
@@ -198,6 +201,14 @@ router.post(
     const token = jwt.sign(user, OPERATOR_SECRET_KEY, { expiresIn: '1d' });
     const expiresAt = Date.now() + 1 * 24 * 60 * 60 * 1000;
     res.json({ authentificated: true, token, expiresAt });
+  }),
+);
+
+router.get(
+  '/brands',
+  asyncHandler(async (req, res) => {
+    const brands = await prisma.brand.findMany();
+    res.json(brands.map((brand) => brand.name));
   }),
 );
 

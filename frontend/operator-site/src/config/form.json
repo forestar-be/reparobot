@@ -15,7 +15,6 @@
       ],
       "isRequired": true
     },
-    { "id": "devis", "label": "Devis", "type": "checkbox", "isRequired": true },
     {
       "id": "repair_or_maintenance",
       "label": "Choix réparation ou entretien",
@@ -23,7 +22,8 @@
       "options": ["Réparation", "Entretien"],
       "isRequired": true
     },
-    { "id": "machine_brand", "label": "Marque", "type": "text", "isRequired": true },
+    { "id": "devis", "label": "Devis", "type": "checkbox", "isRequired": false },
+    { "id": "brand_name", "label": "Marque", "type": "select", "optionsListName": "brands", "isRequired": true },
     { "id": "robot_code", "label": "Code (si robot)", "type": "text", "isRequired": false },
     { "id": "warranty", "label": "Garantie", "type": "checkbox", "isRequired": false },
     { "id": "fault_description", "label": "Descriptif de la panne", "type": "textarea", "isRequired": true },
