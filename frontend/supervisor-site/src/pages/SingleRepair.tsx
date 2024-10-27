@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { EventHandler, MouseEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
@@ -29,6 +29,9 @@ import {
   Edit as EditIcon,
   FileDownload as FileDownloadIcon,
   Save as SaveIcon,
+  PlayArrow as PlayArrowIcon,
+  Stop as StopIcon,
+  Replay as ReplayIcon,
 } from '@mui/icons-material';
 import {
   deleteRepair,
@@ -50,6 +53,7 @@ import { toast } from 'react-toastify';
 import RepairField from '../components/repair/RepairField';
 import ReactPDF from '@react-pdf/renderer';
 import MyDocument from '../components/repair/Document';
+import { useStopwatch } from 'react-timer-hook';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
@@ -64,8 +68,8 @@ interface MachineRepair {
   repair_or_maintenance: string;
   robot_code: string;
   fault_description: string;
-  working_time_hour: number | null;
-  working_time_minute: number | null;
+  start_timer: Date | null;
+  working_time_in_sec: number;
   replaced_part_list: { name: string; price: number }[];
   state: string | null;
   createdAt: string;
@@ -73,6 +77,7 @@ interface MachineRepair {
   signatureUrl: string;
   brand_name: string;
   warranty?: boolean;
+  devis: boolean;
   repairer_name: string | null;
   remark: string | null;
 }
@@ -82,6 +87,22 @@ export const replacedPartToString = (replacedPart: {
   price: number;
 }) => {
   return `${replacedPart.name} - ${replacedPart.price}€`;
+};
+
+const getHoursMinutesAndSeconds = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  return { hours, minutes, remainingSeconds };
+};
+
+export const getFormattedWorkingTime = (
+  seconds: number,
+  withSeconds = false,
+) => {
+  const { hours, minutes, remainingSeconds } =
+    getHoursMinutesAndSeconds(seconds);
+  return `${hours}h ${minutes}m ${withSeconds ? `${remainingSeconds}s` : ''}`;
 };
 
 const getPdfDocumentProps = (repair: MachineRepair) => {
@@ -102,11 +123,12 @@ const getPdfDocumentProps = (repair: MachineRepair) => {
           .reduce((acc, part) => acc + part.price, 0)
           .toString() + '€'
       }
-      tempsPasse={`${repair.working_time_hour ?? 0}h ${repair.working_time_minute ?? 0}m`}
+      tempsPasse={getFormattedWorkingTime(repair.working_time_in_sec, false)}
       piecesRemplacees={repair.replaced_part_list
         .map(replacedPartToString)
         .join(', ')}
       travailEffectue={repair.remark ?? ''}
+      avecDevis={repair.devis ? 'Oui' : 'Non'}
     />
   );
 };
@@ -117,7 +139,9 @@ const SingleRepair = () => {
   const auth = useAuth();
   const { id } = useParams<{ id: string }>();
   const [repair, setRepair] = useState<null | MachineRepair>(null);
-  const [initialRepair, setInitialRepair] = useState<null | any>(null);
+  const [initialRepair, setInitialRepair] = useState<null | MachineRepair>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [isLoadingSendEmail, setIsLoadingSendEmail] = useState(false);
   const [editableFields, setEditableFields] = useState<{
@@ -136,6 +160,17 @@ const SingleRepair = () => {
   const [instance, updateInstance] = ReactPDF.usePDF({
     document: undefined,
   });
+  const {
+    totalSeconds,
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    reset,
+  } = useStopwatch({ autoStart: false });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -186,9 +221,16 @@ const SingleRepair = () => {
     }
     const fetchData = async () => {
       try {
-        const repairData: MachineRepair = await fetchRepairById(id, auth.token);
-        setRepair(repairData);
-        setInitialRepair(repairData);
+        const repairData: MachineRepair & { start_timer: string | null } =
+          await fetchRepairById(id, auth.token);
+        const repairDataWithDate = {
+          ...repairData,
+          start_timer: repairData.start_timer
+            ? new Date(repairData.start_timer)
+            : null,
+        };
+        setInitialRepair(repairDataWithDate);
+        setRepair(repairDataWithDate);
       } catch (error) {
         console.error('Error fetching repair:', error);
         alert(
@@ -206,6 +248,35 @@ const SingleRepair = () => {
       updateInstance(getPdfDocumentProps(repair));
     }
   }, [repair]);
+
+  useEffect(() => {
+    if (!repair || !initialRepair) {
+      return;
+    }
+
+    if (repair.start_timer) {
+      const currentOffset = repair.working_time_in_sec * 1000;
+      const startTime = repair.start_timer.getTime();
+      console.log('Restarting timer', {
+        currentOffset,
+        startTime,
+      });
+
+      const currentTime = new Date().getTime();
+      const offsetTimestamp = new Date(
+        currentTime + (currentTime - startTime + currentOffset),
+      );
+      console.log('Offset timestamp', offsetTimestamp);
+      reset(offsetTimestamp, true);
+    } else {
+      console.log('Pausing timer');
+      pause();
+    }
+
+    if (repair.start_timer !== initialRepair.start_timer) {
+      handleUpdate(); // update the start_timer field in the backend
+    }
+  }, [repair?.start_timer]);
 
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -255,12 +326,75 @@ const SingleRepair = () => {
     } as MachineRepair);
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleManualTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(String(e.target.value).replace(/\D/g, ''));
-    if (!isNaN(value)) {
-      setRepair({ ...repair, [e.target.name]: value } as MachineRepair);
+    if (!isNaN(value) && repair) {
+      const name = e.target.name as 'hour' | 'minute' | 'second';
+      let newTime = repair.working_time_in_sec;
+      if (name === 'hour') {
+        newTime = value * 3600 + (repair.working_time_in_sec % 3600);
+      } else if (name === 'minute') {
+        newTime =
+          Math.floor(repair.working_time_in_sec / 3600) * 3600 +
+          value * 60 +
+          (repair.working_time_in_sec % 60);
+      } else if (name === 'second') {
+        newTime = Math.floor(repair.working_time_in_sec / 60) * 60 + value;
+      }
+      setRepair({
+        ...repair,
+        working_time_in_sec: newTime,
+      });
     }
   };
+
+  const startTimer = () => {
+    if (repair) {
+      setRepair({
+        ...repair,
+        start_timer: new Date(),
+      });
+    }
+  };
+
+  const stopTimer = () => {
+    if (repair) {
+      console.log('stopping timer', totalSeconds);
+      setRepair({
+        ...repair,
+        working_time_in_sec: totalSeconds,
+        start_timer: null,
+      });
+    }
+  };
+
+  const resetTimer = () => {
+    if (repair) {
+      console.log('resetting timer');
+      setRepair({
+        ...repair,
+        working_time_in_sec: 0,
+        start_timer: null,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (repair && initialRepair) {
+      if (
+        !isRunning &&
+        !editableSections['technicalInfo'] && // only update if not in edit mode and timer is not running
+        repair.working_time_in_sec !== initialRepair.working_time_in_sec &&
+        repair.start_timer === initialRepair.start_timer // skip when start_timer is updated as update already triggered by useEffect of start_timer
+      ) {
+        console.log('Updating repair working time', {
+          repair,
+          initialRepair,
+        });
+        handleUpdate();
+      }
+    }
+  }, [repair?.working_time_in_sec]);
 
   const toggleEditableSection = (section: string, fields: string[]) => {
     const isSectionEditable = !editableSections[section];
@@ -270,6 +404,10 @@ const SingleRepair = () => {
     });
     const hasChanges = JSON.stringify(repair) !== JSON.stringify(initialRepair);
     if (hasChanges && !isSectionEditable) {
+      console.log('Changes detected, updating repair', {
+        repair,
+        initialRepair,
+      });
       // save action
       handleUpdate();
     }
@@ -311,7 +449,7 @@ const SingleRepair = () => {
   };
 
   const handleUpdate = async () => {
-    if (!repair) {
+    if (!repair || !initialRepair) {
       console.error('No repair data found');
       return;
     }
@@ -344,6 +482,11 @@ const SingleRepair = () => {
   };
 
   const sendEmail = async () => {
+    if (isRunning) {
+      toast.warn("Arrêtez le chronomètre avant d'envoyer l'email");
+      return;
+    }
+
     setIsLoadingSendEmail(true);
     try {
       // send pdf to email api
@@ -408,40 +551,76 @@ const SingleRepair = () => {
       return null;
     }
     return (
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Box
           display={'flex'}
           flexDirection={'row'}
+          alignItems={'center'}
           gap={'10px'}
           margin={'5px 0'}
         >
           <Typography
             variant="subtitle1"
             noWrap
-            width={editableFields['working_time'] ? 180 : undefined}
+            // width={editableFields['working_time'] ? 180 : undefined}
           >
             Temps passé :
           </Typography>
-          {editableFields['working_time'] ? (
+          {editableFields['working_time'] && !isRunning ? (
             <>
               <TextField
                 label={'Heure'}
-                name={'working_time_hour'}
-                value={repair.working_time_hour ?? 0}
-                onChange={handleTimeChange}
+                name={'hour'}
+                value={Math.floor(repair.working_time_in_sec / 3600)}
+                onChange={handleManualTimeChange}
               ></TextField>
               <TextField
                 label={'Minute'}
-                name={'working_time_minute'}
-                value={repair.working_time_minute ?? 0}
-                onChange={handleTimeChange}
+                name={'minute'}
+                value={Math.floor((repair.working_time_in_sec % 3600) / 60)}
+                onChange={handleManualTimeChange}
+              ></TextField>
+              <TextField
+                label={'Second'}
+                name={'second'}
+                value={repair.working_time_in_sec % 60}
+                onChange={handleManualTimeChange}
               ></TextField>
             </>
           ) : (
-            <Typography variant="subtitle1">
-              {repair.working_time_hour ?? 0}h {repair.working_time_minute ?? 0}
-              m
-            </Typography>
+            <>
+              <Typography variant="subtitle1" noWrap width={100}>
+                {isRunning ? (
+                  <>
+                    {hours}h {minutes}m {seconds}s
+                  </>
+                ) : (
+                  <>
+                    {getFormattedWorkingTime(repair.working_time_in_sec, true)}
+                  </>
+                )}
+              </Typography>
+              <Button
+                size={'small'}
+                variant="contained"
+                color="primary"
+                startIcon={isRunning ? <StopIcon /> : <PlayArrowIcon />}
+                onClick={isRunning ? stopTimer : startTimer}
+              >
+                {isRunning ? 'Arrêter' : 'Démarrer'}
+              </Button>
+              {!isRunning && (
+                <Button
+                  size={'small'}
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<ReplayIcon />}
+                  onClick={resetTimer}
+                >
+                  Réinitialiser
+                </Button>
+              )}
+            </>
           )}
         </Box>
       </Grid>
@@ -606,7 +785,7 @@ const SingleRepair = () => {
             {isLoadingSendEmail ? (
               <CircularProgress size={24} color="inherit" />
             ) : (
-              'Envoyer par email'
+              'Envoyer par email au client'
             )}
           </Button>
           <Button
@@ -615,6 +794,14 @@ const SingleRepair = () => {
             component="a"
             href={instance.url ?? undefined}
             download={`fiche_reparation_${id}.pdf`}
+            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              if (isRunning) {
+                e.preventDefault();
+                toast.warn(
+                  'Arrêtez le chronomètre avant de télécharger le PDF',
+                );
+              }
+            }}
           >
             Télécharger
           </Button>
@@ -635,6 +822,7 @@ const SingleRepair = () => {
                       'robot_code',
                       'brand_name',
                       'warranty',
+                      'devis',
                     ])
                   }
                 >
@@ -675,6 +863,7 @@ const SingleRepair = () => {
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
               {renderCheckbox('Garantie', 'warranty', repair.warranty ?? false)}
+              {renderCheckbox('Devis', 'devis', repair.devis)}
             </Grid>
             <Grid item xs={12} display={'flex'}>
               {renderField(
@@ -761,7 +950,7 @@ const SingleRepair = () => {
               'État',
               'state',
               repair.state || 'Non commencé',
-              ['Non commencé', 'En cours', 'Terminé', 'Hors service'],
+              Object.keys(colorByState),
               { marginTop: 2, marginBottom: 1, width: '80%' },
               12,
               colorByState,

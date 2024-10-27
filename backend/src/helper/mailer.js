@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const logger = require('../config/logger');
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
@@ -8,8 +9,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// send email with attached file
+let lastSentTime = 0;
+const COOLDOWN_PERIOD = 1000 * 20; // 20 seconds
+
 const sendEmail = async ({ to, subject, html, attachments, replyTo }) => {
+  const currentTime = Date.now();
+  const diff = currentTime - lastSentTime;
+  lastSentTime = currentTime;
+  if (diff < COOLDOWN_PERIOD) {
+    logger.info(
+      `Email cooldown period. Waiting for ${COOLDOWN_PERIOD - diff}ms`,
+    );
+    await new Promise((resolve) => setTimeout(resolve, COOLDOWN_PERIOD - diff));
+  }
+
+  logger.info(`Sending email to ${to} with subject: ${subject}`);
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to,
@@ -18,6 +32,8 @@ const sendEmail = async ({ to, subject, html, attachments, replyTo }) => {
     attachments,
     replyTo,
   });
+
+  lastSentTime = currentTime;
 };
 
 module.exports = { sendEmail };

@@ -15,6 +15,7 @@
       ],
       "isRequired": true
     },
+    { "id": "devis", "label": "Devis", "type": "checkbox", "isRequired": true },
     {
       "id": "repair_or_maintenance",
       "label": "Choix réparation ou entretien",
