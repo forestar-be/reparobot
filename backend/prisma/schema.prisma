@@ -19,7 +19,6 @@ model MachineRepair {
   robot_code            String?
   devis                 Boolean         @default(false)
   fault_description     String
-  machine_brand         String
   warranty              Boolean?
   client_signature      String // URL or path to the PNG file in Supabase storage
   bucket_name           String // Supabase storage bucket name

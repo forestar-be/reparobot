@@ -107,11 +107,11 @@ const MachineRepairsTable: React.FC = () => {
       },
     },
     {
-      headerName: 'ID',
+      headerName: 'N° de bon',
       field: 'id' as keyof MachineRepair,
       sortable: true,
       filter: true,
-      width: 80,
+      width: 120,
     },
     {
       headerName: 'État',

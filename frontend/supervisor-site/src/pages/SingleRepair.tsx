@@ -108,7 +108,7 @@ export const getFormattedWorkingTime = (
 const getPdfDocumentProps = (repair: MachineRepair) => {
   return (
     <MyDocument
-      dateDuDepot={repair.createdAt}
+      dateDuDepot={new Date(repair.createdAt).toLocaleDateString('fr-FR')}
       gSMClient={repair.phone}
       nom={`${repair.first_name} ${repair.last_name}`}
       code={repair.id.toString()}
@@ -221,7 +221,7 @@ const SingleRepair = () => {
     }
     const fetchData = async () => {
       try {
-        const repairData: MachineRepair & { start_timer: string | null } =
+        const repairData: { start_timer: string | null } & MachineRepair =
           await fetchRepairById(id, auth.token);
         const repairDataWithDate = {
           ...repairData,

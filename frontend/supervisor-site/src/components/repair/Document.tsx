@@ -125,7 +125,7 @@ const MyDocument = ({
           <Text style={styles.textBox}>Date du dépôt : {dateDuDepot}</Text>
           <Text style={styles.textBox}>GSM Client : {gSMClient}</Text>
           <Text style={styles.textBox}>Nom : {nom}</Text>
-          <Text style={styles.textBox}>Code : {code}</Text>
+          <Text style={styles.textBox}>Numéro de bon : {code}</Text>
         </View>
       </View>
       <View style={styles.section}>
