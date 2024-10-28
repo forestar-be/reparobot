@@ -11,6 +11,7 @@ import {
   fetchBrands,
   fetchRepairers,
 } from '../utils/api';
+import EditConfig from '../components/settings/EditConfig';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -29,15 +30,20 @@ function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
+      height={'90%'}
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
+      {value === index && (
+        <Box height={'100%'} sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </Box>
   );
 }
 const Settings = (): JSX.Element => {
@@ -48,7 +54,7 @@ const Settings = (): JSX.Element => {
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding: 4, height: '100%', position: 'relative' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
@@ -59,6 +65,7 @@ const Settings = (): JSX.Element => {
           <Tab label="Utilisateurs" {...a11yProps(1)} />
           <Tab label="Réparateur" {...a11yProps(2)} />
           <Tab label="Marques" {...a11yProps(3)} />
+          <Tab label="Autre" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -82,6 +89,9 @@ const Settings = (): JSX.Element => {
           addEntity={addBrand}
           deleteEntity={deleteBrand}
         />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <EditConfig />
       </CustomTabPanel>
     </Box>
   );

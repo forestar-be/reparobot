@@ -25,6 +25,7 @@ interface MyDocumentProps {
   tempsPasse: string;
   piecesRemplacees: string;
   travailEffectue: string;
+  prixPieces: string;
 }
 
 // Create styles
@@ -99,6 +100,7 @@ const MyDocument = ({
   prix,
   tempsPasse,
   piecesRemplacees,
+  prixPieces,
   travailEffectue,
 }: MyDocumentProps) => (
   <Document>
@@ -213,8 +215,14 @@ const MyDocument = ({
             <Text>{travailEffectue}</Text>
           </div>
           <div style={{ ...styles.textBox, borderTop: 'unset' }}>
-            <Text style={{ marginBottom: 5 }}>Pièces remplacées:</Text>
-            <Text>{piecesRemplacees}</Text>
+            <Text style={{ marginBottom: 5 }}>
+              Pièces remplacées: {piecesRemplacees}
+            </Text>
+          </div>
+          <div style={{ ...styles.textBox, borderTop: 'unset' }}>
+            <Text style={{ marginBottom: 5 }}>
+              Prix des pièces: {prixPieces}
+            </Text>
           </div>
           <Text style={styles.header}> Conditions générales de réparation</Text>
           <div style={styles.textBox}>
