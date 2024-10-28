@@ -488,6 +488,7 @@ router.put(
         },
       ],
       replyTo: process.env.REPLY_TO,
+      fromName: 'Forestar Shop Atelier',
     };
 
     await sendEmail(options);
