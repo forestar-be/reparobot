@@ -1,4 +1,5 @@
 import { User } from '../components/settings/EditUser';
+import { ConfigElement } from '../components/settings/EditConfig';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -276,6 +277,97 @@ export const sendEmailApi = async (
       body: data,
     },
   );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const fetchConfig = async (token: string) => {
+  const response = await fetch(`${API_URL}/supervisor/config`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const addConfig = async (
+  token: string,
+  config: { key: string; value: string },
+) => {
+  const response = await fetch(`${API_URL}/supervisor/config`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(config),
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const deleteConfig = async (token: string, key: string) => {
+  const response = await fetch(`${API_URL}/supervisor/config/${key}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const updateConfig = async (
+  token: string,
+  configToUpdate: ConfigElement,
+) => {
+  const response = await fetch(
+    `${API_URL}/supervisor/config/${configToUpdate.key}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(configToUpdate),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const fetchAllConfig = async (token: string) => {
+  const response = await fetch(`${API_URL}/supervisor/allConfig`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`${response.statusText} ${response.status}`);

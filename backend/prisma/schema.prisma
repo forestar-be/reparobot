@@ -64,5 +64,12 @@ model Brand {
   machineRepairs MachineRepair[] @relation("MachineRepairBrand")
 }
 
+model Config {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+}
+
 // command to add migration:
 // npx prisma migrate dev --name xxxxxxxx

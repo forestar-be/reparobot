@@ -278,6 +278,90 @@ router.get(
   }),
 );
 
+router.get(
+  '/allConfig',
+  asyncHandler(async (req, res) => {
+    const [brands, repairerNames, replacedParts, config] =
+      await prisma.$transaction([
+        prisma.brand.findMany(),
+        prisma.repairer.findMany(),
+        prisma.replacedParts.findMany(),
+        prisma.config.findMany(),
+      ]);
+    res.json({
+      brands: brands.map((brand) => brand.name),
+      repairerNames: repairerNames.map((repairer) => repairer.name),
+      replacedParts,
+      config: config.reduce((acc, { key, value }) => {
+        return { ...acc, [key]: value };
+      }, {}),
+    });
+  }),
+);
+
+router.get(
+  '/config',
+  asyncHandler(async (req, res) => {
+    const config = await prisma.config.findMany();
+    res.json(config);
+  }),
+);
+
+router.put(
+  '/config',
+  asyncHandler(async (req, res) => {
+    const config = req.body;
+    if (
+      !config ||
+      typeof config !== 'object' ||
+      typeof config['key'] !== 'string' ||
+      typeof config['value'] !== 'string'
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'Veuillez fournir une configuration valide.' });
+    }
+
+    // update config
+    const result = await prisma.config.createMany({
+      data: [config],
+      skipDuplicates: true,
+    });
+
+    res.json(result);
+  }),
+);
+
+router.delete(
+  '/config/:key',
+  asyncHandler(async (req, res) => {
+    const { key } = req.params;
+    const config = await prisma.config.findUnique({ where: { key } });
+    if (!config) {
+      return res.status(404).json({ message: 'Configuration non trouvée.' });
+    }
+    await prisma.config.delete({ where: { key } });
+    res.json(config);
+  }),
+);
+
+router.patch(
+  '/config/:key',
+  asyncHandler(async (req, res) => {
+    const { key } = req.params;
+    const { value } = req.body;
+    const config = await prisma.config.findUnique({ where: { key } });
+    if (!config) {
+      return res.status(404).json({ message: 'Configuration non trouvée.' });
+    }
+    const updatedConfig = await prisma.config.update({
+      where: { key },
+      data: { value },
+    });
+    res.json(updatedConfig);
+  }),
+);
+
 router.put(
   '/brands',
   asyncHandler(async (req, res) => {

@@ -35,6 +35,7 @@ import {
 } from '@mui/icons-material';
 import {
   deleteRepair,
+  fetchAllConfig,
   fetchBrands,
   fetchRepairById,
   fetchRepairers,
@@ -105,7 +106,15 @@ export const getFormattedWorkingTime = (
   return `${hours}h ${minutes}m ${withSeconds ? `${remainingSeconds}s` : ''}`;
 };
 
-const getPdfDocumentProps = (repair: MachineRepair) => {
+function getWorkingTimePrice(repair: MachineRepair, hourlyRate: number) {
+  return `${(repair.working_time_in_sec * (hourlyRate / 3600)).toFixed(2).replace('.', ',')}€`;
+}
+
+function getTotalPriceParts(repair: MachineRepair) {
+  return `${repair.replaced_part_list.reduce((acc, part) => acc + part.price, 0)}€`;
+}
+
+const getPdfDocumentProps = (repair: MachineRepair, hourlyRate: number) => {
   return (
     <MyDocument
       dateDuDepot={new Date(repair.createdAt).toLocaleDateString('fr-FR')}
@@ -118,17 +127,14 @@ const getPdfDocumentProps = (repair: MachineRepair) => {
       typeReparation={repair.repair_or_maintenance}
       avecGarantie={repair.warranty ? 'Oui' : 'Non'}
       remarques={repair.fault_description}
-      prix={
-        repair.replaced_part_list
-          .reduce((acc, part) => acc + part.price, 0)
-          .toString() + '€'
-      }
+      prix={getWorkingTimePrice(repair, hourlyRate)}
       tempsPasse={getFormattedWorkingTime(repair.working_time_in_sec, false)}
       piecesRemplacees={repair.replaced_part_list
         .map(replacedPartToString)
         .join(', ')}
       travailEffectue={repair.remark ?? ''}
       avecDevis={repair.devis ? 'Oui' : 'Non'}
+      prixPieces={getTotalPriceParts(repair)}
     />
   );
 };
@@ -160,6 +166,8 @@ const SingleRepair = () => {
   const [instance, updateInstance] = ReactPDF.usePDF({
     document: undefined,
   });
+  const [hourlyRate, setHourlyRate] = useState(0);
+
   const {
     totalSeconds,
     seconds,
@@ -173,45 +181,27 @@ const SingleRepair = () => {
   } = useStopwatch({ autoStart: false });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllConfigData = async () => {
       try {
-        const newReplacedParts = await fetchReplacedParts(auth.token);
-        setReplacedParts(newReplacedParts);
-      } catch (error) {
-        console.error('Error fetching replacedParts:', error);
-        alert(
-          `Une erreur s'est produite lors de la récupération des données ${error}`,
-        );
-      }
-    };
-    fetchData();
-
-    const fetchRepairersData = async () => {
-      try {
-        const repairersData = await fetchRepairers(auth.token);
-        setRepairers(repairersData);
-      } catch (error) {
-        console.error('Error fetching repairers:', error);
-        alert(
-          `Une erreur s'est produite lors de la récupération des données ${error}`,
-        );
-      }
-    };
-    fetchRepairersData();
-
-    const fetchBrandsData = async () => {
-      try {
-        const brands = await fetchBrands(auth.token);
+        const {
+          brands,
+          repairerNames,
+          replacedParts,
+          config: { 'Taux horaire': hourlyRate },
+        } = await fetchAllConfig(auth.token);
         setBrands(brands);
+        setRepairers(repairerNames);
+        setReplacedParts(replacedParts);
+        setHourlyRate(Number(hourlyRate));
       } catch (error) {
-        console.error('Error fetching brands:', error);
+        console.error('Error fetching config:', error);
         alert(
           `Une erreur s'est produite lors de la récupération des données ${error}`,
         );
       }
     };
 
-    fetchBrandsData();
+    fetchAllConfigData();
   }, []);
 
   useEffect(() => {
@@ -245,7 +235,7 @@ const SingleRepair = () => {
 
   useEffect(() => {
     if (repair) {
-      updateInstance(getPdfDocumentProps(repair));
+      updateInstance(getPdfDocumentProps(repair, hourlyRate));
     }
   }, [repair]);
 
@@ -557,7 +547,7 @@ const SingleRepair = () => {
           flexDirection={'row'}
           alignItems={'center'}
           gap={'10px'}
-          margin={'5px 0'}
+          marginTop={'5px'}
         >
           <Typography
             variant="subtitle1"
@@ -946,6 +936,12 @@ const SingleRepair = () => {
               </Box>
             </Grid>
             {renderTimePicker()}
+            <Box display={'flex'} gap={'10px'} marginBottom={'20px'}>
+              <Typography variant="subtitle1">Total temps:</Typography>
+              <Typography variant="subtitle1">
+                {getWorkingTimePrice(repair, hourlyRate)}
+              </Typography>
+            </Box>
             {renderSelect(
               'État',
               'state',
@@ -981,11 +977,7 @@ const SingleRepair = () => {
               <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
                 <Typography variant="subtitle1">Total pièces :</Typography>
                 <Typography variant="subtitle1">
-                  {repair.replaced_part_list.reduce(
-                    (acc, part) => acc + part.price,
-                    0,
-                  )}
-                  €
+                  {getTotalPriceParts(repair)}
                 </Typography>
               </Box>
             </Box>
