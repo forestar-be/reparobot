@@ -12,6 +12,8 @@ model MachineRepair {
   first_name            String
   last_name             String
   address               String
+  postal_code           String?
+  city                  String?
   phone                 String
   email                 String
   machine_type          String

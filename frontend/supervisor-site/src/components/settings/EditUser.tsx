@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogTitle,
   MenuItem,
+  Box,
 } from '@mui/material';
 import { useAuth } from '../../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
@@ -135,7 +136,7 @@ const EditUser = () => {
   ];
 
   return (
-    <div>
+    <Box height={'100%'}>
       <Button
         variant="contained"
         color="primary"
@@ -146,7 +147,7 @@ const EditUser = () => {
       </Button>
       <div
         className={`ag-theme-quartz${theme.palette.mode === 'dark' ? '-dark' : ''}`}
-        style={{ height: 400, width: '100%' }}
+        style={{ height: '100%', width: '100%' }}
       >
         <AgGridReact
           rowData={users}
@@ -209,7 +210,7 @@ const EditUser = () => {
           </DialogActions>
         </form>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

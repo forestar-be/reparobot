@@ -8,6 +8,7 @@ interface RenderFieldProps {
   isMultiline?: boolean;
   editableFields: { [key: string]: boolean };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  xs?: 6 | 12 | 3;
 }
 
 const RepairField: React.FC<RenderFieldProps> = ({
@@ -17,8 +18,9 @@ const RepairField: React.FC<RenderFieldProps> = ({
   isMultiline = false,
   editableFields,
   handleChange,
+  xs,
 }) => (
-  <Grid item xs={isMultiline ? 12 : 6}>
+  <Grid item xs={(xs ?? isMultiline) ? 12 : 6}>
     {editableFields[name] ? (
       <TextField
         sx={{ margin: '5px 0' }}

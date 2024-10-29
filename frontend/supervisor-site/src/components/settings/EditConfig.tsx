@@ -9,6 +9,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from '@mui/material';
 import { useAuth } from '../../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
@@ -115,6 +116,7 @@ const EditConfig: React.FC<EditConfigProps> = ({}) => {
             variant="contained"
             color="primary"
             onClick={() => handleEditConfigElement(params.data)}
+            sx={{ mr: 1 }}
           >
             Modifier
           </Button>
@@ -131,7 +133,7 @@ const EditConfig: React.FC<EditConfigProps> = ({}) => {
   ];
 
   return (
-    <div>
+    <Box height={'100%'}>
       <Button
         variant="contained"
         color="primary"
@@ -142,7 +144,7 @@ const EditConfig: React.FC<EditConfigProps> = ({}) => {
       </Button>
       <div
         className={`ag-theme-quartz${theme.palette.mode === 'dark' ? '-dark' : ''}`}
-        style={{ height: 400, width: '100%' }}
+        style={{ height: '100%', width: '100%' }}
       >
         <AgGridReact
           rowData={config}
@@ -197,7 +199,7 @@ const EditConfig: React.FC<EditConfigProps> = ({}) => {
           </DialogActions>
         </form>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

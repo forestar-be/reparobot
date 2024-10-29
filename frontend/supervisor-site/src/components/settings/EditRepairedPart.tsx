@@ -1,32 +1,42 @@
-import { useEffect, useState } from 'react';
-import { fetchReplacedParts, putReplacedParts } from '../../utils/api';
+import React, { useEffect, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+  deleteReplacedPart,
+  fetchReplacedParts,
+  putReplacedParts,
+} from '../../utils/api';
 import { useAuth } from '../../hooks/AuthProvider';
 import {
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
   Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
   Box,
 } from '@mui/material';
-import * as XLSX from 'xlsx';
+import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
-import { MuiFileInput } from 'mui-file-input';
-import {
-  AttachFile as AttachFileIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
-import { replacedPartToString } from '../../pages/SingleRepair';
+
+export interface ReplacedPart {
+  name: string;
+  price: number;
+}
 
 const EditRepairedPart = () => {
   const auth = useAuth();
-  const [replacedParts, setReplacedParts] = useState<
-    { name: string; price: number }[]
-  >([]);
+  const [replacedParts, setReplacedParts] = useState<ReplacedPart[]>([]);
   const [initialReplacedParts, setInitialReplacedParts] = useState<
-    { name: string; price: number }[]
+    ReplacedPart[]
   >([]);
-  const [file, setFile] = useState<File | null>(null);
+  const [open, setOpen] = useState(false);
+  const [selectedPart, setSelectedPart] = useState<ReplacedPart | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [price, setPrice] = useState<number | null>(null);
+  const theme = useTheme();
 
   const fetchData = async () => {
     try {
@@ -45,39 +55,60 @@ const EditRepairedPart = () => {
     fetchData();
   }, []);
 
-  const handleFileUpload = (newFile: File | null) => {
-    setFile(newFile);
-    if (newFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data);
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json<{
-          Nom: string;
-          Prix: number;
-        }>(worksheet);
-        if (!json[0]?.Nom || !json[0]?.Prix) {
-          toast.error(
-            'Le fichier Excel doit contenir les colonnes "Nom" et "Prix"',
-          );
-          setFile(null);
-          return;
-        }
-        const parts = json.map((row) => ({
-          name: row.Nom,
-          price: row.Prix,
-        }));
-        setReplacedParts(parts);
-      };
-      reader.readAsArrayBuffer(newFile);
+  const handleAddPart = () => {
+    setSelectedPart(null);
+    setName('');
+    setPrice(null);
+    setOpen(true);
+  };
+
+  const handleEditPart = (part: ReplacedPart) => {
+    setSelectedPart(part);
+    setName(part.name);
+    setPrice(part.price);
+    setOpen(true);
+  };
+
+  const handleDeletePart = async (part: ReplacedPart) => {
+    const choice = window.confirm(
+      `Voulez-vous vraiment supprimer la pièce ${part.name} ?`,
+    );
+
+    if (!choice) {
+      return;
+    }
+
+    const updatedParts = replacedParts.filter((p) => p !== part);
+
+    try {
+      await deleteReplacedPart(auth.token, part.name);
+      setReplacedParts(updatedParts);
+      toast.success('Pièce supprimée avec succès');
+    } catch (error) {
+      console.error('Error deleting replacedPart:', error);
+      toast.error(
+        "Une erreur s'est produite lors de la suppression de la pièce",
+      );
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const newPart = { name: name!, price: price! };
+    let updatedParts;
+    if (selectedPart) {
+      updatedParts = replacedParts.map((p) =>
+        p === selectedPart ? newPart : p,
+      );
+    } else {
+      updatedParts = [...replacedParts, newPart];
+    }
+    setReplacedParts(updatedParts);
+    setOpen(false);
+
     try {
-      await putReplacedParts(auth.token, replacedParts);
+      await putReplacedParts(auth.token, updatedParts);
       toast.success('Données sauvegardées avec succès');
     } catch (error) {
       console.error('Error saving replacedParts:', error);
@@ -87,51 +118,94 @@ const EditRepairedPart = () => {
     }
   };
 
-  const isModified =
-    JSON.stringify(replacedParts) !== JSON.stringify(initialReplacedParts);
+  const columns: any = [
+    { headerName: 'Nom', field: 'name' },
+    { headerName: 'Prix', field: 'price' },
+    {
+      headerName: 'Actions',
+      field: 'actions',
+      cellRenderer: (params: any) => (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleEditPart(params.data)}
+            sx={{ mr: 1 }}
+          >
+            Modifier
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeletePart(params.data)}
+          >
+            Supprimer
+          </Button>
+        </>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <MuiFileInput
-          value={file}
-          onChange={handleFileUpload}
-          placeholder="Importer un fichier Excel"
-          clearIconButtonProps={{
-            children: <CloseIcon fontSize="small" />,
+    <Box height={'100%'}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddPart}
+        sx={{ mb: 2 }}
+      >
+        Ajouter une pièce
+      </Button>
+      <div
+        className={`ag-theme-quartz${theme.palette.mode === 'dark' ? '-dark' : ''}`}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <AgGridReact
+          rowData={replacedParts}
+          columnDefs={columns}
+          autoSizeStrategy={{
+            type: 'fitGridWidth',
           }}
-          InputProps={{
-            startAdornment: <AttachFileIcon />,
-          }}
-          inputProps={{ accept: '.xlsx, .xls, .csv' }}
-          sx={{ margin: '16px 0' }}
+          rowHeight={50}
         />
-        {isModified && (
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Sauvegarder
-          </Button>
-        )}
-      </Box>
-      <List>
-        {replacedParts.map((part, index) => {
-          const partStr = replacedPartToString(part);
-          return (
-            <ListItem
-              key={partStr}
-              sx={{
-                borderTop: '1px solid #ccc',
-                borderBottom:
-                  index === replacedParts.length - 1
-                    ? '1px solid #ccc'
-                    : 'none',
-              }}
-            >
-              <ListItemText primary={partStr} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
+      </div>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <form onSubmit={handleSave}>
+          <DialogTitle>
+            {selectedPart ? 'Modifier' : 'Ajouter'} une pièce
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Nom"
+              type="text"
+              required
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Prix"
+              type="number"
+              required
+              fullWidth
+              value={price}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="secondary">
+              Annuler
+            </Button>
+            <Button type="submit" color="primary">
+              Sauvegarder
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </Box>
   );
 };
 

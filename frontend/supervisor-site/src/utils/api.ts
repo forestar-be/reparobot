@@ -1,4 +1,3 @@
-import { User } from '../components/settings/EditUser';
 import { ConfigElement } from '../components/settings/EditConfig';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -37,6 +36,22 @@ export const fetchReplacedParts = async (
   const response = await fetch(`${API_URL}/supervisor/replaced-parts`, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const deleteReplacedPart = async (token: string, name: string) => {
+  const response = await fetch(`${API_URL}/supervisor/replaced-parts/${name}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
