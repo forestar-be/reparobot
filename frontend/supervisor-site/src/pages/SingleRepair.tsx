@@ -81,6 +81,8 @@ interface MachineRepair {
   devis: boolean;
   repairer_name: string | null;
   remark: string | null;
+  city: string | null;
+  postal_code: string | null;
 }
 
 export const replacedPartToString = (replacedPart: {
@@ -114,7 +116,15 @@ function getTotalPriceParts(repair: MachineRepair) {
   return `${repair.replaced_part_list.reduce((acc, part) => acc + part.price, 0)}€`;
 }
 
-const getPdfDocumentProps = (repair: MachineRepair, hourlyRate: number) => {
+function getSuffixPriceDevis(repair: MachineRepair, priceDevis: number) {
+  return repair.devis ? ` +${String(priceDevis).replace('.', ',')}€` : '';
+}
+
+const getPdfDocumentProps = (
+  repair: MachineRepair,
+  hourlyRate: number,
+  priceDevis: number,
+) => {
   return (
     <MyDocument
       dateDuDepot={new Date(repair.createdAt).toLocaleDateString('fr-FR')}
@@ -133,7 +143,9 @@ const getPdfDocumentProps = (repair: MachineRepair, hourlyRate: number) => {
         .map(replacedPartToString)
         .join(', ')}
       travailEffectue={repair.remark ?? ''}
-      avecDevis={repair.devis ? 'Oui' : 'Non'}
+      avecDevis={
+        repair.devis ? `Oui${getSuffixPriceDevis(repair, priceDevis)}` : 'Non'
+      }
       prixPieces={getTotalPriceParts(repair)}
     />
   );
@@ -167,6 +179,7 @@ const SingleRepair = () => {
     document: undefined,
   });
   const [hourlyRate, setHourlyRate] = useState(0);
+  const [priceDevis, setPriceDevis] = useState(0);
 
   const {
     totalSeconds,
@@ -187,12 +200,13 @@ const SingleRepair = () => {
           brands,
           repairerNames,
           replacedParts,
-          config: { 'Taux horaire': hourlyRate },
+          config: { 'Taux horaire': hourlyRate, 'Prix devis': priceDevis },
         } = await fetchAllConfig(auth.token);
         setBrands(brands);
         setRepairers(repairerNames);
         setReplacedParts(replacedParts);
         setHourlyRate(Number(hourlyRate));
+        setPriceDevis(Number(priceDevis));
       } catch (error) {
         console.error('Error fetching config:', error);
         alert(
@@ -235,7 +249,7 @@ const SingleRepair = () => {
 
   useEffect(() => {
     if (repair) {
-      updateInstance(getPdfDocumentProps(repair, hourlyRate));
+      updateInstance(getPdfDocumentProps(repair, hourlyRate, priceDevis));
     }
   }, [repair]);
 
@@ -498,7 +512,12 @@ const SingleRepair = () => {
     }
   };
 
-  const renderCheckbox = (label: string, name: string, value: boolean) => (
+  const renderCheckbox = (
+    label: string,
+    name: string,
+    value: boolean,
+    suffix = '',
+  ) => (
     <Grid item xs={6}>
       {editableFields[name] ? (
         <FormControlLabel
@@ -514,7 +533,10 @@ const SingleRepair = () => {
       ) : (
         <Box display={'flex'} gap={'10px'}>
           <Typography variant="subtitle1">{label} :</Typography>
-          <Typography variant="subtitle1">{value ? 'Oui' : 'Non'}</Typography>
+          <Typography variant="subtitle1">
+            {value ? 'Oui' : 'Non'}
+            {suffix}
+          </Typography>
         </Box>
       )}
     </Grid>
@@ -525,6 +547,7 @@ const SingleRepair = () => {
     name: string,
     value: string,
     isMultiline: boolean = false,
+    xs?: 6 | 12 | 3,
   ) => (
     <RepairField
       label={label}
@@ -533,6 +556,7 @@ const SingleRepair = () => {
       isMultiline={isMultiline}
       editableFields={editableFields}
       handleChange={handleChange}
+      xs={xs}
     />
   );
 
@@ -746,7 +770,7 @@ const SingleRepair = () => {
           <CircularProgress size={'4rem'} />
         </Box>
       )}
-      <Grid container spacing={2} display={'flex'}>
+      <Grid container display={'flex'}>
         <Grid item xs={6}>
           <Typography variant="h4" gutterBottom>
             Fiche n°{id}
@@ -853,7 +877,12 @@ const SingleRepair = () => {
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
               {renderCheckbox('Garantie', 'warranty', repair.warranty ?? false)}
-              {renderCheckbox('Devis', 'devis', repair.devis)}
+              {renderCheckbox(
+                'Devis',
+                'devis',
+                repair.devis,
+                getSuffixPriceDevis(repair, priceDevis),
+              )}
             </Grid>
             <Grid item xs={12} display={'flex'}>
               {renderField(
@@ -876,6 +905,8 @@ const SingleRepair = () => {
                       'address',
                       'phone',
                       'email',
+                      'city',
+                      'postal_code',
                     ])
                   }
                 >
@@ -888,11 +919,19 @@ const SingleRepair = () => {
               {renderField('Nom', 'last_name', repair.last_name)}
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
-              {renderField('Adresse', 'address', repair.address)}
-              {renderField('Téléphone', 'phone', repair.phone)}
+              {renderField('Adresse', 'address', repair.address, false, 12)}
+            </Grid>
+            <Grid item xs={12} display={'flex'} gap={'10px'}>
+              {renderField(
+                'Code postal',
+                'postal_code',
+                repair.postal_code ?? '',
+              )}
+              {renderField('Ville', 'city', repair.city ?? '')}
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
               {renderField('Email', 'email', repair.email)}
+              {renderField('Téléphone', 'phone', repair.phone)}
             </Grid>
             <Grid item xs={12} display={'flex'} flexDirection={'column'}>
               <img

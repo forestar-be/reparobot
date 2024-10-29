@@ -237,6 +237,21 @@ router.put(
   }),
 );
 
+router.delete(
+  '/replaced-parts/:name',
+  asyncHandler(async (req, res) => {
+    const { name } = req.params;
+    const replacedPart = await prisma.replacedParts.findUnique({
+      where: { name },
+    });
+    if (!replacedPart) {
+      return res.status(404).json({ message: 'Pièce non trouvée.' });
+    }
+    await prisma.replacedParts.delete({ where: { name } });
+    res.json(replacedPart);
+  }),
+);
+
 router.get(
   '/repairer_names',
   asyncHandler(async (req, res) => {

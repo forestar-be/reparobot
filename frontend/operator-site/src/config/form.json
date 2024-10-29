@@ -3,6 +3,8 @@
     { "id": "last_name", "label": "Nom", "type": "text", "isRequired": true },
     { "id": "first_name", "label": "Prénom", "type": "text", "isRequired": true },
     { "id": "address", "label": "Adresse", "type": "text", "isRequired": true },
+    { "id": "postal_code", "label": "Code postal", "type": "text", "isRequired": true },
+    { "id": "city", "label": "Ville", "type": "text", "isRequired": true },
     { "id": "phone", "label": "Téléphone", "type": "tel", "isRequired": true },
     { "id": "email", "label": "Mail", "type": "email", "isRequired": true },
     {
