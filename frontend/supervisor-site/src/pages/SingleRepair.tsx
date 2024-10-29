@@ -25,6 +25,7 @@ import {
 } from '@mui/material';
 import {
   AttachEmail as AttachEmailIcon,
+  AddToDrive as AddToDriveIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
   FileDownload as FileDownloadIcon,
@@ -40,6 +41,7 @@ import {
   fetchRepairById,
   fetchRepairers,
   fetchReplacedParts,
+  sendDriveApi,
   sendEmailApi,
   updateRepair,
 } from '../utils/api';
@@ -65,7 +67,7 @@ interface MachineRepair {
   address: string;
   phone: string;
   email: string;
-  machine_type: string;
+  machine_type_name: string;
   repair_or_maintenance: string;
   robot_code: string;
   fault_description: string;
@@ -131,7 +133,7 @@ const getPdfDocumentProps = (
       gSMClient={repair.phone}
       nom={`${repair.first_name} ${repair.last_name}`}
       code={repair.id.toString()}
-      type={repair.machine_type}
+      type={repair.machine_type_name}
       codeRobot={repair.robot_code}
       modele={repair.brand_name}
       typeReparation={repair.repair_or_maintenance}
@@ -162,6 +164,7 @@ const SingleRepair = () => {
   );
   const [loading, setLoading] = useState(true);
   const [isLoadingSendEmail, setIsLoadingSendEmail] = useState(false);
+  const [isLoadingAddDrive, setIsLoadingAddDrive] = useState(false);
   const [editableFields, setEditableFields] = useState<{
     [key: string]: boolean;
   }>({});
@@ -180,6 +183,7 @@ const SingleRepair = () => {
   });
   const [hourlyRate, setHourlyRate] = useState(0);
   const [priceDevis, setPriceDevis] = useState(0);
+  const [machineTypes, setMachineTypes] = useState<string[]>([]);
 
   const {
     totalSeconds,
@@ -201,12 +205,14 @@ const SingleRepair = () => {
           repairerNames,
           replacedParts,
           config: { 'Taux horaire': hourlyRate, 'Prix devis': priceDevis },
+          machineType,
         } = await fetchAllConfig(auth.token);
         setBrands(brands);
         setRepairers(repairerNames);
         setReplacedParts(replacedParts);
         setHourlyRate(Number(hourlyRate));
         setPriceDevis(Number(priceDevis));
+        setMachineTypes(machineType);
       } catch (error) {
         console.error('Error fetching config:', error);
         alert(
@@ -512,6 +518,37 @@ const SingleRepair = () => {
     }
   };
 
+  const sendDrive = async () => {
+    if (isRunning) {
+      toast.warn(
+        "Arrêtez le chronomètre avant d'ajouter le PDF à Google Drive",
+      );
+      return;
+    }
+
+    setIsLoadingAddDrive(true);
+    try {
+      // send pdf to email api
+      const pdfBlob = instance.blob;
+      if (!pdfBlob) {
+        console.error('No pdf blob found');
+        toast.error("Une erreur s'est produite lors de la création du PDF");
+        return;
+      }
+      const formData = new FormData();
+      formData.append('attachment', pdfBlob, `fiche_reparation_${id}.pdf`);
+      await sendDriveApi(auth.token, id!, formData);
+      toast.success('Email envoyé avec succès');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error(
+        "Une erreur s'est produite lors de l'ajout du PDF à Google Drive",
+      );
+    } finally {
+      setIsLoadingAddDrive(false);
+    }
+  };
+
   const renderCheckbox = (
     label: string,
     name: string,
@@ -771,19 +808,20 @@ const SingleRepair = () => {
         </Box>
       )}
       <Grid container display={'flex'}>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Typography variant="h4" gutterBottom>
             Fiche n°{id}
           </Typography>
         </Grid>
         <Grid
           item
-          xs={6}
+          xs={9}
           display={'flex'}
           flexDirection={'row-reverse'}
           gap={4}
         >
           <Button
+            sx={{ paddingTop: 0 }}
             color="error"
             startIcon={<DeleteIcon />}
             onClick={handleDelete}
@@ -791,6 +829,20 @@ const SingleRepair = () => {
             Supprimer
           </Button>
           <Button
+            sx={{ paddingTop: 0 }}
+            color="secondary"
+            startIcon={<AddToDriveIcon />}
+            onClick={sendDrive}
+            disabled={isLoadingAddDrive}
+          >
+            {isLoadingAddDrive ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Sauvegarder dans le Google Drive'
+            )}
+          </Button>
+          <Button
+            sx={{ paddingTop: 0 }}
             color="secondary"
             startIcon={<AttachEmailIcon />}
             onClick={sendEmail}
@@ -803,6 +855,7 @@ const SingleRepair = () => {
             )}
           </Button>
           <Button
+            sx={{ paddingTop: 0 }}
             color="primary"
             startIcon={<FileDownloadIcon />}
             component="a"
@@ -830,7 +883,7 @@ const SingleRepair = () => {
                 <IconButton
                   onClick={() =>
                     toggleEditableSection('repairDetails', [
-                      'machine_type',
+                      'machine_type_name',
                       'repair_or_maintenance',
                       'fault_description',
                       'robot_code',
@@ -849,10 +902,13 @@ const SingleRepair = () => {
               </Box>
             </Grid>
             <Grid item xs={12} display={'flex'} gap={'10px'}>
-              {renderField(
+              {renderSelect(
                 'Type de machine',
-                'machine_type',
-                repair.machine_type,
+                'machine_type_name',
+                repair.machine_type_name,
+                machineTypes,
+                { width: '100%', margin: '5px 0' },
+                6,
               )}
               {renderField(
                 'Type',

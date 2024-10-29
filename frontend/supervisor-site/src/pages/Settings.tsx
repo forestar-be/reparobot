@@ -5,10 +5,13 @@ import EditUser from '../components/settings/EditUser';
 import EditEntity from '../components/settings/EditEntity';
 import {
   addBrand,
+  addMachineType,
   addRepairer,
   deleteBrand,
+  deleteMachineType,
   deleteRepairer,
   fetchBrands,
+  fetchMachineType,
   fetchRepairers,
 } from '../utils/api';
 import EditConfig from '../components/settings/EditConfig';
@@ -65,7 +68,8 @@ const Settings = (): JSX.Element => {
           <Tab label="Utilisateurs" {...a11yProps(1)} />
           <Tab label="Réparateur" {...a11yProps(2)} />
           <Tab label="Marques" {...a11yProps(3)} />
-          <Tab label="Autre" {...a11yProps(4)} />
+          <Tab label="Type de machine" {...a11yProps(4)} />
+          <Tab label="Autre" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -91,6 +95,14 @@ const Settings = (): JSX.Element => {
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
+        <EditEntity
+          entityName="Type de machine"
+          fetchEntities={fetchMachineType}
+          addEntity={addMachineType}
+          deleteEntity={deleteMachineType}
+        />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
         <EditConfig />
       </CustomTabPanel>
     </Box>

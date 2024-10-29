@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const asyncHandler = require('../helper/asyncHandler');
 const { sendEmail } = require('../helper/mailer');
+const { uploadFileToDrive } = require('../helper/ggdrive');
 
 const SUPERVISOR_SECRET_KEY = process.env.SUPERVISOR_SECRET_KEY;
 
@@ -162,6 +163,27 @@ router.delete(
       return res.status(404).json({ message: 'Réparation non trouvée.' });
     }
 
+    const { bucket_name, image_path_list, client_signature } = machineRepair;
+
+    if (bucket_name) {
+      try {
+        await Promise.all(
+          image_path_list.map(async (image_path) => {
+            logger.info(`Deleting image: ${image_path} in ${bucket_name}`);
+            await supabase.storage.from(bucket_name).remove([image_path]);
+          }),
+        );
+        logger.info(
+          `Deleting signature: ${client_signature} in ${bucket_name}`,
+        );
+        await supabase.storage.from(bucket_name).remove([client_signature]);
+      } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ error: error.message });
+      }
+    }
+
+    logger.info(`Deleting machine repair: ${id}`);
     await prisma.machineRepair.delete({
       where: { id: parseInt(id) },
     });
@@ -296,12 +318,13 @@ router.get(
 router.get(
   '/allConfig',
   asyncHandler(async (req, res) => {
-    const [brands, repairerNames, replacedParts, config] =
+    const [brands, repairerNames, replacedParts, config, machineType] =
       await prisma.$transaction([
         prisma.brand.findMany(),
         prisma.repairer.findMany(),
         prisma.replacedParts.findMany(),
         prisma.config.findMany(),
+        prisma.machineType.findMany(),
       ]);
     res.json({
       brands: brands.map((brand) => brand.name),
@@ -310,6 +333,7 @@ router.get(
       config: config.reduce((acc, { key, value }) => {
         return { ...acc, [key]: value };
       }, {}),
+      machineType: machineType.map((type) => type.name),
     });
   }),
 );
@@ -473,6 +497,35 @@ router.put(
 );
 
 router.put(
+  '/machine-repairs/drive/:id',
+  upload.single('attachment'),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const machineRepair = await prisma.machineRepair.findUnique({
+      where: { id: parseInt(id) },
+      select: { repair_or_maintenance: true },
+    });
+
+    if (!machineRepair) {
+      return res.status(404).json({ message: 'Réparation non trouvée.' });
+    }
+
+    const { repair_or_maintenance } = machineRepair;
+    const type = String(repair_or_maintenance).toLowerCase();
+    const mimeType = req.file.mimetype;
+    const fileName = `bon_de_${type}_${id}.pdf`;
+
+    const response = await uploadFileToDrive(
+      req.file.buffer,
+      fileName,
+      mimeType,
+    );
+
+    res.json(response);
+  }),
+);
+
+router.put(
   '/machine-repairs/email/:id',
   upload.single('attachment'),
   asyncHandler(async (req, res) => {
@@ -509,6 +562,41 @@ router.put(
     await sendEmail(options);
 
     res.json({ message: 'Email envoyé avec succès.' });
+  }),
+);
+
+router.get(
+  '/machine_types',
+  asyncHandler(async (req, res) => {
+    const machineTypes = await prisma.machineType.findMany();
+    res.json(machineTypes.map((type) => type.name));
+  }),
+);
+
+router.put(
+  '/machine_types',
+  asyncHandler(async (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'Veuillez fournir un nom.' });
+    }
+    const machineType = await prisma.machineType.create({ data: { name } });
+    res.json(machineType);
+  }),
+);
+
+router.delete(
+  '/machine_types/:name',
+  asyncHandler(async (req, res) => {
+    const { name } = req.params;
+    const machineType = await prisma.machineType.findUnique({
+      where: { name },
+    });
+    if (!machineType) {
+      return res.status(404).json({ message: 'Type de machine non trouvé.' });
+    }
+    await prisma.machineType.delete({ where: { name } });
+    res.json(machineType);
   }),
 );
 

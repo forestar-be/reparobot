@@ -4,8 +4,11 @@ import { green, orange } from '@mui/material/colors';
 export const light = {
   mode: 'light' as PaletteMode,
   primary: {
-    main: 'rgb(129, 187, 89)',
-    contrastText: 'rgb(100, 101, 98)',
+    main: '#418e93',
+    contrastText: 'rgb(255,255,255)',
+  },
+  secondary: {
+    main: '#936a41',
   },
   success: {
     main: 'rgb(111, 214, 145)',
@@ -26,8 +29,12 @@ export const light = {
 export const dark = {
   mode: 'dark' as PaletteMode,
   primary: {
-    main: 'rgb(129, 187, 89)',
-    contrastText: 'rgb(100, 101, 98)',
+    main: '#5f9598',
+    contrastText: 'rgb(43,43,43)',
+  },
+  secondary: {
+    main: '#a18970',
+    contrastText: 'rgb(43,43,43)',
   },
   warning: {
     main: 'rgb(242, 175, 87)',

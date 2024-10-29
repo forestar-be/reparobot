@@ -14,6 +14,7 @@ import {
 import { useAuth } from '../../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
+import { AG_GRID_LOCALE_FR } from '@ag-grid-community/locale';
 
 type Entity = string;
 
@@ -86,7 +87,7 @@ const EditEntity: React.FC<EditEntityProps> = ({
   };
 
   const columns: any = [
-    { headerName: entityName, field: 'entity' },
+    { headerName: entityName, field: 'entity', sortable: true, filter: true },
     {
       headerName: 'Actions',
       field: 'entity',
@@ -121,10 +122,11 @@ const EditEntity: React.FC<EditEntityProps> = ({
         <AgGridReact
           rowData={entities.map((entity) => ({ entity }))}
           columnDefs={columns}
+          rowHeight={50}
           autoSizeStrategy={{
             type: 'fitGridWidth',
           }}
-          rowHeight={50}
+          localeText={AG_GRID_LOCALE_FR}
         />
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>

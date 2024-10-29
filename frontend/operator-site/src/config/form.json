@@ -7,16 +7,7 @@
     { "id": "city", "label": "Ville", "type": "text", "isRequired": true },
     { "id": "phone", "label": "Téléphone", "type": "tel", "isRequired": true },
     { "id": "email", "label": "Mail", "type": "email", "isRequired": true },
-    {
-      "id": "machine_type",
-      "label": "Type de machine",
-      "type": "select",
-      "options": [
-        "Tondeuse", "Tronçonneuse", "Débroussailleuse", "Motoculteur",
-        "Tracteur", "Robot Tondeuse", "Autre"
-      ],
-      "isRequired": true
-    },
+    { "id": "machine_type_name", "label": "Type de machine", "type": "select", "optionsListName": "machineType", "isRequired": true },
     {
       "id": "repair_or_maintenance",
       "label": "Choix réparation ou entretien",

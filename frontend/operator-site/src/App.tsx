@@ -41,8 +41,8 @@ const App = (): JSX.Element => {
   return (
     <HelmetProvider>
       <Helmet
-        titleTemplate="%s | Opérateur Reparobot.be - Forestar"
-        defaultTitle="Opérateur Reparobot.be - Forestar"
+        titleTemplate="%s | Forestar Opérateur"
+        defaultTitle="Forestar Opérateur"
       />
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={getTheme(mode)}>

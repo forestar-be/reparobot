@@ -16,7 +16,8 @@ model MachineRepair {
   city                  String?
   phone                 String
   email                 String
-  machine_type          String
+  machine_type_id       MachineType?    @relation("MachineRepairMachineType", fields: [machine_type_name], references: [name], onDelete: SetNull)
+  machine_type_name     String?
   repair_or_maintenance String
   robot_code            String?
   devis                 Boolean         @default(false)
@@ -64,6 +65,11 @@ model Repairer {
 model Brand {
   name           String          @id @unique
   machineRepairs MachineRepair[] @relation("MachineRepairBrand")
+}
+
+model MachineType {
+  name           String          @id @unique
+  machineRepairs MachineRepair[] @relation("MachineRepairMachineType")
 }
 
 model Config {
