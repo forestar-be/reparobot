@@ -47,7 +47,7 @@ const DynamicForm = () => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const response = await fetch(`${API_URL}/operator/brands`, {
+        const response = await fetch(`${API_URL}/operator/optionsListByName`, {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -63,8 +63,8 @@ const DynamicForm = () => {
           throw new Error('Network response was not ok');
         }
 
-        const result = await response.json();
-        setOptionsListByName({ brands: result });
+        const result: Record<string, string[]> = await response.json();
+        setOptionsListByName(result);
       } catch (error) {
         console.error('Error fetching options:', error);
         alert('Erreur lors de la récupération des options');

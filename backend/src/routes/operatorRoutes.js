@@ -62,7 +62,7 @@ router.post(
         address,
         phone,
         email,
-        machine_type,
+        machine_type_name,
         repair_or_maintenance,
         robot_code,
         fault_description,
@@ -77,7 +77,7 @@ router.post(
         address,
         phone,
         email,
-        machine_type,
+        machine_type_name,
         repair_or_maintenance,
         fault_description,
         brand_name,
@@ -97,7 +97,7 @@ router.post(
       const addressDecoded = decodeURIComponent(address);
       const phoneDecoded = decodeURIComponent(phone);
       const emailDecoded = decodeURIComponent(email);
-      const machineTypeDecoded = decodeURIComponent(machine_type);
+      const machineTypeDecoded = decodeURIComponent(machine_type_name);
       const repairOrMaintenanceDecoded = decodeURIComponent(
         repair_or_maintenance,
       );
@@ -149,7 +149,7 @@ router.post(
           address: addressDecoded,
           phone: phoneDecoded,
           email: emailDecoded,
-          machine_type: machineTypeDecoded,
+          machine_type_name: machineTypeDecoded,
           repair_or_maintenance: repairOrMaintenanceDecoded,
           robot_code: robotCodeDecoded,
           fault_description: faultDescriptionDecoded,
@@ -205,10 +205,16 @@ router.post(
 );
 
 router.get(
-  '/brands',
+  '/optionsListByName',
   asyncHandler(async (req, res) => {
-    const brands = await prisma.brand.findMany();
-    res.json(brands.map((brand) => brand.name));
+    const [brands, machineType] = await prisma.$transaction([
+      prisma.brand.findMany(),
+      prisma.machineType.findMany(),
+    ]);
+    res.json({
+      brands: brands.map((brand) => brand.name),
+      machineType: machineType.map((type) => type.name),
+    });
   }),
 );
 

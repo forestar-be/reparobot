@@ -24,7 +24,7 @@ interface MachineRepair {
   address: string;
   phone: string;
   email: string;
-  machine_type: string;
+  machine_type_name: string;
   repair_or_maintenance: string;
   createdAt: string;
   repairer_name: string | null;
@@ -134,7 +134,7 @@ const MachineRepairsTable: React.FC = () => {
     },
     {
       headerName: 'Type de machine',
-      field: 'machine_type' as keyof MachineRepair,
+      field: 'machine_type_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
     },
@@ -155,11 +155,6 @@ const MachineRepairsTable: React.FC = () => {
       headerName: 'Nom',
       field: 'last_name' as keyof MachineRepair,
       sortable: true,
-      filter: true,
-    },
-    {
-      headerName: 'Téléphone',
-      field: 'phone' as keyof MachineRepair,
       filter: true,
     },
     {

@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { toast } from 'react-toastify';
+import { AG_GRID_LOCALE_FR } from '@ag-grid-community/locale';
 
 export interface ReplacedPart {
   name: string;
@@ -119,8 +120,8 @@ const EditRepairedPart = () => {
   };
 
   const columns: any = [
-    { headerName: 'Nom', field: 'name' },
-    { headerName: 'Prix', field: 'price' },
+    { headerName: 'Nom', field: 'name', sortable: true, filter: true },
+    { headerName: 'Prix', field: 'price', sortable: true, filter: true },
     {
       headerName: 'Actions',
       field: 'actions',

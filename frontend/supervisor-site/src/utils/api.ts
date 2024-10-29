@@ -261,6 +261,58 @@ export const deleteBrand = async (token: string, brand: string) => {
   return await response.json();
 };
 
+export const fetchMachineType = async (token: string) => {
+  const response = await fetch(`${API_URL}/supervisor/machine_types`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const addMachineType = async (token: string, machineType: string) => {
+  const response = await fetch(`${API_URL}/supervisor/machine_types`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name: machineType }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const deleteMachineType = async (token: string, machineType: string) => {
+  const response = await fetch(
+    `${API_URL}/supervisor/machine_types/${machineType}`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 export const deleteRepair = async (token: string, id: string) => {
   const response = await fetch(`${API_URL}/supervisor/machine-repairs/${id}`, {
     method: 'DELETE',
@@ -284,6 +336,29 @@ export const sendEmailApi = async (
 ) => {
   const response = await fetch(
     `${API_URL}/supervisor/machine-repairs/email/${id}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const sendDriveApi = async (
+  token: string,
+  id: number | string,
+  data: FormData,
+) => {
+  const response = await fetch(
+    `${API_URL}/supervisor/machine-repairs/drive/${id}`,
     {
       method: 'PUT',
       headers: {
