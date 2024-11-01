@@ -4,16 +4,13 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
 const logger = require('./config/logger');
 const publicAuthMiddleware = require('./middleware/publicAuthMiddleware');
 const publicSiteRoutes = require('./routes/publicSiteRoutes');
-const operatorAuthMiddleware = require('./middleware/operatorAuthMiddleware');
+const authMiddleware = require('./middleware/authMiddleware');
 const operatorRoutes = require('./routes/operatorRoutes');
-const supervisorAuthMiddleware = require('./middleware/supervisorAuthMiddleware');
 const supervisorRoutes = require('./routes/supervisorRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 // const rateLimit = require('express-rate-limit');
 const { initPingIntervals } = require('./helper/pingInterval');
 
@@ -58,8 +55,9 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/operator', operatorAuthMiddleware, operatorRoutes);
-app.use('/supervisor', supervisorAuthMiddleware, supervisorRoutes);
+app.use('/operator', authMiddleware, operatorRoutes);
+app.use('/supervisor', authMiddleware, supervisorRoutes);
+app.use('/admin', authMiddleware, adminRoutes);
 app.use('/', publicAuthMiddleware, publicSiteRoutes);
 
 // Error-handling middleware

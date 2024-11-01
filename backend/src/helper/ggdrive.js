@@ -13,47 +13,30 @@ const drive = google.drive({
   }),
 });
 
-const maxTries = 10;
-
 async function uploadFileToDrive(fileBuffer, fileName, mimeType) {
-  let fileIndex = 0;
-  let newFileName = fileName;
+  const response = await drive.files.create({
+    requestBody: {
+      name: newFileName,
+      mimeType: mimeType,
+      parents: [process.env.DRIVE_FOLDER_ID],
+    },
+    media: {
+      mimeType: mimeType,
+      body: Readable.from(fileBuffer),
+    },
+  });
 
-  while (true) {
-    try {
-      const response = await drive.files.create({
-        requestBody: {
-          name: newFileName,
-          mimeType: mimeType,
-        },
-        media: {
-          mimeType: mimeType,
-          body: Readable.from(fileBuffer),
-        },
-      });
+  await drive.permissions.create({
+    fileId: response.data.id,
+    // transferOwnership: true,
+    requestBody: {
+      role: 'writer',
+      type: 'user',
+      emailAddress: process.env.EMAIL_USER,
+    },
+  });
 
-      await drive.permissions.create({
-        fileId: response.data.id,
-        // transferOwnership: true,
-        requestBody: {
-          role: 'writer',
-          type: 'user',
-          emailAddress: process.env.EMAIL_USER,
-        },
-      });
-
-      return response.data;
-    } catch (error) {
-      if (error.code === 409 && fileIndex < maxTries) {
-        // Conflict error, file already exists
-        fileIndex++;
-        const ext = path.extname(fileName);
-        newFileName = path.basename(fileName, ext) + ` (${fileIndex})` + ext;
-      } else {
-        throw error;
-      }
-    }
-  }
+  return response.data;
 }
 
 module.exports = { uploadFileToDrive };

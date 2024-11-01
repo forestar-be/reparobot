@@ -185,7 +185,7 @@ router.post(
 
     // Find user by username
     const user = await prisma.user.findUnique({
-      where: { username, role: 'OPERATOR' },
+      where: { username, role: { in: ['OPERATOR', 'ADMIN'] } },
     });
 
     if (!user) {
@@ -200,7 +200,12 @@ router.post(
 
     const token = jwt.sign(user, OPERATOR_SECRET_KEY, { expiresIn: '1d' });
     const expiresAt = Date.now() + 1 * 24 * 60 * 60 * 1000;
-    res.json({ authentificated: true, token, expiresAt });
+    res.json({
+      authentificated: true,
+      token,
+      expiresAt,
+      isAdmin: user.role === 'ADMIN',
+    });
   }),
 );
 

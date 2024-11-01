@@ -111,7 +111,7 @@ export const updateRepair = async (token: string, id: string, data: any) => {
 };
 
 export const fetchUsers = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/users`, {
+  const response = await fetch(`${API_URL}/admin/users`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export const fetchUsers = async (token: string) => {
 };
 
 export const addUser = async (token: string, user: any) => {
-  const response = await fetch(`${API_URL}/supervisor/users`, {
+  const response = await fetch(`${API_URL}/admin/users`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export const addUser = async (token: string, user: any) => {
 };
 
 export const updateUser = async (token: string, id: string, user: any) => {
-  const response = await fetch(`${API_URL}/supervisor/users/${id}`, {
+  const response = await fetch(`${API_URL}/admin/users/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ export const updateUser = async (token: string, id: string, user: any) => {
 };
 
 export const deleteUser = async (token: string, id: string) => {
-  const response = await fetch(`${API_URL}/supervisor/users/${id}`, {
+  const response = await fetch(`${API_URL}/admin/users/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

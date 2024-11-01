@@ -1,4 +1,10 @@
-import React, { EventHandler, MouseEvent, useEffect, useState } from 'react';
+import React, {
+  EventHandler,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
@@ -13,6 +19,9 @@ import {
   ImageList,
   ImageListItem,
   InputLabel,
+  List,
+  ListItem,
+  ListItemIcon,
   ListItemText,
   MenuItem,
   Modal,
@@ -37,10 +46,7 @@ import {
 import {
   deleteRepair,
   fetchAllConfig,
-  fetchBrands,
   fetchRepairById,
-  fetchRepairers,
-  fetchReplacedParts,
   sendDriveApi,
   sendEmailApi,
   updateRepair,
@@ -60,6 +66,8 @@ import { useStopwatch } from 'react-timer-hook';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
+type ReplacedPart = { name: string; price: number };
+
 interface MachineRepair {
   id: number;
   first_name: string;
@@ -73,7 +81,10 @@ interface MachineRepair {
   fault_description: string;
   start_timer: Date | null;
   working_time_in_sec: number;
-  replaced_part_list: { name: string; price: number }[];
+  replaced_part_list: {
+    quantity: number;
+    replacedPart: ReplacedPart;
+  }[];
   state: string | null;
   createdAt: string;
   imageUrls: string[];
@@ -87,7 +98,13 @@ interface MachineRepair {
   postal_code: string | null;
 }
 
-export const replacedPartToString = (replacedPart: {
+export const replacedPartToString = (
+  replacedPart: MachineRepair['replaced_part_list'][0],
+) => {
+  return `${replacedPart.quantity}x ${replacedPart.replacedPart.name} (${replacedPart.replacedPart.price}€)`;
+};
+
+export const possibleReplacedPartToString = (replacedPart: {
   name: string;
   price: number;
 }) => {
@@ -110,12 +127,32 @@ export const getFormattedWorkingTime = (
   return `${hours}h ${minutes}m ${withSeconds ? `${remainingSeconds}s` : ''}`;
 };
 
+function formatPrice(value: number) {
+  return `${value.toFixed(2).replace('.', ',')}€`;
+}
+
 function getWorkingTimePrice(repair: MachineRepair, hourlyRate: number) {
-  return `${(repair.working_time_in_sec * (hourlyRate / 3600)).toFixed(2).replace('.', ',')}€`;
+  const price = repair.working_time_in_sec * (hourlyRate / 3600);
+  return formatPrice(price);
 }
 
 function getTotalPriceParts(repair: MachineRepair) {
-  return `${repair.replaced_part_list.reduce((acc, part) => acc + part.price, 0)}€`;
+  const total = repair.replaced_part_list.reduce(
+    (acc, replacedPart) =>
+      acc + replacedPart.replacedPart.price * replacedPart.quantity,
+    0,
+  );
+  return formatPrice(total);
+}
+
+function getTotalPrice(repair: MachineRepair, hourlyRate: number) {
+  const partsTotal = repair.replaced_part_list.reduce(
+    (acc, replacedPart) =>
+      acc + replacedPart.replacedPart.price * replacedPart.quantity,
+    0,
+  );
+  const workingTimePrice = repair.working_time_in_sec * (hourlyRate / 3600);
+  return formatPrice(partsTotal + workingTimePrice);
 }
 
 function getSuffixPriceDevis(repair: MachineRepair, priceDevis: number) {
@@ -126,6 +163,12 @@ const getPdfDocumentProps = (
   repair: MachineRepair,
   hourlyRate: number,
   priceDevis: number,
+  conditions: string,
+  address: string,
+  phone: string,
+  email: string,
+  website: string,
+  pdfTitle: string,
 ) => {
   return (
     <MyDocument
@@ -141,14 +184,22 @@ const getPdfDocumentProps = (
       remarques={repair.fault_description}
       prix={getWorkingTimePrice(repair, hourlyRate)}
       tempsPasse={getFormattedWorkingTime(repair.working_time_in_sec, false)}
-      piecesRemplacees={repair.replaced_part_list
-        .map(replacedPartToString)
-        .join(', ')}
+      piecesRemplacees={
+        repair.replaced_part_list.map(replacedPartToString).join(', ') ||
+        'Aucune'
+      }
       travailEffectue={repair.remark ?? ''}
       avecDevis={
         repair.devis ? `Oui${getSuffixPriceDevis(repair, priceDevis)}` : 'Non'
       }
       prixPieces={getTotalPriceParts(repair)}
+      prixTotal={getTotalPrice(repair, hourlyRate)}
+      conditions={conditions}
+      address={address}
+      phone={phone}
+      email={email}
+      website={website}
+      pdfTitle={pdfTitle}
     />
   );
 };
@@ -173,8 +224,8 @@ const SingleRepair = () => {
   }>({});
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [replacedParts, setReplacedParts] = useState<
-    { name: string; price: number }[]
+  const [possibleReplacedParts, setPossibleReplacedParts] = useState<
+    ReplacedPart[]
   >([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [repairers, setRepairers] = useState<string[]>([]);
@@ -184,6 +235,12 @@ const SingleRepair = () => {
   const [hourlyRate, setHourlyRate] = useState(0);
   const [priceDevis, setPriceDevis] = useState(0);
   const [machineTypes, setMachineTypes] = useState<string[]>([]);
+  const [conditions, setConditions] = useState<string>('');
+  const [adresse, setAdresse] = useState<string>('');
+  const [telephone, setTelephone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [siteWeb, setSiteWeb] = useState<string>('');
+  const [titreBonPdf, setTitreBonPdf] = useState<string>('');
 
   const {
     totalSeconds,
@@ -204,15 +261,30 @@ const SingleRepair = () => {
           brands,
           repairerNames,
           replacedParts,
-          config: { 'Taux horaire': hourlyRate, 'Prix devis': priceDevis },
+          config: {
+            'Taux horaire': hourlyRate,
+            'Prix devis': priceDevis,
+            'Conditions générales de réparation': conditions,
+            Adresse: address,
+            Téléphone: phone,
+            Email: email,
+            'Site web': website,
+            'Titre bon pdf': pdfTitle,
+          },
           machineType,
         } = await fetchAllConfig(auth.token);
         setBrands(brands);
         setRepairers(repairerNames);
-        setReplacedParts(replacedParts);
+        setPossibleReplacedParts(replacedParts);
         setHourlyRate(Number(hourlyRate));
         setPriceDevis(Number(priceDevis));
         setMachineTypes(machineType);
+        setConditions(conditions);
+        setAdresse(address);
+        setTelephone(phone);
+        setEmail(email);
+        setSiteWeb(website);
+        setTitreBonPdf(pdfTitle);
       } catch (error) {
         console.error('Error fetching config:', error);
         alert(
@@ -255,7 +327,19 @@ const SingleRepair = () => {
 
   useEffect(() => {
     if (repair) {
-      updateInstance(getPdfDocumentProps(repair, hourlyRate, priceDevis));
+      updateInstance(
+        getPdfDocumentProps(
+          repair,
+          hourlyRate,
+          priceDevis,
+          conditions,
+          adresse,
+          telephone,
+          email,
+          siteWeb,
+          titreBonPdf,
+        ),
+      );
     }
   }, [repair]);
 
@@ -284,7 +368,7 @@ const SingleRepair = () => {
     }
 
     if (repair.start_timer !== initialRepair.start_timer) {
-      handleUpdate(); // update the start_timer field in the backend
+      handleUpdate(repair, initialRepair); // update the start_timer field in the backend
     }
   }, [repair?.start_timer]);
 
@@ -314,12 +398,18 @@ const SingleRepair = () => {
   ) => {
     const newReplacedParts = Array.isArray(event.target.value)
       ? event.target.value.map((partName) => {
-          const part = replacedParts.find((p) => p.name === partName);
+          const part = possibleReplacedParts.find((p) => p.name === partName);
           if (!part) {
             toast.error(`Pièce ${partName} non trouvée`);
             throw new Error(`Pièce ${partName} non trouvée`);
           }
-          return part;
+          return {
+            quantity:
+              repair?.replaced_part_list.find(
+                (p) => p.replacedPart.name === partName,
+              )?.quantity || 1,
+            replacedPart: part,
+          };
         })
       : [];
 
@@ -389,6 +479,53 @@ const SingleRepair = () => {
     }
   };
 
+  const handleDeleteReplacedPart = useCallback(
+    (replacedPartName: string) => {
+      if (!repair || !initialRepair) {
+        console.error('No repair data found');
+        return;
+      }
+      const newReplacedPartList = repair.replaced_part_list.filter(
+        (part) => part.replacedPart.name !== replacedPartName,
+      );
+      const newRepair = {
+        ...repair,
+        replaced_part_list: newReplacedPartList,
+      };
+      setRepair(newRepair);
+      handleUpdate(newRepair, initialRepair);
+    },
+    [repair, initialRepair],
+  );
+
+  const updateQuantityOfReplacedPart = useCallback(
+    (
+      e: SelectChangeEvent<number>,
+      replacedPart: MachineRepair['replaced_part_list'][0],
+    ) => {
+      if (!repair || !initialRepair) {
+        console.error('No repair data found');
+        return;
+      }
+      const newReplacedPartList = repair.replaced_part_list.map((part) => {
+        if (part.replacedPart.name === replacedPart.replacedPart.name) {
+          return {
+            ...part,
+            quantity: Number(e.target.value),
+          };
+        }
+        return part;
+      });
+      const newRepair = {
+        ...repair,
+        replaced_part_list: newReplacedPartList,
+      };
+      setRepair(newRepair);
+      handleUpdate(newRepair, initialRepair);
+    },
+    [repair, initialRepair],
+  );
+
   useEffect(() => {
     if (repair && initialRepair) {
       if (
@@ -401,7 +538,7 @@ const SingleRepair = () => {
           repair,
           initialRepair,
         });
-        handleUpdate();
+        handleUpdate(repair, initialRepair);
       }
     }
   }, [repair?.working_time_in_sec]);
@@ -419,7 +556,7 @@ const SingleRepair = () => {
         initialRepair,
       });
       // save action
-      handleUpdate();
+      handleUpdate(repair!, initialRepair!);
     }
   };
 
@@ -458,28 +595,28 @@ const SingleRepair = () => {
     }
   };
 
-  const handleUpdate = async () => {
-    if (!repair || !initialRepair) {
-      console.error('No repair data found');
-      return;
-    }
-
+  const handleUpdate = async (
+    repairData: MachineRepair,
+    initialRepairData: MachineRepair,
+  ) => {
     setLoading(true);
 
     const updatedData: Record<keyof MachineRepair, any> = getKeys(
-      repair,
+      repairData,
     ).reduce((acc: any, key: keyof MachineRepair) => {
-      if (repair[key] !== initialRepair[key]) {
-        acc[key] = repair[key];
+      if (repairData[key] !== initialRepairData[key]) {
+        acc[key] = repairData[key];
       }
       return acc;
     }, {});
 
     try {
       await updateRepair(auth.token, id!, updatedData);
-      // alert('Fiche mise à jour avec succès');
-      toast.success('Fiche mise à jour avec succès');
-      setInitialRepair(repair);
+      toast.success('Fiche mise à jour avec succès', {
+        toastId: 'successUpdateSingleRepair',
+        updateId: 'successUpdateSingleRepair',
+      });
+      setInitialRepair(repairData);
     } catch (error) {
       console.error('Error updating repair:', error);
       toast.error(
@@ -538,7 +675,7 @@ const SingleRepair = () => {
       const formData = new FormData();
       formData.append('attachment', pdfBlob, `fiche_reparation_${id}.pdf`);
       await sendDriveApi(auth.token, id!, formData);
-      toast.success('Email envoyé avec succès');
+      toast.success('PDF ajouté au Google Drive avec succès');
     } catch (error) {
       console.error('Error sending email:', error);
       toast.error(
@@ -608,7 +745,7 @@ const SingleRepair = () => {
           flexDirection={'row'}
           alignItems={'center'}
           gap={'10px'}
-          marginTop={'5px'}
+          marginTop={'10px'}
         >
           <Typography
             variant="subtitle1"
@@ -731,19 +868,19 @@ const SingleRepair = () => {
   const renderReplacedPartSelect = (
     label: string,
     name: string,
-    values: { name: string; price: number }[],
-    possibleValues: { name: string; price: number }[],
+    values: MachineRepair['replaced_part_list'],
+    possibleValues: ReplacedPart[],
   ) => {
     return (
       <Grid item xs={12}>
-        {editableFields[name] ? (
+        {editableFields[name] && (
           <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
             <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={values.map((val) => val.name)}
+              value={values.map((val) => val.replacedPart.name)}
               name={name}
               onChange={handleReplacedPartSelectChange}
               input={<OutlinedInput id="select-multiple-chip" label={label} />}
@@ -756,11 +893,13 @@ const SingleRepair = () => {
               )}
             >
               {possibleValues.map((val) => {
-                const replacedPartString = replacedPartToString(val);
+                const replacedPartString = possibleReplacedPartToString(val);
                 return (
                   <MenuItem key={val.name} value={val.name}>
                     <Checkbox
-                      checked={values.some((v) => v.name === val.name)}
+                      checked={values.some(
+                        (v) => v.replacedPart.name === val.name,
+                      )}
                     />
                     <ListItemText primary={replacedPartString} />
                   </MenuItem>
@@ -768,27 +907,67 @@ const SingleRepair = () => {
               })}
             </Select>
           </FormControl>
-        ) : (
-          <Box
-            display={'flex'}
-            flexDirection={'row'}
-            gap={'10px'}
-            margin={'5px 0'}
-          >
-            <Typography variant="subtitle1">{label} :</Typography>
-            <Typography variant="subtitle1">
-              {values.length
-                ? values.map(replacedPartToString).join(', ')
-                : 'Aucune'}
-            </Typography>
-          </Box>
         )}
+        <Box
+          display={'flex'}
+          flexDirection={values.length ? 'column' : 'row'}
+          gap={values.length ? undefined : '10px'}
+          margin={'5px 0'}
+        >
+          <Typography variant="subtitle1">{label} :</Typography>
+          <Grid item xs={6}>
+            {values.length ? (
+              <List sx={{ width: '100%' }}>
+                {values.map((replacedPart) => (
+                  <ListItem
+                    key={replacedPart.replacedPart.name}
+                    secondaryAction={
+                      <Select
+                        sx={{ width: 70 }}
+                        size={'small'}
+                        value={replacedPart.quantity}
+                        onChange={(e) =>
+                          updateQuantityOfReplacedPart(e, replacedPart)
+                        }
+                      >
+                        {[...Array(10).keys()].map((num) => (
+                          <MenuItem key={num} value={num + 1}>
+                            {num + 1}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                  >
+                    <ListItemIcon>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() =>
+                          handleDeleteReplacedPart(
+                            replacedPart.replacedPart.name,
+                          )
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${replacedPart.replacedPart.name} - ${replacedPart.replacedPart.price}€`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="subtitle1">Aucune</Typography>
+            )}
+          </Grid>
+        </Box>
       </Grid>
     );
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding: 4, paddingTop: 2 }}>
       {loading && (
         <Box
           sx={{
@@ -797,7 +976,8 @@ const SingleRepair = () => {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            // backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            background: 'transparent',
             zIndex: 100,
             width: '100vw',
             top: 0,
@@ -809,7 +989,7 @@ const SingleRepair = () => {
       )}
       <Grid container display={'flex'}>
         <Grid item xs={3}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom paddingTop={1}>
             Fiche n°{id}
           </Typography>
         </Grid>
@@ -821,7 +1001,6 @@ const SingleRepair = () => {
           gap={4}
         >
           <Button
-            sx={{ paddingTop: 0 }}
             color="error"
             startIcon={<DeleteIcon />}
             onClick={handleDelete}
@@ -829,7 +1008,6 @@ const SingleRepair = () => {
             Supprimer
           </Button>
           <Button
-            sx={{ paddingTop: 0 }}
             color="secondary"
             startIcon={<AddToDriveIcon />}
             onClick={sendDrive}
@@ -842,7 +1020,6 @@ const SingleRepair = () => {
             )}
           </Button>
           <Button
-            sx={{ paddingTop: 0 }}
             color="secondary"
             startIcon={<AttachEmailIcon />}
             onClick={sendEmail}
@@ -855,7 +1032,6 @@ const SingleRepair = () => {
             )}
           </Button>
           <Button
-            sx={{ paddingTop: 0 }}
             color="primary"
             startIcon={<FileDownloadIcon />}
             component="a"
@@ -948,6 +1124,87 @@ const SingleRepair = () => {
                 true,
               )}
             </Grid>
+            <Grid item xs={12} padding={'20px 0'}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6">Informations techniques</Typography>
+                <IconButton
+                  onClick={() =>
+                    toggleEditableSection('technicalInfo', [
+                      'file_url',
+                      'bucket_name',
+                      'working_time',
+                      'replaced_part_list',
+                      'repairer_name',
+                      'state',
+                      'remark',
+                    ])
+                  }
+                >
+                  {editableSections['technicalInfo'] ? (
+                    <SaveIcon />
+                  ) : (
+                    <EditIcon />
+                  )}
+                </IconButton>
+              </Box>
+            </Grid>
+            {renderSelect(
+              'État',
+              'state',
+              repair.state || 'Non commencé',
+              Object.keys(colorByState),
+              { marginTop: 2, marginBottom: 1, width: '80%' },
+              12,
+              colorByState,
+            )}
+            {renderSelect(
+              'Réparateur',
+              'repairer_name',
+              repair.repairer_name || 'Non attribué',
+              repairers,
+              { marginTop: 2, marginBottom: 1, width: '80%' },
+              12,
+            )}
+            <Box width={'80%'}>
+              {renderField(
+                'Remarques atelier',
+                'remark',
+                repair.remark ?? '',
+                true,
+              )}
+            </Box>
+            {renderTimePicker()}
+            <Box display={'flex'} gap={'10px'} marginBottom={'20px'}>
+              <Typography variant="subtitle1">Total temps:</Typography>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {getWorkingTimePrice(repair, hourlyRate)}
+              </Typography>
+            </Box>
+            <Box margin={'20px 0'}>
+              {renderReplacedPartSelect(
+                'Pièces remplacées',
+                'replaced_part_list',
+                repair.replaced_part_list || [],
+                possibleReplacedParts,
+              )}
+              <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
+                <Typography variant="subtitle1">Total pièces :</Typography>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {getTotalPriceParts(repair)}
+                </Typography>
+              </Box>
+            </Box>
+            <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Total :
+              </Typography>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {getTotalPrice(repair, hourlyRate)}
+              </Typography>
+            </Box>
           </Grid>
           <Grid item xs={6}>
             <Grid item xs={12}>
@@ -1001,83 +1258,9 @@ const SingleRepair = () => {
                 Signature client
               </Typography>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={6}>
-            <Grid item xs={12}>
-              <Box display="flex" alignItems="center">
-                <Typography variant="h6">Information techniques</Typography>
-                <IconButton
-                  onClick={() =>
-                    toggleEditableSection('technicalInfo', [
-                      'file_url',
-                      'bucket_name',
-                      'working_time',
-                      'replaced_part_list',
-                      'repairer_name',
-                      'state',
-                      'remark',
-                    ])
-                  }
-                >
-                  {editableSections['technicalInfo'] ? (
-                    <SaveIcon />
-                  ) : (
-                    <EditIcon />
-                  )}
-                </IconButton>
-              </Box>
+            <Grid item xs={12} padding={'20px 0'}>
+              <Divider />
             </Grid>
-            {renderTimePicker()}
-            <Box display={'flex'} gap={'10px'} marginBottom={'20px'}>
-              <Typography variant="subtitle1">Total temps:</Typography>
-              <Typography variant="subtitle1">
-                {getWorkingTimePrice(repair, hourlyRate)}
-              </Typography>
-            </Box>
-            {renderSelect(
-              'État',
-              'state',
-              repair.state || 'Non commencé',
-              Object.keys(colorByState),
-              { marginTop: 2, marginBottom: 1, width: '80%' },
-              12,
-              colorByState,
-            )}
-            {renderSelect(
-              'Réparateur',
-              'repairer_name',
-              repair.repairer_name || 'Non attribué',
-              repairers,
-              { marginTop: 2, marginBottom: 1, width: '80%' },
-              12,
-            )}
-            <Box width={'80%'}>
-              {renderField(
-                'Remarques atelier',
-                'remark',
-                repair.remark ?? '',
-                true,
-              )}
-            </Box>
-            <Box margin={'20px 0'}>
-              {renderReplacedPartSelect(
-                'Pièces remplacées',
-                'replaced_part_list',
-                repair.replaced_part_list || [],
-                replacedParts,
-              )}
-              <Box display={'flex'} gap={'10px'} margin={'5px 0'}>
-                <Typography variant="subtitle1">Total pièces :</Typography>
-                <Typography variant="subtitle1">
-                  {getTotalPriceParts(repair)}
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={6}>
             <Typography variant="h6" gutterBottom>
               Photos
             </Typography>

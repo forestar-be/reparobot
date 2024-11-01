@@ -21,7 +21,7 @@ import { toast } from 'react-toastify';
 export interface User {
   id: string;
   username: string;
-  role: 'OPERATOR' | 'SUPERVISOR';
+  role: 'OPERATOR' | 'SUPERVISOR' | 'ADMIN';
 }
 
 const EditUser = () => {
@@ -31,7 +31,9 @@ const EditUser = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
-  const [role, setRole] = useState<'OPERATOR' | 'SUPERVISOR' | null>(null);
+  const [role, setRole] = useState<'OPERATOR' | 'SUPERVISOR' | 'ADMIN' | null>(
+    null,
+  );
   const theme = useTheme();
 
   useEffect(() => {
@@ -107,8 +109,19 @@ const EditUser = () => {
     {
       headerName: 'Rôle',
       field: 'role',
-      valueFormatter: (params: any) =>
-        params.value === 'OPERATOR' ? 'OPERATEUR' : 'SUPERVISEUR',
+      valueFormatter: (params: any) => {
+        if (params.value === 'OPERATOR') {
+          return 'Opérateur';
+        }
+
+        if (params.value === 'SUPERVISOR') {
+          return 'Superviseur';
+        }
+
+        if (params.value === 'ADMIN') {
+          return 'Admin';
+        }
+      },
     },
     {
       headerName: 'Actions',
@@ -193,11 +206,12 @@ const EditUser = () => {
               value={role}
               required
               onChange={(e) =>
-                setRole(e.target.value as 'OPERATOR' | 'SUPERVISOR')
+                setRole(e.target.value as 'OPERATOR' | 'SUPERVISOR' | 'ADMIN')
               }
             >
-              <MenuItem value="OPERATOR">OPERATEUR</MenuItem>
-              <MenuItem value="SUPERVISOR">SUPERVISEUR</MenuItem>
+              <MenuItem value="OPERATOR">Opérateur</MenuItem>
+              <MenuItem value="SUPERVISOR">Superviseur</MenuItem>
+              <MenuItem value="ADMIN">Admin</MenuItem>
             </TextField>
           </DialogContent>
           <DialogActions>

@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useEffect } from 'react';
+import { useContext, createContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext({
@@ -10,6 +10,7 @@ const AuthContext = createContext({
     return { success: false, message: 'Impossible de vous authentifier' };
   },
   logOut: () => {},
+  isAdmin: false,
 });
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -31,6 +32,9 @@ const AuthProvider = ({ children }: any) => {
   const [token, setToken] = useState(getTokenFromLocalStorage());
   const [expiresAt, setExpiresAt] = useState(
     localStorage.getItem('expires_at') || '',
+  );
+  const [isAdmin, setIsAdmin] = useState(
+    localStorage.getItem('is_admin') === 'true',
   );
 
   const navigate = useNavigate();
@@ -65,8 +69,10 @@ const AuthProvider = ({ children }: any) => {
     if (res.authentificated) {
       setExpiresAt(res.expiresAt);
       setToken(res.token);
+      setIsAdmin(res.isAdmin);
       localStorage.setItem('token', String(res.token));
       localStorage.setItem('expires_at', String(res.expiresAt));
+      localStorage.setItem('is_admin', String(res.isAdmin));
       navigate('/');
       return { success: true, message: 'Vous êtes connecté' };
     }
@@ -81,13 +87,17 @@ const AuthProvider = ({ children }: any) => {
     console.log('logout');
     setExpiresAt('');
     setToken('');
+    setIsAdmin(false);
     localStorage.removeItem('token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('is_admin');
     navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ token, expiresAt, loginAction, logOut }}>
+    <AuthContext.Provider
+      value={{ token, expiresAt, loginAction, logOut, isAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );
