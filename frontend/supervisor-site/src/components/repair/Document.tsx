@@ -26,6 +26,13 @@ interface MyDocumentProps {
   piecesRemplacees: string;
   travailEffectue: string;
   prixPieces: string;
+  prixTotal: string;
+  conditions: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  pdfTitle: string;
 }
 
 // Create styles
@@ -102,6 +109,13 @@ const MyDocument = ({
   piecesRemplacees,
   prixPieces,
   travailEffectue,
+  prixTotal,
+  conditions,
+  address,
+  phone,
+  email,
+  website,
+  pdfTitle,
 }: MyDocumentProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -110,20 +124,19 @@ const MyDocument = ({
           <Image style={{ width: '66%' }} src="/images/forestar_enhanced.png" />
           <div style={styles.issuerInfoBox}>
             <div style={styles.subIssuerInfoBox}>
-              <Text>FORESTAR SHOP</Text>
-              <Text>Chaussée d'escaussines 162</Text>
-              <Text>7090 Braine-le-Compte</Text>
-              <Text>Belgique</Text>
+              {address.split('\n').map((line, index) => (
+                <Text key={index}>{line}</Text>
+              ))}
             </div>
             <div>
-              <Text>067830706</Text>
-              <Link>info@forestar.be</Link>
-              <Link>www.forestar.be</Link>
+              <Text>{phone}</Text>
+              <Link>{email}</Link>
+              <Link>{website}</Link>
             </div>
           </div>
         </View>
         <View style={styles.subHeaderRightSection}>
-          <Text style={styles.header}>Bon d'entretien ou de réparation</Text>
+          <Text style={styles.header}>{pdfTitle}</Text>
           <Text style={styles.textBox}>Date du dépôt : {dateDuDepot}</Text>
           <Text style={styles.textBox}>GSM Client : {gSMClient}</Text>
           <Text style={styles.textBox}>Nom : {nom}</Text>
@@ -207,7 +220,7 @@ const MyDocument = ({
                 borderBottom: 'unset',
               }}
             >
-              Prix: {prix}
+              Prix main d'œuvre: {prix}
             </Text>
           </div>
           <div style={styles.textBox}>
@@ -224,32 +237,14 @@ const MyDocument = ({
               Prix des pièces: {prixPieces}
             </Text>
           </div>
+          <div style={{ ...styles.textBox, borderTop: 'unset' }}>
+            <Text style={{ marginBottom: 5 }}>Prix total: {prixTotal}</Text>
+          </div>
           <Text style={styles.header}> Conditions générales de réparation</Text>
           <div style={styles.textBox}>
-            <Text>
-              *Forfait nettoyage haute pression si machine non néttoyée + 25,00€
-              TVAC
-            </Text>
-            <Text>*Entretien = machine en état de marche.</Text>
-            <Text>*Machine en PANNE sur devis</Text>
-            <Text>*Machine de Grande surface, sur réserve d’acceptation</Text>
-            <Text>
-              *Les machines qui nous sont remises à fin de réparation doivent
-              être enlevées endéans les 6 mois. Passé ce délai, nous considérons
-              les machines comme abandonnées.
-            </Text>
-            <Text>
-              *Au cas où une remise de prix (devis) doit précéder la réparation,
-              le prix du démontage et remontage de la machine sera facturé au
-              client si celui-ci ne fait pas exécuter la réparation dans nos
-              ateliers (25€).
-            </Text>
-            <Text>
-              *Les retards de livraison de pièce de rechange ne peuvent donner
-              lieu à dommages et intérêts et ne sont jamais causes de rupture de
-              contrats.
-            </Text>
-            <Text>*Main d'œuvre: 50,00 € / heure TVAC</Text>
+            {conditions.split('\n').map((line, index) => (
+              <Text key={index}>{line}</Text>
+            ))}
           </div>
         </View>
       </View>

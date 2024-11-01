@@ -15,6 +15,7 @@ import {
   fetchRepairers,
 } from '../utils/api';
 import EditConfig from '../components/settings/EditConfig';
+import { useAuth } from '../hooks/AuthProvider';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,6 +51,7 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 const Settings = (): JSX.Element => {
+  const { isAdmin } = useAuth();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -65,20 +67,17 @@ const Settings = (): JSX.Element => {
           aria-label="Onglets des paramètres"
         >
           <Tab label="Pièces à remplacer" {...a11yProps(0)} />
-          <Tab label="Utilisateurs" {...a11yProps(1)} />
-          <Tab label="Réparateur" {...a11yProps(2)} />
-          <Tab label="Marques" {...a11yProps(3)} />
-          <Tab label="Type de machine" {...a11yProps(4)} />
-          <Tab label="Autre" {...a11yProps(5)} />
+          <Tab label="Réparateur" {...a11yProps(1)} />
+          <Tab label="Marques" {...a11yProps(2)} />
+          <Tab label="Type de machine" {...a11yProps(3)} />
+          <Tab label="Autre" {...a11yProps(4)} />
+          {isAdmin && <Tab label="Utilisateurs" {...a11yProps(5)} />}
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <EditRepairedPart />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <EditUser />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
         <EditEntity
           entityName="Réparateur"
           fetchEntities={fetchRepairers}
@@ -86,7 +85,7 @@ const Settings = (): JSX.Element => {
           deleteEntity={deleteRepairer}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
+      <CustomTabPanel value={value} index={2}>
         <EditEntity
           entityName="Marque"
           fetchEntities={fetchBrands}
@@ -94,7 +93,7 @@ const Settings = (): JSX.Element => {
           deleteEntity={deleteBrand}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={4}>
+      <CustomTabPanel value={value} index={3}>
         <EditEntity
           entityName="Type de machine"
           fetchEntities={fetchMachineType}
@@ -102,9 +101,14 @@ const Settings = (): JSX.Element => {
           deleteEntity={deleteMachineType}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={5}>
+      <CustomTabPanel value={value} index={4}>
         <EditConfig />
       </CustomTabPanel>
+      {isAdmin && (
+        <CustomTabPanel value={value} index={5}>
+          <EditUser />
+        </CustomTabPanel>
+      )}
     </Box>
   );
 };

@@ -187,6 +187,7 @@ const EditConfig: React.FC<EditConfigProps> = ({}) => {
                 setConfigElement({ ...configElement, value: e.target.value })
               }
               autoComplete={'off'}
+              multiline
             />
           </DialogContent>
           <DialogActions>
