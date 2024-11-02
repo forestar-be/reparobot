@@ -214,6 +214,7 @@ const MachineRepairsTable: React.FC = () => {
           autoSizeStrategy={{
             type: 'fitGridWidth',
           }}
+          paginationPageSizeSelector={false}
         />
       </div>
     </Paper>

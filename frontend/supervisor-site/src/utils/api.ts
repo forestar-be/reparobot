@@ -465,3 +465,57 @@ export const fetchAllConfig = async (token: string) => {
 
   return await response.json();
 };
+
+export const addImage = async (
+  token: string,
+  id: string,
+  file: File,
+): Promise<{
+  message: string;
+  imageUrls: string[];
+}> => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const response = await fetch(
+    `${API_URL}/supervisor/machine-repairs/${id}/image`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+export const deleteImage = async (
+  token: string,
+  id: string,
+  imageIndex: number,
+): Promise<{
+  message: string;
+  imageUrls: string[];
+}> => {
+  const response = await fetch(
+    `${API_URL}/supervisor/machine-repairs/${id}/image/${imageIndex}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`${response.statusText} ${response.status}`);
+  }
+
+  return await response.json();
+};

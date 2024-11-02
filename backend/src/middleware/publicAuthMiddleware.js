@@ -12,7 +12,7 @@ function authMiddleware(req, res, next) {
   if (authHeader && authHeader === `Bearer ${AUTH_TOKEN}`) {
     next();
   } else {
-    logger.warn(`Tentative d'accès non autorisée depuis ${req.ip}`);
+    logger.warn(`Tentative d'accès non autorisée sur public site route`);
     res.status(401).send('Non autorisé');
   }
 }
