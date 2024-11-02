@@ -249,7 +249,6 @@ const SingleRepair = () => {
     hours,
     days,
     isRunning,
-    start,
     pause,
     reset,
   } = useStopwatch({ autoStart: false });
@@ -780,7 +779,7 @@ const SingleRepair = () => {
               <Typography variant="subtitle1" noWrap width={100}>
                 {isRunning ? (
                   <>
-                    {hours}h {minutes}m {seconds}s
+                    {hours + days * 24}h {minutes}m {seconds}s
                   </>
                 ) : (
                   <>

@@ -16,7 +16,7 @@ const drive = google.drive({
 async function uploadFileToDrive(fileBuffer, fileName, mimeType) {
   const response = await drive.files.create({
     requestBody: {
-      name: newFileName,
+      name: fileName,
       mimeType: mimeType,
       parents: [process.env.DRIVE_FOLDER_ID],
     },
