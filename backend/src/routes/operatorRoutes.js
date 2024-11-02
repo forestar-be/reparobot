@@ -10,6 +10,7 @@ const logger = require('../config/logger');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const asyncHandler = require('../helper/asyncHandler');
+const { generateUniqueString } = require('../helper/common.helper');
 
 const OPERATOR_SECRET_KEY = process.env.OPERATOR_SECRET_KEY;
 
@@ -19,12 +20,6 @@ const supabase = createClient(
   process.env.SUPABASE_KEY,
 );
 const bucketName = process.env.BUCKET_IMAGE_NAME;
-
-function generateUniqueString() {
-  const randomString = Math.random().toString(36).substring(2, 15);
-  const timestamp = new Date().getTime();
-  return `${timestamp}_${randomString}`;
-}
 
 // Function to convert Base64 string to Blob
 function base64ToBlob(base64, contentType = '', sliceSize = 512) {

@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 const asyncHandler = require('../helper/asyncHandler');
 const { sendEmail } = require('../helper/mailer');
 const { uploadFileToDrive } = require('../helper/ggdrive');
+const { generateUniqueString } = require('../helper/common.helper');
 
 const SUPERVISOR_SECRET_KEY = process.env.SUPERVISOR_SECRET_KEY;
 
@@ -73,7 +74,7 @@ router.post(
 async function getImageUrl(bucket_name, image_path) {
   const { data, error } = await supabase.storage
     .from(bucket_name)
-    .createSignedUrl(image_path, 60);
+    .createSignedUrl(image_path, 10 * 60);
 
   if (error) {
     throw error;
@@ -121,6 +122,113 @@ router.get(
         res.status(500).json({ error: error.message });
       }
     }
+  }),
+);
+
+router.delete(
+  '/machine-repairs/:id/image/:imageIndex',
+  asyncHandler(async (req, res) => {
+    const { id, imageIndex } = req.params;
+    const machineRepair = await prisma.machineRepair.findUnique({
+      where: { id: parseInt(id) },
+      select: { bucket_name: true, image_path_list: true },
+    });
+
+    if (!machineRepair) {
+      return res.status(404).json({ message: 'Réparation non trouvée.' });
+    }
+
+    const { bucket_name, image_path_list } = machineRepair;
+
+    if (imageIndex < 0 || imageIndex >= image_path_list.length) {
+      return res.status(404).json({ message: 'Image non trouvée.' });
+    }
+
+    const image_path = image_path_list[imageIndex];
+
+    if (!image_path) {
+      return res.status(404).json({ message: 'Image non trouvée.' });
+    }
+
+    try {
+      await supabase.storage.from(bucket_name).remove([image_path]);
+      const newImagePathList = image_path_list.filter(
+        (path) => path !== image_path,
+      );
+      await prisma.machineRepair.update({
+        where: { id: parseInt(id) },
+        data: {
+          image_path_list: newImagePathList,
+        },
+      });
+
+      const imageUrls = await Promise.all(
+        newImagePathList.map(async (image_path) => {
+          return await getImageUrl(bucket_name, image_path);
+        }),
+      );
+
+      res.json({ message: 'Image supprimée avec succès.', imageUrls });
+    } catch (error) {
+      logger.error(error);
+      res.status(500).json({ error: error.message });
+    }
+  }),
+);
+
+router.put(
+  '/machine-repairs/:id/image',
+  upload.single('image'),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const machineRepair = await prisma.machineRepair.findUnique({
+      where: { id: parseInt(id) },
+      select: { bucket_name: true, image_path_list: true },
+    });
+
+    if (!machineRepair) {
+      return res.status(404).json({ message: 'Réparation non trouvée.' });
+    }
+
+    const { bucket_name, image_path_list } = machineRepair;
+
+    if (image_path_list.length >= 5) {
+      return res.status(400).json({
+        message: 'Vous ne pouvez pas ajouter plus de 5 images.',
+      });
+    }
+
+    const webpBuffer = req.file.buffer; // WebP image buffer
+    const fileName = req.file.originalname;
+    const imagePath = `images/${generateUniqueString()}_${fileName}`;
+
+    const { data: imageUpload, error: imageError } = await supabase.storage
+      .from(bucket_name)
+      .upload(imagePath, webpBuffer, {
+        contentType: 'image/webp',
+      });
+
+    if (imageError) {
+      throw new Error(
+        `Erreur lors du téléchargement de l'image : ${imageError.message}`,
+      );
+    }
+
+    const newImagePathList = [...image_path_list, imagePath];
+    await prisma.machineRepair.update({
+      where: { id: parseInt(id) },
+      data: {
+        image_path_list: newImagePathList,
+      },
+    });
+
+    const imageUrls = await Promise.all(
+      newImagePathList.map(async (image_path) => {
+        return await getImageUrl(bucket_name, image_path);
+      }),
+    );
+
+    res.json({ message: 'Image ajoutée avec succès.', imageUrls });
   }),
 );
 
