@@ -2,43 +2,27 @@ import { ConfigElement } from '../components/settings/EditConfig';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const getAllMachineRepairs = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/machine-repairs`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ filter: {} }),
-  });
-  const data = await response.json();
-  return data.data;
-};
-
-export const fetchRepairById = async (id: string, token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/machine-repairs/${id}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const fetchReplacedParts = async (
+const apiRequest = async (
+  endpoint: string,
+  method: string,
   token: string,
-): Promise<{ name: string; price: number }[]> => {
-  const response = await fetch(`${API_URL}/supervisor/replaced-parts`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  body?: any,
+) => {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+
+  const options: RequestInit = {
+    method,
+    headers,
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${API_URL}${endpoint}`, options);
 
   if (!response.ok) {
     throw new Error(`${response.statusText} ${response.status}`);
@@ -47,433 +31,112 @@ export const fetchReplacedParts = async (
   return await response.json();
 };
 
-export const deleteReplacedPart = async (token: string, name: string) => {
-  const response = await fetch(`${API_URL}/supervisor/replaced-parts/${name}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+export const getAllMachineRepairs = async (token: string) => {
+  const response = await apiRequest(
+    '/supervisor/machine-repairs',
+    'POST',
+    token,
+    {
+      filter: {},
     },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
+  );
+  return response.data;
 };
 
-export const putReplacedParts = async (
+export const fetchRepairById = (id: string, token: string) =>
+  apiRequest(`/supervisor/machine-repairs/${id}`, 'GET', token);
+
+export const fetchReplacedParts = (token: string) =>
+  apiRequest('/supervisor/replaced-parts', 'GET', token);
+
+export const deleteReplacedPart = (token: string, name: string) =>
+  apiRequest(`/supervisor/replaced-parts/${name}`, 'DELETE', token);
+
+export const putReplacedParts = (
   token: string,
   data: { name: string; price: number }[],
-) => {
-  const response = await fetch(`${API_URL}/supervisor/replaced-parts`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
+) => apiRequest('/supervisor/replaced-parts', 'PUT', token, data);
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const fetchRepairers = (token: string) =>
+  apiRequest('/supervisor/repairer_names', 'GET', token);
 
-  return await response.json();
-};
+export const updateRepair = (token: string, id: string, data: any) =>
+  apiRequest(`/supervisor/machine-repairs/${id}`, 'PATCH', token, data);
 
-export const fetchRepairers = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/repairer_names`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchUsers = (token: string) =>
+  apiRequest('/admin/users', 'GET', token);
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const addUser = (token: string, user: any) =>
+  apiRequest('/admin/users', 'PUT', token, user);
 
-  return await response.json();
-};
+export const updateUser = (token: string, id: string, user: any) =>
+  apiRequest(`/admin/users/${id}`, 'PATCH', token, user);
 
-export const updateRepair = async (token: string, id: string, data: any) => {
-  const response = await fetch(`${API_URL}/supervisor/machine-repairs/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  return await response.json();
-};
+export const deleteUser = (token: string, id: string) =>
+  apiRequest(`/admin/users/${id}`, 'DELETE', token);
 
-export const fetchUsers = async (token: string) => {
-  const response = await fetch(`${API_URL}/admin/users`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const addRepairer = (token: string, repairer: string) =>
+  apiRequest('/supervisor/repairer_names', 'PUT', token, { name: repairer });
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const deleteRepairer = (token: string, repairer: string) =>
+  apiRequest(`/supervisor/repairer_names/${repairer}`, 'DELETE', token);
 
-  return await response.json();
-};
+export const fetchBrands = (token: string) =>
+  apiRequest('/supervisor/brands', 'GET', token);
 
-export const addUser = async (token: string, user: any) => {
-  const response = await fetch(`${API_URL}/admin/users`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(user),
-  });
+export const addBrand = (token: string, brand: string) =>
+  apiRequest('/supervisor/brands', 'PUT', token, { name: brand });
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const deleteBrand = (token: string, brand: string) =>
+  apiRequest(`/supervisor/brands/${brand}`, 'DELETE', token);
 
-  return await response.json();
-};
+export const fetchMachineType = (token: string) =>
+  apiRequest('/supervisor/machine_types', 'GET', token);
 
-export const updateUser = async (token: string, id: string, user: any) => {
-  const response = await fetch(`${API_URL}/admin/users/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(user),
-  });
+export const addMachineType = (token: string, machineType: string) =>
+  apiRequest('/supervisor/machine_types', 'PUT', token, { name: machineType });
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const deleteMachineType = (token: string, machineType: string) =>
+  apiRequest(`/supervisor/machine_types/${machineType}`, 'DELETE', token);
 
-  return await response.json();
-};
+export const deleteRepair = (token: string, id: string) =>
+  apiRequest(`/supervisor/machine-repairs/${id}`, 'DELETE', token);
 
-export const deleteUser = async (token: string, id: string) => {
-  const response = await fetch(`${API_URL}/admin/users/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const addRepairer = async (token: string, repairer: string) => {
-  const response = await fetch(`${API_URL}/supervisor/repairer_names`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ name: repairer }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const deleteRepairer = async (token: string, repairer: string) => {
-  const response = await fetch(
-    `${API_URL}/supervisor/repairer_names/${repairer}`,
-    {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const fetchBrands = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/brands`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const addBrand = async (token: string, brand: string) => {
-  const response = await fetch(`${API_URL}/supervisor/brands`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ name: brand }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const deleteBrand = async (token: string, brand: string) => {
-  const response = await fetch(`${API_URL}/supervisor/brands/${brand}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const fetchMachineType = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/machine_types`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const addMachineType = async (token: string, machineType: string) => {
-  const response = await fetch(`${API_URL}/supervisor/machine_types`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ name: machineType }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const deleteMachineType = async (token: string, machineType: string) => {
-  const response = await fetch(
-    `${API_URL}/supervisor/machine_types/${machineType}`,
-    {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const deleteRepair = async (token: string, id: string) => {
-  const response = await fetch(`${API_URL}/supervisor/machine-repairs/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const sendEmailApi = async (
+export const sendEmailApi = (
   token: string,
   id: number | string,
   data: FormData,
-) => {
-  const response = await fetch(
-    `${API_URL}/supervisor/machine-repairs/email/${id}`,
-    {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: data,
-    },
-  );
+) => apiRequest(`/supervisor/machine-repairs/email/${id}`, 'PUT', token, data);
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const sendDriveApi = async (
+export const sendDriveApi = (
   token: string,
   id: number | string,
   data: FormData,
-) => {
-  const response = await fetch(
-    `${API_URL}/supervisor/machine-repairs/drive/${id}`,
-    {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: data,
-    },
-  );
+) => apiRequest(`/supervisor/machine-repairs/drive/${id}`, 'PUT', token, data);
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const fetchConfig = (token: string) =>
+  apiRequest('/supervisor/config', 'GET', token);
 
-  return await response.json();
-};
-
-export const fetchConfig = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/config`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const addConfig = async (
+export const addConfig = (
   token: string,
   config: { key: string; value: string },
-) => {
-  const response = await fetch(`${API_URL}/supervisor/config`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(config),
-  });
+) => apiRequest('/supervisor/config', 'PUT', token, config);
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const deleteConfig = (token: string, key: string) =>
+  apiRequest(`/supervisor/config/${key}`, 'DELETE', token);
 
-  return await response.json();
-};
-
-export const deleteConfig = async (token: string, key: string) => {
-  const response = await fetch(`${API_URL}/supervisor/config/${key}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const updateConfig = async (
-  token: string,
-  configToUpdate: ConfigElement,
-) => {
-  const response = await fetch(
-    `${API_URL}/supervisor/config/${configToUpdate.key}`,
-    {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(configToUpdate),
-    },
+export const updateConfig = (token: string, configToUpdate: ConfigElement) =>
+  apiRequest(
+    `/supervisor/config/${configToUpdate.key}`,
+    'PATCH',
+    token,
+    configToUpdate,
   );
 
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
+export const fetchAllConfig = (token: string) =>
+  apiRequest('/supervisor/allConfig', 'GET', token);
 
-  return await response.json();
-};
-
-export const fetchAllConfig = async (token: string) => {
-  const response = await fetch(`${API_URL}/supervisor/allConfig`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
-
-export const addImage = async (
-  token: string,
-  id: string,
-  file: File,
-): Promise<{
-  message: string;
-  imageUrls: string[];
-}> => {
+export const addImage = async (token: string, id: string, file: File) => {
   const formData = new FormData();
   formData.append('image', file);
 
@@ -495,27 +158,9 @@ export const addImage = async (
   return await response.json();
 };
 
-export const deleteImage = async (
-  token: string,
-  id: string,
-  imageIndex: number,
-): Promise<{
-  message: string;
-  imageUrls: string[];
-}> => {
-  const response = await fetch(
-    `${API_URL}/supervisor/machine-repairs/${id}/image/${imageIndex}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
+export const deleteImage = (token: string, id: string, imageIndex: number) =>
+  apiRequest(
+    `/supervisor/machine-repairs/${id}/image/${imageIndex}`,
+    'DELETE',
+    token,
   );
-
-  if (!response.ok) {
-    throw new Error(`${response.statusText} ${response.status}`);
-  }
-
-  return await response.json();
-};
