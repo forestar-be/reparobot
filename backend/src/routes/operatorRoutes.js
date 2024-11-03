@@ -120,7 +120,7 @@ router.post(
 
       // Convert base64 signature to a buffer and upload to Supabase
       const signatureBuffer = base64ToBlob(signature, 'image/png');
-      const signatureFileName = `signature_${generateUniqueString()}_${first_name}_${last_name}.png`;
+      const signatureFileName = `signature_${generateUniqueString()}.png`;
 
       const signaturePath = `signatures/${signatureFileName}`;
       const { data: signatureUpload, error: signatureError } =
