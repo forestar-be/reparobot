@@ -83,6 +83,9 @@ async function getImageUrl(bucket_name, image_path) {
   return data.signedUrl;
 }
 
+const notFoundImage =
+  'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
+
 router.get(
   '/machine-repairs/:id',
   asyncHandler(async (req, res) => {
@@ -108,14 +111,24 @@ router.get(
     const { bucket_name, image_path_list, client_signature, ...response } =
       machineRepair;
 
+    const getSignedUrl = async (path) => {
+      try {
+        return await getImageUrl(bucket_name, path);
+      } catch (error) {
+        if (
+          error.name === 'StorageApiError' &&
+          error.message.includes('not found')
+        ) {
+          return notFoundImage;
+        }
+        throw error;
+      }
+    };
+
     if (bucket_name) {
       try {
-        const imageUrls = await Promise.all(
-          image_path_list.map(async (image_path) => {
-            return await getImageUrl(bucket_name, image_path);
-          }),
-        );
-        const signatureUrl = await getImageUrl(bucket_name, client_signature);
+        const imageUrls = await Promise.all(image_path_list.map(getSignedUrl));
+        const signatureUrl = await getSignedUrl(client_signature);
         res.json({ ...response, imageUrls, signatureUrl });
       } catch (error) {
         logger.error(error);
