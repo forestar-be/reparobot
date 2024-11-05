@@ -1,3 +1,5 @@
+ 
+
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -6,10 +8,13 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 import CustomButton from '../components/CustomButton';
-import { useState } from 'react';
+import { useEffect, useState  } from 'react';
+
 import headerData from '../config/header.json';
 import { HeaderProps } from './Header';
 import { Logo } from '../components/Logo';
+
+import CalculatorDropdown from '../components/CalculatorDropdown';
 
 interface Props {
   onClose: () => void;
@@ -19,7 +24,12 @@ interface Props {
 const Sidebar = ({ open, onClose }: Props): JSX.Element => {
   const theme = useTheme();
   const [header] = useState<HeaderProps>(headerData);
+  const [isHomePage, setIsHomePage] = useState(true);
 
+  useEffect(() => {
+    // Update isHomePage when the component mounts and when the pathname changes
+    setIsHomePage(window.location.pathname === '/');
+  }, []);
   return (
     <>
       <Drawer
@@ -56,17 +66,27 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
               </IconButton>
             </Link>
           </Box>
-          <Box padding={2}>
-            <Box paddingY={2}>
-              <CustomButton href="#services" text="Services" />
-              <Box paddingY={1}>
-                <CustomButton href="#about" text="À propos" />
-              </Box>
-              <Box paddingY={1}>
-                <CustomButton href="#contact" text="Contact" />
-              </Box>
-            </Box>
-          </Box>
+          <div className="hidden lg:flex items-center p-8">
+            <div className="py-8">
+              <CustomButton
+                href={isHomePage ? '#services' : '/#services'}
+                text="Services"
+              />
+              <div className="py-4">
+                <CustomButton
+                  href={isHomePage ? '#about' : '/#about'}
+                  text="À propos"
+                />
+              </div>
+              <div className="py-4">
+                <CustomButton
+                  href={isHomePage ? '#contact' : '/#contact'}
+                  text="Contact"
+                />
+              </div>
+              <CalculatorDropdown />
+            </div>
+          </div>
         </Box>
       </Drawer>
     </>

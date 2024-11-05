@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ServicesProps } from './Services';
-import dayjs from 'dayjs';
+// src/components/ServiceForm.tsx
+
+import React, { useState, useEffect, useRef } from 'react';
 import {
+  Box,
+  IconButton,
+  Typography,
+  TextField,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  CircularProgress,
   FormControl,
   FormHelperText,
   Dialog,
@@ -25,8 +19,17 @@ import {
   DialogContentText,
   DialogTitle,
   Link,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { ServicesProps } from './Services';
 import conditions from '../config/conditions.json';
+import { trackEvent } from '../utils/analytics'; // Import the tracking utility
 
 const API_URL = process.env.REACT_APP_API_URL;
 const AUTH_TOKEN = process.env.REACT_APP_AUTH_TOKEN;
@@ -56,12 +59,59 @@ const ServiceForm = ({
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
+  const formRef = useRef<HTMLDivElement | null>(null); // Reference to the form container
+  const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
+
+  // Initialize form values with default states
+  useEffect(() => {
+    const initialFormValues: { [key: string]: any } = {};
+    service.formFields.forEach((field) => {
+      if (field.type === 'checkbox' || field.type === 'checkbox_price' || field.type === 'checkbox_term') {
+        initialFormValues[field.label] = false;
+      } else {
+        initialFormValues[field.label] = '';
+      }
+    });
+    setFormValues(initialFormValues);
+  }, [service.formFields]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasTrackedView) {
+            // Track ServiceForm section visibility
+            trackEvent(
+              'view_section',       // Action
+              'Form Engagement',    // Category
+              'ServiceForm Section' // Label
+            );
+            setHasTrackedView(true); // Prevent duplicate tracking
+          }
+        });
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the form is visible
+      }
+    );
+
+    if (formRef.current) {
+      observer.observe(formRef.current);
+    }
+
+    return () => {
+      if (formRef.current) {
+        observer.unobserve(formRef.current);
+      }
+    };
+  }, [hasTrackedView]);
+
   useEffect(() => {
     if (service.basePrice !== undefined) {
       let price = service.basePrice;
       service.formFields.forEach((field) => {
         if (
-          field.type === 'checkbox_price' &&
+          (field.type === 'checkbox_price' || field.type === 'checkbox') &&
           formValues[field.label] &&
           field.price
         ) {
@@ -77,75 +127,97 @@ const ServiceForm = ({
     onFormEdit(true);
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+    const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/;
 
     service.formFields.forEach((field) => {
       if (field.isRequired && !formValues[field.label]) {
         newErrors[field.label] = `${field.label} est requis`;
       }
-      if (field.type === 'tel' && !phoneRegex.test(formValues[field.label])) {
+      if (
+        field.type === 'tel' &&
+        formValues[field.label] &&
+        !phoneRegex.test(formValues[field.label])
+      ) {
         newErrors[field.label] =
           `${field.label} doit être un numéro de téléphone valide`;
       }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      console.log('Errors', newErrors);
-    } else {
-      onFormEdit(false);
-      setIsLoading(true);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-      // Convert dates to readable format
-      const formattedValues = { ...formValues };
-      service.formFields.forEach((field) => {
-        if (field.type === 'date' && formValues[field.label]) {
-          formattedValues[field.label] = dayjs(formValues[field.label]).format(
-            'DD/MM/YYYY',
-          );
-        }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!validateForm()) {
+      // Track form submission with validation errors
+      trackEvent(
+        'Submit Failed',          // Action
+        'Form Interaction',       // Category
+        'Form Submission Errors'  // Label
+      );
+      return;
+    }
+
+    onFormEdit(false);
+    setIsLoading(true);
+
+    const formattedValues = { ...formValues };
+    service.formFields.forEach((field) => {
+      if (field.type === 'date' && formValues[field.label]) {
+        formattedValues[field.label] = dayjs(formValues[field.label]).format(
+          'DD/MM/YYYY',
+        );
+      }
+    });
+
+    if (totalPrice !== undefined) {
+      formattedValues['Prix total'] = totalPrice;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/submit-form`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+        body: JSON.stringify(formattedValues),
       });
 
-      // Add total price to form values
-      if (totalPrice !== undefined) {
-        formattedValues['Prix total'] = totalPrice;
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
 
-      // Submit form
-      try {
-        console.log('Submitting', formattedValues);
+      setFormValues({});
+      setErrors({});
+      setModalType('success');
+      setModalMessage('Votre demande a été soumise avec succès');
 
-        const response = await fetch(`${API_URL}/submit-form`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-          },
-          body: JSON.stringify(formattedValues),
-        });
+      // Track successful form submission
+      trackEvent(
+        'Submit Success',        // Action
+        'Form Interaction',      // Category
+        'Form Submission Success'// Label
+      );
+    } catch (error) {
+      console.error('Error submitting form', error);
+      setModalType('error');
+      setModalMessage(
+        "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
+      );
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        console.log('Form submitted', response);
-        setFormValues({});
-        setErrors({});
-        setModalType('success');
-        setModalMessage('Votre demande a été soumise avec succès');
-      } catch (error) {
-        console.error('Error submitting form', error);
-        setModalType('error');
-        setModalMessage(
-          "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
-        );
-      } finally {
-        setIsLoading(false);
-        setModalOpen(true);
-      }
+      // Track failed form submission
+      trackEvent(
+        'Submit Failed',          // Action
+        'Form Interaction',       // Category
+        'Form Submission Error'   // Label
+      );
+    } finally {
+      setIsLoading(false);
+      setModalOpen(true);
     }
   };
 
@@ -158,14 +230,180 @@ const ServiceForm = ({
 
   const handleOpenTerms = () => {
     setTermsOpen(true);
+    trackEvent(
+      'Open Terms',            // Action
+      'Form Interaction',      // Category
+      'Open Terms Dialog'      // Label
+    );
   };
 
   const handleCloseTerms = () => {
     setTermsOpen(false);
   };
 
+  const renderField = (field: any, index: number) => {
+    switch (field.type) {
+      case 'text':
+      case 'email':
+      case 'tel':
+        return (
+          <TextField
+            key={index}
+            id={`field-${index}`}
+            name={field.label}
+            label={field.label}
+            type={field.type}
+            variant="outlined"
+            fullWidth
+            required={field.isRequired}
+            error={!!errors[field.label]}
+            helperText={errors[field.label]}
+            value={formValues[field.label] || ''} // Ensure value is never undefined
+            onChange={(e) => handleChange(field.label, e.target.value)}
+            aria-describedby={`${field.label}-error`}
+            inputProps={{
+              'aria-required': field.isRequired,
+            }}
+          />
+        );
+      case 'textarea':
+        return (
+          <TextField
+            key={index}
+            id={`field-${index}`}
+            name={field.label}
+            label={field.label}
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            required={field.isRequired}
+            error={!!errors[field.label]}
+            helperText={errors[field.label]}
+            value={formValues[field.label] || ''} // Ensure value is never undefined
+            onChange={(e) => handleChange(field.label, e.target.value)}
+            aria-describedby={`${field.label}-error`}
+            inputProps={{
+              'aria-required': field.isRequired,
+            }}
+          />
+        );
+      case 'select':
+        return (
+          <TextField
+            key={index}
+            id={`field-${index}`}
+            name={field.label}
+            label={field.label}
+            select
+            variant="outlined"
+            fullWidth
+            required={field.isRequired}
+            error={!!errors[field.label]}
+            helperText={errors[field.label]}
+            value={formValues[field.label] || ''} // Added value prop
+            onChange={(e) => handleChange(field.label, e.target.value)}
+            aria-describedby={`${field.label}-error`}
+            inputProps={{
+              'aria-required': field.isRequired,
+            }}
+          >
+            {field.options?.map((option: string, i: number) => (
+              <MenuItem key={i} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+        );
+      case 'checkbox':
+      case 'checkbox_term':
+      case 'checkbox_price':
+        return (
+          <FormControl
+            key={index}
+            required={field.isRequired}
+            error={!!errors[field.label]}
+            component="fieldset"
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id={`field-${index}`}
+                  name={field.label}
+                  checked={formValues[field.label] || false}
+                  onChange={(e) => handleChange(field.label, e.target.checked)}
+                  aria-describedby={`${field.label}-error`}
+                  inputProps={{
+                    'aria-required': field.isRequired,
+                  }}
+                />
+              }
+              label={
+                field.type === 'checkbox_term' ? (
+                  <span>
+                    {field.label}{' '}
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={handleOpenTerms}
+                      aria-label="Lire les conditions générales"
+                    >
+                      (Lire)
+                    </Link>
+                  </span>
+                ) : (
+                  `${field.label} ${
+                    field.type === 'checkbox_price' ? `+${field.price} €` : ''
+                  }`
+                )
+              }
+            />
+            {!!errors[field.label] && (
+              <FormHelperText id={`${field.label}-error`}>
+                {errors[field.label]}
+              </FormHelperText>
+            )}
+          </FormControl>
+        );
+      case 'date':
+        return (
+          <LocalizationProvider key={index} dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disablePast={!!field.minFuturDateRange}
+              minDate={
+                field.minFuturDateRange
+                  ? dayjs().add(field.minFuturDateRange, 'day')
+                  : undefined
+              }
+              label={field.label}
+              format={'DD/MM/YYYY'}
+              value={formValues[field.label] || null} // Ensure value is never undefined
+              onChange={(date) => handleChange(field.label, date)}
+              slotProps={{
+                textField: {
+                  id: `field-${index}`,
+                  name: field.label,
+                  required: field.isRequired,
+                  error: !!errors[field.label],
+                  helperText: errors[field.label],
+                  fullWidth: true,
+                  inputProps: {
+                    'aria-describedby': `${field.label}-error`,
+                    'aria-required': field.isRequired,
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Box
+      ref={formRef} // Attach ref here for visibility tracking
       component="form"
       sx={{
         display: 'flex',
@@ -181,7 +419,12 @@ const ServiceForm = ({
         },
       }}
       onSubmit={handleSubmit}
+      noValidate
+      aria-labelledby="service-form-title"
+      itemScope
+      itemType="https://schema.org/ContactPage"
     >
+      {/* Form Header */}
       <IconButton
         onClick={() => onClose()}
         sx={{
@@ -189,11 +432,13 @@ const ServiceForm = ({
           top: 8,
           right: 8,
         }}
+        aria-label="Fermer le formulaire"
       >
         <CloseIcon />
       </IconButton>
       <Typography
-        variant="h6"
+        id="service-form-title"
+        variant="h6" // Maintained existing style with h6
         sx={{
           flex: '1 1 100%',
           marginBottom: 2,
@@ -201,157 +446,11 @@ const ServiceForm = ({
       >
         Formulaire du service: {service.name}
       </Typography>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {service.formFields.map((field, index) => {
-          switch (field.type) {
-            case 'text':
-              return (
-                <TextField
-                  key={index}
-                  label={field.label}
-                  variant="outlined"
-                  fullWidth
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  helperText={errors[field.label]}
-                  onChange={(e) => handleChange(field.label, e.target.value)}
-                />
-              );
-            case 'email':
-              return (
-                <TextField
-                  key={index}
-                  label={field.label}
-                  type="email"
-                  variant="outlined"
-                  fullWidth
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  helperText={errors[field.label]}
-                  onChange={(e) => handleChange(field.label, e.target.value)}
-                />
-              );
-            case 'tel':
-              return (
-                <TextField
-                  key={index}
-                  label={field.label}
-                  type="tel"
-                  variant="outlined"
-                  fullWidth
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  helperText={errors[field.label]}
-                  onChange={(e) => handleChange(field.label, e.target.value)}
-                />
-              );
-            case 'textarea':
-              return (
-                <TextField
-                  key={index}
-                  label={field.label}
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  helperText={errors[field.label]}
-                  onChange={(e) => handleChange(field.label, e.target.value)}
-                />
-              );
-            case 'select':
-              return (
-                <TextField
-                  key={index}
-                  label={field.label}
-                  select
-                  variant="outlined"
-                  fullWidth
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  helperText={errors[field.label]}
-                  onChange={(e) => handleChange(field.label, e.target.value)}
-                >
-                  {field.options?.map((option, i) => (
-                    <MenuItem key={i} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              );
-            case 'checkbox':
-            case 'checkbox_term':
-            case 'checkbox_price':
-              return (
-                <FormControl
-                  key={index}
-                  required={field.isRequired}
-                  error={!!errors[field.label]}
-                  component="fieldset"
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={formValues[field.label] || false}
-                        onChange={(e) =>
-                          handleChange(field.label, e.target.checked)
-                        }
-                      />
-                    }
-                    label={
-                      field.type === 'checkbox_term' ? (
-                        <span>
-                          {field.label}{' '}
-                          <Link
-                            component="button"
-                            variant="body2"
-                            onClick={handleOpenTerms}
-                          >
-                            (Lire)
-                          </Link>
-                        </span>
-                      ) : (
-                        `${field.label} ${field.type === 'checkbox_price' ? `+${field.price} €` : ''}`
-                      )
-                    }
-                  />
-                  {!!errors[field.label] && (
-                    <FormHelperText>{errors[field.label]}</FormHelperText>
-                  )}
-                </FormControl>
-              );
-            case 'date':
-              return (
-                <DatePicker
-                  disablePast={!!field.minFuturDateRange}
-                  minDate={
-                    field.minFuturDateRange
-                      ? dayjs().add(field.minFuturDateRange, 'day')
-                      : undefined
-                  }
-                  key={index}
-                  label={field.label}
-                  format={'DD/MM/YYYY'}
-                  value={formValues[field.label] || null}
-                  onChange={(date) => handleChange(field.label, date)}
-                  slotProps={{
-                    textField: {
-                      inputProps: {
-                        required: field.isRequired,
-                        error: !!errors[field.label],
-                        helperText: errors[field.label],
-                        fullWidth: true,
-                      },
-                    },
-                  }}
-                />
-              );
-            default:
-              return null;
-          }
-        })}
-      </LocalizationProvider>
+
+      {/* Form Fields */}
+      {service.formFields.map(renderField)}
+
+      {/* Total Price */}
       {totalPrice !== undefined && (
         <Typography
           variant="h6"
@@ -359,28 +458,31 @@ const ServiceForm = ({
             flex: '1 1 100%',
             marginTop: 2,
           }}
+          itemProp="price"
         >
           Prix total: {totalPrice} €
         </Typography>
       )}
+
+      {/* Submit Button */}
       <Button
         variant="contained"
         color="primary"
         type="submit"
         disabled={isLoading}
+        aria-busy={isLoading}
       >
         {isLoading ? <CircularProgress size={24} /> : 'Envoyer'}
       </Button>
 
+      {/* Submission Modal */}
       <Dialog
         open={modalOpen}
         onClose={handleCloseModal}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {'Envoi du formulaire'}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Envoi du formulaire</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {modalMessage}
@@ -393,22 +495,21 @@ const ServiceForm = ({
         </DialogActions>
       </Dialog>
 
+      {/* Terms and Conditions Dialog */}
       <Dialog
         open={termsOpen}
         onClose={handleCloseTerms}
         aria-labelledby="terms-dialog-title"
         aria-describedby="terms-dialog-description"
       >
-        <DialogTitle id="terms-dialog-title">
-          {'Conditions Générales'}
-        </DialogTitle>
+        <DialogTitle id="terms-dialog-title">Conditions Générales</DialogTitle>
         <DialogContent>
           {Object.values(conditions.terms_and_conditions).map(
             (section, index) => (
-              <div key={index}>
+              <Box key={index} mb={2}>
                 <Typography variant="h6">{section.title}</Typography>
                 <DialogContentText>{section.content}</DialogContentText>
-              </div>
+              </Box>
             ),
           )}
         </DialogContent>

@@ -1,37 +1,132 @@
+// src/components/Map.tsx
+
+import React, { useState, useEffect, useRef } from 'react';
 import { LatLngExpression } from 'leaflet';
 import { useTheme } from '@mui/material/styles';
-import { MapContainer, Circle, TileLayer } from 'react-leaflet';
+import {
+  MapContainer,
+  Circle,
+  TileLayer,
+  AttributionControl,
+  Marker,
+  Popup,
+} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { trackEvent } from '../utils/analytics'; // Import the tracking utility
 
 interface Props {
   coordinates: [number, number];
   zoom: number;
 }
 
-const Map = ({ coordinates, zoom }: Props): JSX.Element => {
+const Map: React.FC<Props> = ({ coordinates, zoom }) => {
   const theme = useTheme();
+  const businessName = 'Réparobot';
+  const address = "160 Chaussée d'ecaussinnes, 7090 Braine le comte, Belgique";
   const position: LatLngExpression = coordinates;
-  const fillBlueOptions = {
+  const [mapKey, setMapKey] = useState(0);
+  const mapRef = useRef<HTMLDivElement | null>(null); // Reference to the map container
+  const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
+
+  useEffect(() => {
+    const handleResize = () => setMapKey((prev) => prev + 1);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasTrackedView) {
+            // Track Map section visibility
+            trackEvent(
+              'view_section',       // Action
+              'Map Engagement',     // Category
+              'Map Section'         // Label
+            );
+            setHasTrackedView(true); // Prevent duplicate tracking
+          }
+        });
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the map is visible
+      }
+    );
+
+    if (mapRef.current) {
+      observer.observe(mapRef.current);
+    }
+
+    return () => {
+      if (mapRef.current) {
+        observer.unobserve(mapRef.current);
+      }
+    };
+  }, [hasTrackedView]);
+
+  const fillOptions = {
     fillColor:
       theme.palette.mode === 'dark'
         ? theme.palette.primary.main
         : theme.palette.success.dark,
+    fillOpacity: 0.6,
+    color:
+      theme.palette.mode === 'dark'
+        ? theme.palette.primary.light
+        : theme.palette.success.light,
+  };
+
+  // Event handler for marker click
+  const handleMarkerClick = () => {
+    trackEvent(
+      'Click',               // Action
+      'Map Interaction',     // Category
+      'Marker Click'         // Label
+    );
+  };
+
+  // Event handler for popup open
+  const handlePopupOpen = () => {
+    trackEvent(
+      'Open Popup',          // Action
+      'Map Interaction',     // Category
+      'Popup Open'           // Label
+    );
   };
 
   return (
-    <MapContainer
-      center={position}
-      zoom={zoom}
-      scrollWheelZoom={false}
-      style={{ height: '400px', width: '100%' }}
-    >
-      <TileLayer
-        attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
-      <Circle center={position} pathOptions={fillBlueOptions} radius={50} />
-    </MapContainer>
+    <div ref={mapRef}>
+      <h2>{`Location of ${businessName}`}</h2>
+      <MapContainer
+        key={mapKey}
+        center={position}
+        zoom={zoom}
+        scrollWheelZoom={false}
+        style={{ height: '400px', width: '100%' }}
+        aria-label={`Map showing location of ${businessName}`}
+        attributionControl={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Circle center={position} pathOptions={fillOptions} radius={50} />
+        <Marker position={position} eventHandlers={{
+          click: handleMarkerClick
+        }}>
+          <Popup eventHandlers={{
+            popupopen: handlePopupOpen // Corrected event name
+          }}>
+            <strong>{businessName}</strong>
+            <br />
+            {address}
+          </Popup>
+        </Marker>
+        <AttributionControl position="bottomright" prefix={false} />
+      </MapContainer>
+    </div>
   );
 };
 
-export default Map;
+export default React.memo(Map);
