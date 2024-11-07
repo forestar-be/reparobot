@@ -89,6 +89,7 @@ const notFoundImage =
 router.get(
   '/machine-repairs/:id',
   asyncHandler(async (req, res) => {
+    logger.info(`Getting machine repair of id ${req.params.id}`);
     const { id } = req.params;
     const machineRepair = await prisma.machineRepair.findUnique({
       where: { id: parseInt(id) },
@@ -404,6 +405,8 @@ router.put(
   '/replaced-parts',
   asyncHandler(async (req, res) => {
     const newReplacedParts = req.body;
+    logger.info(`Received new replaced parts: ${newReplacedParts.length}`);
+
     // check if newReplacedParts is array of object if key name string and price float
     if (
       !Array.isArray(newReplacedParts) ||
@@ -412,18 +415,65 @@ router.put(
           typeof part.name === 'string' && typeof part.price === 'number',
       )
     ) {
+      logger.info('Invalid replaced parts format');
       return res
         .status(400)
         .json({ message: 'Veuillez fournir une liste valide de pièces.' });
     }
 
-    // drop all replaced parts
-    await prisma.replacedParts.deleteMany();
-    // create new replaced parts
-    const replacedParts = await prisma.replacedParts.createMany({
-      data: newReplacedParts,
+    const existingParts = await prisma.replacedParts.findMany();
+    logger.info(`Fetching existing parts: ${existingParts.length}`);
+
+    const existingPartsMap = new Map(
+      existingParts.map((part) => [part.name, part]),
+    );
+
+    const partsToCreate = [];
+    const partsToUpdate = [];
+    const partsToDelete = [];
+
+    newReplacedParts.forEach((part) => {
+      if (existingPartsMap.has(part.name)) {
+        const existingPart = existingPartsMap.get(part.name);
+        if (existingPart.price !== part.price) {
+          partsToUpdate.push(part);
+        }
+        existingPartsMap.delete(part.name);
+      } else {
+        partsToCreate.push(part);
+      }
     });
-    res.json(replacedParts);
+
+    partsToDelete.push(...existingPartsMap.values());
+
+    if (partsToDelete.length > 0) {
+      logger.error(`Not allowed to delete parts: ${partsToDelete.length}`);
+      return res.status(400).json({
+        message: 'Vous ne pouvez pas supprimer des pièces existantes.',
+      });
+    }
+
+    logger.info(`Parts to create: ${partsToCreate.length}`);
+    logger.info(`Parts to update: ${partsToUpdate.length}`);
+
+    await prisma.$transaction([
+      prisma.replacedParts.createMany({
+        data: partsToCreate,
+      }),
+      ...partsToUpdate.map((part) =>
+        prisma.replacedParts.update({
+          where: { name: part.name },
+          data: { price: part.price },
+        }),
+      ),
+    ]);
+
+    logger.info('Transaction completed successfully');
+
+    res.json({
+      created: partsToCreate,
+      updated: partsToUpdate,
+    });
   }),
 );
 
@@ -437,6 +487,7 @@ router.delete(
     if (!replacedPart) {
       return res.status(404).json({ message: 'Pièce non trouvée.' });
     }
+    logger.info(`Deleting replaced part: ${name}`);
     await prisma.replacedParts.delete({ where: { name } });
     res.json(replacedPart);
   }),

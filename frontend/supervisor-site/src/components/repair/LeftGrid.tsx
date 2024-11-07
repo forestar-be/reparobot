@@ -116,7 +116,7 @@ export const LeftGrid = (props: {
     </Box>
     <Box margin={'20px 0'}>
       <ReplacedPartSelect
-        label="Replaced Parts"
+        label="Pièces remplacées"
         name="replaced_part_list"
         values={props.repair.replaced_part_list}
         possibleValues={props.possibleValues}
