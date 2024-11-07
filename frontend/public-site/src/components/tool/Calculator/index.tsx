@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import './Calculator.css'; 
+import './Calculator.css';
 
-const DiagnosticQuiz = () => {
-  const [step, setStep] = useState(1);
-  const [answers, setAnswers] = useState({
+interface Answers {
+  brand: string;
+  model: string;
+  lawnSize: string;
+  usageFrequency: string;
+  terrainType: string;
+  technicalIssues: string;
+  maintenanceHistory: string;
+  accessories: string[];
+}
+
+const DiagnosticQuiz: React.FC = () => {
+  const [step, setStep] = useState<number>(1);
+  const [answers, setAnswers] = useState<Answers>({
     brand: '',
     model: '',
     lawnSize: '',
@@ -14,9 +25,9 @@ const DiagnosticQuiz = () => {
     accessories: [],
   });
 
-  const [estimatedCost, setEstimatedCost] = useState(null);
-  const [costBreakdown, setCostBreakdown] = useState([]);
-  const [explanations, setExplanations] = useState([]);
+  const [estimatedCost, setEstimatedCost] = useState<number | null>(null);
+  const [costBreakdown, setCostBreakdown] = useState<string[]>([]);
+  const [explanations, setExplanations] = useState<string[]>([]);
 
   const handleNext = () => {
     setStep(step + 1);
@@ -26,11 +37,11 @@ const DiagnosticQuiz = () => {
     setStep(step - 1);
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: any) => {
     setAnswers({ ...answers, [field]: value });
   };
 
-  const handleCheckboxChange = (value) => {
+  const handleCheckboxChange = (value: any) => {
     const newAccessories = answers.accessories.includes(value)
       ? answers.accessories.filter((item) => item !== value)
       : [...answers.accessories, value];
@@ -39,8 +50,8 @@ const DiagnosticQuiz = () => {
 
   const calculateEstimate = () => {
     let cost = 0;
-    let breakdown = [];
-    let explanationTexts = [];
+    let breakdown: string[] = [];
+    let explanationTexts: string[] = [];
 
     // 1. Coût de base en fonction de la taille de la pelouse
     const lawnSize = parseInt(answers.lawnSize);
@@ -130,7 +141,7 @@ const DiagnosticQuiz = () => {
             <p>Quelle est la marque de votre robot tondeuse ?</p>
             <select
               value={answers.brand}
-              onChange={(e) => handleInputChange('brand', e.target.value)}
+              onChange={(e: any) => handleInputChange('brand', e.target.value)}
             >
               <option value="">Sélectionnez une marque</option>
               <option value="Husqvarna">Husqvarna</option>
@@ -156,7 +167,7 @@ const DiagnosticQuiz = () => {
             <input
               type="text"
               value={answers.model}
-              onChange={(e) => handleInputChange('model', e.target.value)}
+              onChange={(e: any) => handleInputChange('model', e.target.value)}
               placeholder="Entrez le modèle"
             />
             <div className="navigation-buttons">
@@ -178,7 +189,7 @@ const DiagnosticQuiz = () => {
             <input
               type="number"
               value={answers.lawnSize}
-              onChange={(e) => handleInputChange('lawnSize', e.target.value)}
+              onChange={(e: any) => handleInputChange('lawnSize', e.target.value)}
               min="0"
               placeholder="Entrez la taille en m²"
             />
@@ -200,7 +211,7 @@ const DiagnosticQuiz = () => {
             <p>À quelle fréquence utilisez-vous votre robot tondeuse ?</p>
             <select
               value={answers.usageFrequency}
-              onChange={(e) => handleInputChange('usageFrequency', e.target.value)}
+              onChange={(e: any) => handleInputChange('usageFrequency', e.target.value)}
             >
               <option value="">Sélectionnez une fréquence</option>
               <option value="Quotidienne">Quotidienne</option>
@@ -225,7 +236,7 @@ const DiagnosticQuiz = () => {
             <p>Quel est le type de votre terrain ?</p>
             <select
               value={answers.terrainType}
-              onChange={(e) => handleInputChange('terrainType', e.target.value)}
+              onChange={(e: any) => handleInputChange('terrainType', e.target.value)}
             >
               <option value="">Sélectionnez un type de terrain</option>
               <option value="Plat">Plat</option>
@@ -250,7 +261,7 @@ const DiagnosticQuiz = () => {
             <p>Avez-vous rencontré des problèmes techniques au cours de l'année passée ?</p>
             <select
               value={answers.technicalIssues}
-              onChange={(e) => handleInputChange('technicalIssues', e.target.value)}
+              onChange={(e: any) => handleInputChange('technicalIssues', e.target.value)}
             >
               <option value="">Sélectionnez une option</option>
               <option value="Oui">Oui</option>
@@ -274,7 +285,7 @@ const DiagnosticQuiz = () => {
             <p>Avez-vous effectué un entretien régulier de votre robot tondeuse ?</p>
             <select
               value={answers.maintenanceHistory}
-              onChange={(e) => handleInputChange('maintenanceHistory', e.target.value)}
+              onChange={(e: any) => handleInputChange('maintenanceHistory', e.target.value)}
             >
               <option value="">Sélectionnez une option</option>
               <option value="Oui">Oui</option>
@@ -336,11 +347,14 @@ const DiagnosticQuiz = () => {
               <input
                 type="text"
                 placeholder="Précisez les accessoires"
-                onChange={(e) => {
-                  const otherAccessories = e.target.value.split(',').map(item => item.trim());
+                onChange={(e: any) => {
+                  const otherAccessories = e.target.value.split(',').map((item: string) => item.trim());
                   setAnswers({
                     ...answers,
-                    accessories: [...answers.accessories.filter(a => a !== 'Autre'), ...otherAccessories],
+                    accessories: [
+                      ...answers.accessories.filter((a) => a !== 'Autre'),
+                      ...otherAccessories,
+                    ],
                   });
                 }}
               />

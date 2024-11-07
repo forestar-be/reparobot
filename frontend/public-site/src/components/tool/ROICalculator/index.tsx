@@ -1,51 +1,63 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, FormEvent } from 'react';
 import './ROICalculateur.css';
 
-const ROICalculateur = () => {
+interface Errors {
+  cEssence?: string;
+  cTondeuseManuelle?: string;
+  cServiceJardinage?: string;
+  moyenneTonteParSaison?: string;
+  cAchatRobot?: string;
+  cMaintenanceRobot?: string;
+  usageRobotParSaison?: string;
+  superficiePelouse?: string;
+  dureeAnnees?: string;
+}
+
+const ROICalculateur: React.FC = () => {
   // Références pour les champs de formulaire
-  const essenceRef = useRef(null);
-  const tondeuseManuelleRef = useRef(null);
-  const serviceJardinageRef = useRef(null);
-  const moyenneTonteRef = useRef(null);
-  const achatRobotRef = useRef(null);
-  const maintenanceRobotRef = useRef(null);
-  const usageRobotRef = useRef(null);
-  const superficieRef = useRef(null);
-  const dureeRef = useRef(null);
+  const essenceRef = useRef<HTMLInputElement>(null);
+  const tondeuseManuelleRef = useRef<HTMLInputElement>(null);
+  const serviceJardinageRef = useRef<HTMLInputElement>(null);
+  const moyenneTonteRef = useRef<HTMLInputElement>(null);
+  const achatRobotRef = useRef<HTMLInputElement>(null);
+  const maintenanceRobotRef = useRef<HTMLInputElement>(null);
+  const usageRobotRef = useRef<HTMLInputElement>(null);
+  const superficieRef = useRef<HTMLInputElement>(null);
+  const dureeRef = useRef<HTMLInputElement>(null);
 
   // États pour les coûts annuels traditionnels
-  const [cEssence, setCEssence] = useState('');
-  const [cTondeuseManuelle, setCTondeuseManuelle] = useState('');
-  const [cServiceJardinage, setCServiceJardinage] = useState('');
-  const [moyenneTonteParSaison, setMoyenneTonteParSaison] = useState('');
+  const [cEssence, setCEssence] = useState<string>('');
+  const [cTondeuseManuelle, setCTondeuseManuelle] = useState<string>('');
+  const [cServiceJardinage, setCServiceJardinage] = useState<string>('');
+  const [moyenneTonteParSaison, setMoyenneTonteParSaison] = useState<string>('');
 
   // États pour le robot tondeuse
-  const [cRobot, setCRobot] = useState('');
-  const [cMaintenanceRobot, setCMaintenanceRobot] = useState('');
-  const [cAchatRobot, setCAchatRobot] = useState('');
-  const [usageRobotParSaison, setUsageRobotParSaison] = useState('');
+  const [cRobot, setCRobot] = useState<string>('');
+  const [cMaintenanceRobot, setCMaintenanceRobot] = useState<string>('');
+  const [cAchatRobot, setCAchatRobot] = useState<string>('');
+  const [usageRobotParSaison, setUsageRobotParSaison] = useState<string>('');
 
   // Paramètres généraux
-  const [dureeAnnees, setDureeAnnees] = useState(5);
-  const [superficiePelouse, setSuperficiePelouse] = useState('');
+  const [dureeAnnees, setDureeAnnees] = useState<number>(5);
+  const [superficiePelouse, setSuperficiePelouse] = useState<string>('');
 
   // États pour les résultats
-  const [totalTraditionnel, setTotalTraditionnel] = useState(null);
-  const [totalRobot, setTotalRobot] = useState(null);
-  const [economies, setEconomies] = useState(null);
+  const [totalTraditionnel, setTotalTraditionnel] = useState<number | null>(null);
+  const [totalRobot, setTotalRobot] = useState<number | null>(null);
+  const [economies, setEconomies] = useState<number | null>(null);
 
   // États pour la gestion des erreurs
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
 
   // Fonction de calcul
-  const calculerROI = (e) => {
+  const calculerROI = (e: any) => {
     e.preventDefault();
 
     // Réinitialiser les erreurs
     setErrors({});
 
     // Vérifier les champs et enregistrer les erreurs
-    const newErrors = {};
+    const newErrors: Errors = {};
     if (cEssence === '') newErrors.cEssence = 'Ce champ est requis.';
     if (cTondeuseManuelle === '') newErrors.cTondeuseManuelle = 'Ce champ est requis.';
     if (cServiceJardinage === '') newErrors.cServiceJardinage = 'Ce champ est requis.';
@@ -54,29 +66,29 @@ const ROICalculateur = () => {
     if (cMaintenanceRobot === '') newErrors.cMaintenanceRobot = 'Ce champ est requis.';
     if (usageRobotParSaison === '') newErrors.usageRobotParSaison = 'Ce champ est requis.';
     if (superficiePelouse === '') newErrors.superficiePelouse = 'Ce champ est requis.';
-    if (dureeAnnees === '') newErrors.dureeAnnees = 'Ce champ est requis.';
+    if (dureeAnnees === null || dureeAnnees <= 0) newErrors.dureeAnnees = 'Ce champ est requis.';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       // Défilement vers le premier champ erroné
       if (newErrors.cEssence) {
-        essenceRef.current.scrollIntoView({ behavior: 'smooth' });
+        essenceRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.cTondeuseManuelle) {
-        tondeuseManuelleRef.current.scrollIntoView({ behavior: 'smooth' });
+        tondeuseManuelleRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.cServiceJardinage) {
-        serviceJardinageRef.current.scrollIntoView({ behavior: 'smooth' });
+        serviceJardinageRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.moyenneTonteParSaison) {
-        moyenneTonteRef.current.scrollIntoView({ behavior: 'smooth' });
+        moyenneTonteRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.cAchatRobot) {
-        achatRobotRef.current.scrollIntoView({ behavior: 'smooth' });
+        achatRobotRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.cMaintenanceRobot) {
-        maintenanceRobotRef.current.scrollIntoView({ behavior: 'smooth' });
+        maintenanceRobotRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.usageRobotParSaison) {
-        usageRobotRef.current.scrollIntoView({ behavior: 'smooth' });
+        usageRobotRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.superficiePelouse) {
-        superficieRef.current.scrollIntoView({ behavior: 'smooth' });
+        superficieRef.current?.scrollIntoView({ behavior: 'smooth' });
       } else if (newErrors.dureeAnnees) {
-        dureeRef.current.scrollIntoView({ behavior: 'smooth' });
+        dureeRef.current?.scrollIntoView({ behavior: 'smooth' });
       }
       return;
     }
@@ -102,20 +114,23 @@ const ROICalculateur = () => {
   };
 
   // Fonction pour formater les nombres en euros
-  const formatEuro = (nombre) => {
+  const formatEuro = (nombre: number): string => {
     return nombre.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
   };
 
   return (
     <div className="calculateur-roi-container">
       <h2>Calculateur de Retour sur Investissement (ROI)</h2>
-      <p>Comparez les coûts d'entretien traditionnels de votre pelouse avec ceux d'un robot tondeuse. Découvrez combien vous pourriez économiser sur plusieurs années !</p>
-      
+      <p>
+        Comparez les coûts d'entretien traditionnels de votre pelouse avec ceux d'un robot tondeuse.
+        Découvrez combien vous pourriez économiser sur plusieurs années !
+      </p>
+
       <form className="calculateur-roi-form" onSubmit={calculerROI}>
         <div className="section">
           <h3>Coûts Annuels Traditionnels</h3>
           <p>Entrez les coûts annuels estimés pour entretenir votre pelouse de manière traditionnelle.</p>
-          
+
           <div className={`form-group ${errors.cEssence ? 'error' : ''}`}>
             <label htmlFor="essence">Essence pour la tondeuse (€)</label>
             <input
@@ -123,7 +138,7 @@ const ROICalculateur = () => {
               id="essence"
               placeholder="Ex: 50"
               value={cEssence}
-              onChange={(e) => setCEssence(e.target.value)}
+              onChange={(e: any) => setCEssence(e.target.value)}
               required
               min="0"
               step="10"
@@ -131,7 +146,7 @@ const ROICalculateur = () => {
             />
             {errors.cEssence && <span className="error-message">{errors.cEssence}</span>}
           </div>
-          
+
           <div className={`form-group ${errors.cTondeuseManuelle ? 'error' : ''}`}>
             <label htmlFor="tondeuseManuelle">Achat ou entretien de la tondeuse manuelle (€)</label>
             <input
@@ -139,7 +154,7 @@ const ROICalculateur = () => {
               id="tondeuseManuelle"
               placeholder="Ex: 100"
               value={cTondeuseManuelle}
-              onChange={(e) => setCTondeuseManuelle(e.target.value)}
+              onChange={(e: any) => setCTondeuseManuelle(e.target.value)}
               required
               min="0"
               step="10"
@@ -147,7 +162,7 @@ const ROICalculateur = () => {
             />
             {errors.cTondeuseManuelle && <span className="error-message">{errors.cTondeuseManuelle}</span>}
           </div>
-          
+
           <div className={`form-group ${errors.cServiceJardinage ? 'error' : ''}`}>
             <label htmlFor="serviceJardinage">Service de jardinage (€)</label>
             <input
@@ -155,7 +170,7 @@ const ROICalculateur = () => {
               id="serviceJardinage"
               placeholder="Ex: 200"
               value={cServiceJardinage}
-              onChange={(e) => setCServiceJardinage(e.target.value)}
+              onChange={(e: any) => setCServiceJardinage(e.target.value)}
               required
               min="0"
               step="10"
@@ -171,10 +186,10 @@ const ROICalculateur = () => {
               id="moyenneTonteParSaison"
               placeholder="Ex: 30"
               value={moyenneTonteParSaison}
-              onChange={(e) => setMoyenneTonteParSaison(e.target.value)}
+              onChange={(e: any) => setMoyenneTonteParSaison(e.target.value)}
               required
               min="1"
-              step="1"  
+              step="1"
               ref={moyenneTonteRef}
             />
             {errors.moyenneTonteParSaison && <span className="error-message">{errors.moyenneTonteParSaison}</span>}
@@ -184,7 +199,7 @@ const ROICalculateur = () => {
         <div className="section">
           <h3>Robot Tondeuse</h3>
           <p>Entrez les coûts associés à l'achat et à la maintenance d'un robot tondeuse.</p>
-          
+
           <div className={`form-group ${errors.cAchatRobot ? 'error' : ''}`}>
             <label htmlFor="achatRobot">Coût d'achat du robot tondeuse (€)</label>
             <input
@@ -192,7 +207,7 @@ const ROICalculateur = () => {
               id="achatRobot"
               placeholder="Ex: 500"
               value={cAchatRobot}
-              onChange={(e) => setCAchatRobot(e.target.value)}
+              onChange={(e: any) => setCAchatRobot(e.target.value)}
               required
               min="0"
               step="10"
@@ -200,7 +215,7 @@ const ROICalculateur = () => {
             />
             {errors.cAchatRobot && <span className="error-message">{errors.cAchatRobot}</span>}
           </div>
-          
+
           <div className={`form-group ${errors.cMaintenanceRobot ? 'error' : ''}`}>
             <label htmlFor="maintenanceRobot">Maintenance annuelle (€)</label>
             <input
@@ -208,7 +223,7 @@ const ROICalculateur = () => {
               id="maintenanceRobot"
               placeholder="Ex: 50"
               value={cMaintenanceRobot}
-              onChange={(e) => setCMaintenanceRobot(e.target.value)}
+              onChange={(e: any) => setCMaintenanceRobot(e.target.value)}
               required
               min="0"
               step="10"
@@ -224,10 +239,10 @@ const ROICalculateur = () => {
               id="usageRobotParSaison"
               placeholder="Ex: 30"
               value={usageRobotParSaison}
-              onChange={(e) => setUsageRobotParSaison(e.target.value)}
+              onChange={(e: any) => setUsageRobotParSaison(e.target.value)}
               required
               min="1"
-              step="1"  
+              step="1"
               ref={usageRobotRef}
             />
             {errors.usageRobotParSaison && <span className="error-message">{errors.usageRobotParSaison}</span>}
@@ -236,7 +251,7 @@ const ROICalculateur = () => {
 
         <div className="section">
           <h3>Paramètres Généraux</h3>
-          
+
           <div className={`form-group ${errors.superficiePelouse ? 'error' : ''}`}>
             <label htmlFor="superficiePelouse">Superficie de la pelouse (m²)</label>
             <input
@@ -244,7 +259,7 @@ const ROICalculateur = () => {
               id="superficiePelouse"
               placeholder="Ex: 500"
               value={superficiePelouse}
-              onChange={(e) => setSuperficiePelouse(e.target.value)}
+              onChange={(e: any) => setSuperficiePelouse(e.target.value)}
               required
               min="1"
               step="10"
@@ -260,10 +275,10 @@ const ROICalculateur = () => {
               id="dureeAnnees"
               placeholder="Ex: 5"
               value={dureeAnnees}
-              onChange={(e) => setDureeAnnees(e.target.value)}
+              onChange={(e: any) => setDureeAnnees(Number(e.target.value))}
               required
               min="1"
-              step="1"  
+              step="1"
               ref={dureeRef}
             />
             {errors.dureeAnnees && <span className="error-message">{errors.dureeAnnees}</span>}
@@ -299,11 +314,11 @@ const ROICalculateur = () => {
             )}
             <div className="detailed-results">
               <h4>Détails des Coûts</h4>
-              <p><strong>Essence pour la tondeuse :</strong> {formatEuro(cEssence)}€ par tondeuse traditionnelle</p>
-              <p><strong>Achat ou entretien de la tondeuse manuelle :</strong> {formatEuro(cTondeuseManuelle)}€ par an</p>
-              <p><strong>Service de jardinage :</strong> {formatEuro(cServiceJardinage)}€ par an</p>
-              <p><strong>Coût d'achat du robot tondeuse :</strong> {formatEuro(cAchatRobot)}€ (coût initial)</p>
-              <p><strong>Maintenance annuelle du robot tondeuse :</strong> {formatEuro(cMaintenanceRobot)}€ par an</p>
+              <p><strong>Essence pour la tondeuse :</strong> {formatEuro(Number(cEssence))}€ par tondeuse traditionnelle</p>
+              <p><strong>Achat ou entretien de la tondeuse manuelle :</strong> {formatEuro(Number(cTondeuseManuelle))}€ par an</p>
+              <p><strong>Service de jardinage :</strong> {formatEuro(Number(cServiceJardinage))}€ par an</p>
+              <p><strong>Coût d'achat du robot tondeuse :</strong> {formatEuro(Number(cAchatRobot))}€ (coût initial)</p>
+              <p><strong>Maintenance annuelle du robot tondeuse :</strong> {formatEuro(Number(cMaintenanceRobot))}€ par an</p>
               <p><strong>Superficie de la pelouse :</strong> {superficiePelouse} m²</p>
               <p><strong>Nombre de tontes par saison (traditionnel) :</strong> {moyenneTonteParSaison}</p>
               <p><strong>Nombre de tontes par saison (robot) :</strong> {usageRobotParSaison}</p>
