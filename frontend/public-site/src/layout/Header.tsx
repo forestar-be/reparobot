@@ -100,7 +100,7 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
               href={isHomePage ? '#contact' : '/#contact'}
               text="Contact"
             />
-            <CalculatorDropdown />
+            {/* <CalculatorDropdown /> */}
           </Box>
 
           <Divider
