@@ -1,6 +1,7 @@
 // src/pages/ROICalculatorPage.js
 import React from 'react';
-import ROICalculator from '../components/tool/ROICalculator/index.tsx';
+import ROICalculator from '../components/tool/ROICalculator/ROICalculator';
+
 
 const ROICalculatorPage = () => {
   return (
