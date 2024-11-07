@@ -84,7 +84,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
                   text="Contact"
                 />
               </div>
-              <CalculatorDropdown />
+              {/* <CalculatorDropdown /> */}
             </div>
           </div>
         </Box>
