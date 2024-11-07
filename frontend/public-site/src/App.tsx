@@ -30,6 +30,7 @@ const GoogleAnalytics = (): JSX.Element | null => {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-QM3ZJ7DLLV', {
+          debug_mode: true,
           page_path: '${location.pathname}${location.search}'
         });
       `;
@@ -156,11 +157,11 @@ const App = (): JSX.Element => {
 };
 
 // Add type declaration for gtag
-declare global {
-  interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
-  }
-}
+// declare global {
+//   interface Window {
+//     dataLayer: any[];
+//     gtag: (...args: any[]) => void;
+//   }
+// }
 
 export default App;

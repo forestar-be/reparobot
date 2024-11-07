@@ -53,9 +53,9 @@ const Services: React.FC = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !isSectionViewed) {
             trackEvent(
-              'view_section',       // Action
-              'Engagement',         // Category
-              'Services Section'    // Label
+              'section_view',           // Action: consistent with other section views
+              'user_engagement',       // Category: snake_case, more standard GA4 category
+              'services_section'       // Label: snake_case, consistent naming
             );
             setIsSectionViewed(true);
           }
@@ -79,9 +79,9 @@ const Services: React.FC = () => {
 
   const handleServiceClick = useCallback((service: ServicesProps) => {
     trackEvent(
-      'Click',                       // Action
-      'Service Interaction',        // Category
-      `Service Card: ${service.name}` // Label
+      'service_card_click',          // Action: snake_case, more specific
+      'service_interaction',        // Category: snake_case, already good
+      `service_${service.name.toLowerCase().replace(/\s+/g, '_')}`  // Label: snake_case, formatted service name
     );
     setSelectedService(service);
   }, []);

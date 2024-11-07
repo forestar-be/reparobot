@@ -17,19 +17,18 @@ const HeroButtons = (): JSX.Element => {
   // Event handler for the first button
   const handleExploreServicesClick = () => {
     trackEvent(
-      'Click',                 // Action
-      'Hero Buttons',         // Category
-      'Explore Services Button' // Label
-      // Value is optional and omitted here
+      'button_click',           // Action: more specific, snake_case
+      'hero_interaction',       // Category: more specific, snake_case
+      'explore_services'        // Label: snake_case, shorter
     );
   };
 
   // Event handler for the second button
   const handleExpertiseClick = () => {
     trackEvent(
-      'Click',                 // Action
-      'Hero Buttons',         // Category
-      'Expertise Button'      // Label
+      'button_click',           // Action: more specific, snake_case
+      'hero_interaction',       // Category: more specific, snake_case
+      'expertise_section'       // Label: snake_case, shorter
     );
   };
 
@@ -86,11 +85,10 @@ const HeroButtons = (): JSX.Element => {
                 : theme.palette.success.dark,
           },
           '&:focus': {
-            outline: `2px solid ${
-              theme.palette.mode === 'dark'
+            outline: `2px solid ${theme.palette.mode === 'dark'
                 ? theme.palette.primary.light
                 : theme.palette.success.light
-            }`,
+              }`,
             outlineOffset: '2px',
           },
         }}
@@ -145,11 +143,10 @@ const HeroButtons = (): JSX.Element => {
                   : theme.palette.success.dark,
             },
             '&:focus': {
-              outline: `2px solid ${
-                theme.palette.mode === 'dark'
+              outline: `2px solid ${theme.palette.mode === 'dark'
                   ? theme.palette.primary.light
                   : theme.palette.success.light
-              }`,
+                }`,
               outlineOffset: '2px',
             },
           }}

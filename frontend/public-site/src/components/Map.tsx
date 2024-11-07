@@ -41,9 +41,9 @@ const Map: React.FC<Props> = ({ coordinates, zoom }) => {
           if (entry.isIntersecting && !hasTrackedView) {
             // Track Map section visibility
             trackEvent(
-              'view_section',       // Action
-              'Map Engagement',     // Category
-              'Map Section'         // Label
+              'section_view',           // Action: consistent naming with other section views
+              'map_interaction',       // Category: snake_case, consistent with map events
+              'map_section_visible'    // Label: more specific, snake_case
             );
             setHasTrackedView(true); // Prevent duplicate tracking
           }
@@ -80,18 +80,18 @@ const Map: React.FC<Props> = ({ coordinates, zoom }) => {
   // Event handler for marker click
   const handleMarkerClick = () => {
     trackEvent(
-      'Click',               // Action
-      'Map Interaction',     // Category
-      'Marker Click'         // Label
+      'marker_click',          // Action: snake_case, specific interaction
+      'map_interaction',       // Category: snake_case, consistent with other map events
+      'location_marker'        // Label: snake_case, describes the element
     );
   };
 
   // Event handler for popup open
   const handlePopupOpen = () => {
     trackEvent(
-      'Open Popup',          // Action
-      'Map Interaction',     // Category
-      'Popup Open'           // Label
+      'popup_open',           // Action: already good, keep it
+      'map_interaction',      // Category: already good, keep it
+      'location_details'      // Label: already good, keep it
     );
   };
 
