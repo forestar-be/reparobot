@@ -1,5 +1,5 @@
 import Hero from '../components/Hero';
-import Calculator from '../components/tool/Calculator/index.tsx';
+import Calculator from '../components/tool/Calculator/Calculator';
 
 const CalculatorPage = (): JSX.Element => {
   return (
