@@ -82,9 +82,9 @@ const ServiceForm = ({
           if (entry.isIntersecting && !hasTrackedView) {
             // Track ServiceForm section visibility
             trackEvent(
-              'view_section',       // Action
-              'Form Engagement',    // Category
-              'ServiceForm Section' // Label
+              'section_view',           // Action: consistent with other section views
+              'form_interaction',      // Category: snake_case, consistent category naming
+              'service_form_section'   // Label: snake_case, more consistent naming
             );
             setHasTrackedView(true); // Prevent duplicate tracking
           }
@@ -154,9 +154,9 @@ const ServiceForm = ({
     if (!validateForm()) {
       // Track form submission with validation errors
       trackEvent(
-        'Submit Failed',          // Action
-        'Form Interaction',       // Category
-        'Form Submission Errors'  // Label
+        'form_submit_error',        // Action: snake_case, more specific
+        'form_interaction',        // Category: already good, keep snake_case
+        'validation_failed'        // Label: snake_case, more specific
       );
       return;
     }
@@ -198,9 +198,9 @@ const ServiceForm = ({
 
       // Track successful form submission
       trackEvent(
-        'Submit Success',        // Action
-        'Form Interaction',      // Category
-        'Form Submission Success'// Label
+        'form_submission',          // Keep it snake_case
+        'form_interaction',         // Category
+        'form_submission_success'   // Label
       );
     } catch (error) {
       console.error('Error submitting form', error);
@@ -211,9 +211,9 @@ const ServiceForm = ({
 
       // Track failed form submission
       trackEvent(
-        'Submit Failed',          // Action
-        'Form Interaction',       // Category
-        'Form Submission Error'   // Label
+        'form_submit_error',        // Action: snake_case, clearer error event
+        'form_interaction',        // Category: already good, keep snake_case
+        'submission_failed'        // Label: snake_case, more consistent
       );
     } finally {
       setIsLoading(false);
@@ -231,9 +231,9 @@ const ServiceForm = ({
   const handleOpenTerms = () => {
     setTermsOpen(true);
     trackEvent(
-      'Open Terms',            // Action
-      'Form Interaction',      // Category
-      'Open Terms Dialog'      // Label
+      'dialog_open',            // Action: snake_case, more generic for reuse
+      'form_interaction',      // Category: already good, keep snake_case
+      'terms_dialog'          // Label: snake_case, more concise
     );
   };
 

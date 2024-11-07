@@ -30,9 +30,9 @@ const Hero = (): JSX.Element => {
           if (entry.isIntersecting && !hasTrackedView) {
             // Track Hero section visibility
             trackEvent(
-              'view_section',
-              'Engagement',
-              'hero_section'
+              'section_view',           // More consistent event name in snake_case
+              'user_engagement',       // More standard GA4 category
+              'hero_section',         // Keep the section identifier
             );
             setHasTrackedView(true); // Prevent duplicate tracking
           }

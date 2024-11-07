@@ -29,15 +29,30 @@ const Contact = (): JSX.Element => {
 
   // Handler functions for tracking events
   const handlePhoneClick = () => {
-    trackEvent('click', 'Contact', 'Phone Click', 1);
+    trackEvent(
+      'contact_phone_click',    // More specific event name in snake_case
+      'contact_interaction',    // More consistent category
+      'phone_number',          // More specific label
+      1
+    );
   };
-
+  
   const handleEmailClick = () => {
-    trackEvent('click', 'Contact', 'Email Click', 1);
+    trackEvent(
+      'contact_email_click',    // More specific event name in snake_case
+      'contact_interaction',    // More consistent category
+      'email_address',         // More specific label
+      1
+    );
   };
-
+  
   const handleAddressClick = () => {
-    trackEvent('click', 'Contact', 'Address Click', 1);
+    trackEvent(
+      'contact_address_click',  // More specific event name in snake_case
+      'contact_interaction',    // More consistent category
+      'physical_address',      // More specific label
+      1
+    );
   };
 
   return (
