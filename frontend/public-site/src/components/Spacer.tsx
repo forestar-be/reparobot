@@ -1,23 +1,38 @@
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material';
+import React from 'react';
+import Box, { BoxProps } from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 
-interface Props {
-  [x: string]: any;
+interface SpacerProps extends BoxProps {
+  size?: number | string;
+  role?: string;
+  'aria-hidden'?: boolean;
 }
 
-const Spacer = ({ sx = [] }: Props): JSX.Element => {
+const Spacer: React.FC<SpacerProps> = ({
+  sx = [],
+  size,
+  role = 'separator',
+  'aria-hidden': ariaHidden = true,
+  ...props
+}) => {
   const theme = useTheme();
 
   return (
     <Box
+      component="div"
+      role={role}
+      aria-hidden={ariaHidden}
       sx={[
         {
           backgroundColor: theme.palette.background.default,
+          height: size || 'auto',
+          width: size || '100%',
         },
-        ...[sx],
+        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-    ></Box>
+      {...props}
+    />
   );
 };
 
-export default Spacer;
+export default React.memo(Spacer);

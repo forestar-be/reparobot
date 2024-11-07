@@ -1,4 +1,5 @@
-import { useContext, useState } from 'react';
+import { useContext,useEffect, useState  } from 'react';
+
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -13,10 +14,14 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import CalculatorDropdown from '../components/CalculatorDropdown';
 import CustomButton from '../components/CustomButton';
+
+
 import ColorModeContext from '../utils/ColorModeContext';
 import headerData from '../config/header.json';
 import { Logo } from '../components/Logo';
+
 
 interface Props {
   onSidebarOpen: () => void;
@@ -26,11 +31,22 @@ export interface HeaderProps {
   title: string;
 }
 
+
+
+
+
+
+
 const Header = ({ onSidebarOpen }: Props): JSX.Element => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const [header] = useState<HeaderProps>(headerData);
+  const [isHomePage, setIsHomePage] = useState(true);
 
+  useEffect(() => {
+    // Update isHomePage when the component mounts and when the pathname changes
+    setIsHomePage(window.location.pathname === '/');
+  }, []);
   return (
     <>
       <AppBar
@@ -72,10 +88,21 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
               display: { lg: 'flex', md: 'none', xs: 'none' },
             }}
           >
-            <CustomButton href="#services" text="Services" />
-            <CustomButton href="#about" text="À propos" />
-            <CustomButton href="#contact" text="Contact" />
+            <CustomButton
+              href={isHomePage ? '#services' : '/#services'}
+              text="Services"
+            />
+            <CustomButton
+              href={isHomePage ? '#about' : '/#about'}
+              text="À propos"
+            />
+            <CustomButton
+              href={isHomePage ? '#contact' : '/#contact'}
+              text="Contact"
+            />
+            {/* <CalculatorDropdown /> */}
           </Box>
+
           <Divider
             orientation="vertical"
             sx={{
