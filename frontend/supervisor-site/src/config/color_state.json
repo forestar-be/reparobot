@@ -1,0 +1,7 @@
+{
+  "Non commencé": "rgb(229 229 229)",
+  "En attente de réponse client": "rgb(255 204 111)",
+  "En cours": "rgb(100 250 255)",
+  "Terminé": "rgb(141 231 145)",
+  "Hors service": "rgb(255 126 126)"
+}
