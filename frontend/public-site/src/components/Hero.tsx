@@ -54,10 +54,11 @@ const Hero = (): JSX.Element => {
     };
   }, [hasTrackedView]);
 
+
   const urlParams = new URLSearchParams(window.location.search);
   const urlquery = Object.fromEntries(urlParams.entries());
   console.log(urlquery.x); // This would output: "Résolvez le problème de votre rob"
-   
+
 
   return (
     <>
@@ -122,8 +123,10 @@ const Hero = (): JSX.Element => {
                     }}
                     gutterBottom
                   >
+
                      {urlquery.x || item.description}
                     
+
                   </Typography>
                 </Box>
                 <Box marginBottom={3}>
@@ -135,7 +138,9 @@ const Hero = (): JSX.Element => {
                       fontWeight: 400,
                     }}
                   >
+
                    {item.title}
+
                   </Typography>
                 </Box>
                 <HeroButtons />
