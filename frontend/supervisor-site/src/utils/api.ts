@@ -7,10 +7,11 @@ const apiRequest = async (
   method: string,
   token: string,
   body?: any,
+  additionalHeaders: HeadersInit = { 'Content-Type': 'application/json' },
 ) => {
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
+    ...additionalHeaders,
   };
 
   const options: RequestInit = {
@@ -106,13 +107,15 @@ export const sendEmailApi = (
   token: string,
   id: number | string,
   data: FormData,
-) => apiRequest(`/supervisor/machine-repairs/email/${id}`, 'PUT', token, data);
+) =>
+  apiRequest(`/supervisor/machine-repairs/email/${id}`, 'PUT', token, data, {});
 
 export const sendDriveApi = (
   token: string,
   id: number | string,
   data: FormData,
-) => apiRequest(`/supervisor/machine-repairs/drive/${id}`, 'PUT', token, data);
+) =>
+  apiRequest(`/supervisor/machine-repairs/drive/${id}`, 'PUT', token, data, {});
 
 export const fetchConfig = (token: string) =>
   apiRequest('/supervisor/config', 'GET', token);
