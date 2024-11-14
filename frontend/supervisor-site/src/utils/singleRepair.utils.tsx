@@ -125,7 +125,7 @@ export const sendEmail = async (
     // send pdf to email api
     const pdfBlob = instance.blob;
     if (!pdfBlob) {
-      console.error('No pdf blob found');
+      console.error('No pdf blob found', instance);
       toast.error("Une erreur s'est produite lors de la création du PDF");
       return;
     }

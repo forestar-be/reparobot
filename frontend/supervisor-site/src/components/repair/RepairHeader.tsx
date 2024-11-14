@@ -34,7 +34,9 @@ export const RepairHeader = (props: RepairHeaderProps) => (
         color="secondary"
         startIcon={<AddToDriveIcon />}
         onClick={props.onClick1}
-        disabled={props.disabled}
+        disabled={
+          props.disabled || props.instance.loading || !props.instance.blob
+        }
       >
         {props.disabled ? (
           <CircularProgress size={24} color="inherit" />
@@ -46,7 +48,9 @@ export const RepairHeader = (props: RepairHeaderProps) => (
         color="secondary"
         startIcon={<AttachEmailIcon />}
         onClick={props.onClick2}
-        disabled={props.disabled1}
+        disabled={
+          props.disabled1 || props.instance.loading || !props.instance.blob
+        }
       >
         {props.disabled1 ? (
           <CircularProgress size={24} color="inherit" />
@@ -61,6 +65,7 @@ export const RepairHeader = (props: RepairHeaderProps) => (
         href={props.instance.url ?? undefined}
         download={`fiche_reparation_${props.id}.pdf`}
         onClick={props.onClick3}
+        disabled={props.instance.loading || !props.instance.url}
       >
         Télécharger
       </Button>
