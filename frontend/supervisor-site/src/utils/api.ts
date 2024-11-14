@@ -8,6 +8,7 @@ const apiRequest = async (
   token: string,
   body?: any,
   additionalHeaders: HeadersInit = { 'Content-Type': 'application/json' },
+  stringifyBody: boolean = true,
 ) => {
   const headers: HeadersInit = {
     Authorization: `Bearer ${token}`,
@@ -20,7 +21,7 @@ const apiRequest = async (
   };
 
   if (body) {
-    options.body = JSON.stringify(body);
+    options.body = stringifyBody ? JSON.stringify(body) : body;
   }
 
   const response = await fetch(`${API_URL}${endpoint}`, options);
@@ -108,14 +109,28 @@ export const sendEmailApi = (
   id: number | string,
   data: FormData,
 ) =>
-  apiRequest(`/supervisor/machine-repairs/email/${id}`, 'PUT', token, data, {});
+  apiRequest(
+    `/supervisor/machine-repairs/email/${id}`,
+    'PUT',
+    token,
+    data,
+    {},
+    false,
+  );
 
 export const sendDriveApi = (
   token: string,
   id: number | string,
   data: FormData,
 ) =>
-  apiRequest(`/supervisor/machine-repairs/drive/${id}`, 'PUT', token, data, {});
+  apiRequest(
+    `/supervisor/machine-repairs/drive/${id}`,
+    'PUT',
+    token,
+    data,
+    {},
+    false,
+  );
 
 export const fetchConfig = (token: string) =>
   apiRequest('/supervisor/config', 'GET', token);
