@@ -9,6 +9,7 @@ interface RenderFieldProps {
   editableFields: { [key: string]: boolean };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   xs?: 6 | 12 | 3;
+  endAdornment?: React.ReactNode;
 }
 
 const RepairField: React.FC<RenderFieldProps> = ({
@@ -19,6 +20,7 @@ const RepairField: React.FC<RenderFieldProps> = ({
   editableFields,
   handleChange,
   xs,
+  endAdornment,
 }) => (
   <Grid item xs={(xs ?? isMultiline) ? 12 : 6}>
     {editableFields[name] ? (
@@ -45,6 +47,7 @@ const RepairField: React.FC<RenderFieldProps> = ({
         <Typography variant="subtitle1" sx={{ overflowWrap: 'break-word' }}>
           {value || ''}
         </Typography>
+        {endAdornment}
       </Box>
     )}
   </Grid>

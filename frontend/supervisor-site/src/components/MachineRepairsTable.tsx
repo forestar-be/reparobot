@@ -2,7 +2,7 @@ import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import { Paper, Typography, IconButton, Tooltip } from '@mui/material';
+import { Paper, Typography, IconButton, Tooltip, Box } from '@mui/material';
 import { useAuth } from '../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
 import type { ColDef } from 'ag-grid-community/dist/types/core/entities/colDef';
@@ -13,22 +13,11 @@ import '../styles/MachineRepairsTable.css';
 import { getAllMachineRepairs } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import _colorByState from '../config/color_state.json';
+import { MachineRepair, MachineRepairFromApi } from '../utils/types';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const colorByState: { [key: string]: string } = _colorByState;
 
-interface MachineRepair {
-  id: string;
-  first_name: string;
-  last_name: string;
-  state: string | null;
-  address: string;
-  phone: string;
-  email: string;
-  machine_type_name: string;
-  repair_or_maintenance: string;
-  createdAt: string;
-  repairer_name: string | null;
-}
 const rowHeight = 40;
 
 const MachineRepairsTable: React.FC = () => {
@@ -43,8 +32,19 @@ const MachineRepairsTable: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const data = await getAllMachineRepairs(auth.token);
-      setMachineRepairs(data);
+      const data: MachineRepairFromApi[] = await getAllMachineRepairs(
+        auth.token,
+      );
+      const repairsDataWithDate: MachineRepair[] = data.map(
+        (repair: MachineRepairFromApi) => ({
+          ...repair,
+          start_timer: repair.start_timer ? new Date(repair.start_timer) : null,
+          client_call_times: repair.client_call_times.map(
+            (date) => new Date(date),
+          ),
+        }),
+      );
+      setMachineRepairs(repairsDataWithDate);
     } catch (error) {
       console.error('Failed to fetch data:', error);
       alert("Une erreur s'est produite lors de la récupération des données");
@@ -124,6 +124,30 @@ const MachineRepairsTable: React.FC = () => {
         backgroundColor: colorByState[params.value || 'Non commencé'],
         color: 'black',
       }),
+    },
+    {
+      headerName: 'Appel client',
+      field: 'client_call_times' as keyof MachineRepair,
+      sortable: false,
+      filter: true,
+      cellRenderer: (params: any) => {
+        if (params.value && params.value.length) {
+          const lastCall =
+            params.value[params.value.length - 1].toLocaleString('FR-fr');
+          return (
+            <Box display="flex" alignItems="center" gap={1}>
+              {lastCall}
+              <CheckCircleIcon color={'success'} />
+            </Box>
+          );
+        } else {
+          return (
+            <Box display="flex" alignItems="center" justifyContent="center">
+              -
+            </Box>
+          );
+        }
+      },
     },
     {
       headerName: 'Type',

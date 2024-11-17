@@ -1,9 +1,9 @@
-import { MachineRepair } from '../pages/SingleRepair';
-import MyDocument from '../components/repair/Document';
 import React from 'react';
 import { toast } from 'react-toastify';
-import { sendDriveApi, sendEmailApi } from './api';
+import { sendDriveApi, sendEmailApi, updateRepair } from './api';
 import ReactPDF from '@react-pdf/renderer';
+import { getKeys } from './common.utils';
+import { MachineRepair } from './types';
 
 export const replacedPartToString = (
   replacedPart: MachineRepair['replaced_part_list'][0],
@@ -63,49 +63,86 @@ export function getSuffixPriceDevis(repair: MachineRepair, priceDevis: number) {
   return repair.devis ? ` +${String(priceDevis).replace('.', ',')}€` : '';
 }
 
-export const getPdfDocument = (
-  repair: MachineRepair,
-  hourlyRate: number,
-  priceDevis: number,
-  conditions: string,
-  address: string,
-  phone: string,
-  email: string,
-  website: string,
-  pdfTitle: string,
+export const onClickCall = async (
+  repair: MachineRepair | null,
+  setRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>,
+  initialRepair: MachineRepair | null,
+  setIsLoadingSaveCall: (arg0: boolean) => void,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  auth: { token: string },
+  id: string | undefined,
+  setInitialRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>,
+  closeAllEditableSections: () => void,
 ) => {
-  return (
-    <MyDocument
-      dateDuDepot={new Date(repair.createdAt).toLocaleDateString('fr-FR')}
-      gSMClient={repair.phone}
-      nom={`${repair.first_name} ${repair.last_name}`}
-      code={repair.id.toString()}
-      type={repair.machine_type_name}
-      codeRobot={repair.robot_code}
-      modele={repair.brand_name}
-      typeReparation={repair.repair_or_maintenance}
-      avecGarantie={repair.warranty ? 'Oui' : 'Non'}
-      remarques={repair.fault_description}
-      prix={getWorkingTimePrice(repair, hourlyRate)}
-      tempsPasse={getFormattedWorkingTime(repair.working_time_in_sec, false)}
-      piecesRemplacees={
-        repair.replaced_part_list.map(replacedPartToString).join(', ') ||
-        'Aucune'
-      }
-      travailEffectue={repair.remark ?? ''}
-      avecDevis={
-        repair.devis ? `Oui${getSuffixPriceDevis(repair, priceDevis)}` : 'Non'
-      }
-      prixPieces={getTotalPriceParts(repair)}
-      prixTotal={getTotalPrice(repair, hourlyRate)}
-      conditions={conditions}
-      address={address}
-      phone={phone}
-      email={email}
-      website={website}
-      pdfTitle={pdfTitle}
-    />
-  );
+  try {
+    if (!repair || !initialRepair) {
+      throw new Error('No repair found');
+    }
+    setIsLoadingSaveCall(true);
+    const currentDateTime = new Date();
+    const newRepair: MachineRepair = {
+      ...repair,
+      client_call_times: [...repair.client_call_times, currentDateTime],
+    };
+    setRepair(newRepair);
+    await handleUpdate(
+      newRepair,
+      initialRepair,
+      setLoading,
+      auth,
+      id,
+      setInitialRepair,
+      closeAllEditableSections,
+    );
+  } catch (e) {
+    console.error('Error save call:', e);
+    toast.error(
+      "Une erreur s'est produite lors de de l'enregistrement de l'appel",
+    );
+  } finally {
+    setIsLoadingSaveCall(false);
+  }
+};
+
+export const onRemoveCall = async (
+  repair: MachineRepair | null,
+  setRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>,
+  initialRepair: MachineRepair | null,
+  setIsLoadingRemoveCall: (arg0: boolean) => void,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  auth: { token: string },
+  id: string | undefined,
+  setInitialRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>,
+  closeAllEditableSections: () => void,
+  index: number,
+) => {
+  try {
+    if (!repair || !initialRepair) {
+      throw new Error('No repair found');
+    }
+    setIsLoadingRemoveCall(true);
+    const newRepair: MachineRepair = {
+      ...repair,
+      client_call_times: repair.client_call_times.filter((_, i) => i !== index),
+    };
+    setRepair(newRepair);
+    await handleUpdate(
+      newRepair,
+      initialRepair,
+      setLoading,
+      auth,
+      id,
+      setInitialRepair,
+      closeAllEditableSections,
+    );
+  } catch (e) {
+    console.error('Error remove call:', e);
+    toast.error(
+      "Une erreur s'est produite lors de de la suppression de l'appel",
+    );
+  } finally {
+    setIsLoadingRemoveCall(false);
+  }
 };
 
 export const sendEmail = async (
@@ -236,5 +273,42 @@ export const resetTimer = (
       working_time_in_sec: 0,
       start_timer: null,
     });
+  }
+};
+export const handleUpdate = async (
+  repairData: MachineRepair,
+  initialRepairData: MachineRepair,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  auth: { token: string },
+  id: string | undefined,
+  setInitialRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>,
+  closeAllEditableSections: () => void,
+) => {
+  setLoading(true);
+
+  const updatedData: Record<keyof MachineRepair, any> = getKeys(
+    repairData,
+  ).reduce((acc: any, key: keyof MachineRepair) => {
+    if (repairData[key] !== initialRepairData[key]) {
+      acc[key] = repairData[key];
+    }
+    return acc;
+  }, {});
+
+  try {
+    await updateRepair(auth.token, id!, updatedData);
+    toast.success('Fiche mise à jour avec succès', {
+      toastId: 'successUpdateSingleRepair',
+      updateId: 'successUpdateSingleRepair',
+    });
+    setInitialRepair(repairData);
+  } catch (error) {
+    console.error('Error updating repair:', error);
+    toast.error(
+      "Une erreur s'est produite lors de la mise à jour de la réparation",
+    );
+  } finally {
+    setLoading(false);
+    closeAllEditableSections();
   }
 };

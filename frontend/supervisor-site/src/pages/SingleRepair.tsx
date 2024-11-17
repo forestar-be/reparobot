@@ -7,33 +7,39 @@ import {
   Grid,
   IconButton,
   ImageListItem,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
+  Modal,
   SxProps,
   Theme,
   Typography,
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {
   addImage,
   deleteImage,
   deleteRepair,
   fetchAllConfig,
   fetchRepairById,
-  updateRepair,
 } from '../utils/api';
 import { useAuth } from '../hooks/AuthProvider';
 import '../styles/SingleRepair.css';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useTheme } from '@mui/material/styles';
-import { getKeys } from '../utils/common.utils';
 import _colorByState from '../config/color_state.json';
 import { toast } from 'react-toastify';
 import RepairField from '../components/repair/RepairField';
 import ReactPDF from '@react-pdf/renderer';
 import { useStopwatch } from 'react-timer-hook';
 import {
-  getPdfDocument,
   getSuffixPriceDevis,
   handleManualTimeChange,
+  handleUpdate,
+  onClickCall,
+  onRemoveCall,
   resetTimer,
   sendDrive,
   sendEmail,
@@ -47,40 +53,85 @@ import { RepairHeader } from '../components/repair/RepairHeader';
 import { RepairLoading } from '../components/repair/RepairLoading';
 import { RepairSelect } from '../components/repair/RepairSelect';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { SingleRepairDocument } from '../components/repair/SingleRepairDocument';
+import { MachineRepair, MachineRepairFromApi } from '../utils/types';
 
 export const colorByState: { [key: string]: string } = _colorByState;
 
 export type ReplacedPart = { name: string; price: number };
 
-export interface MachineRepair {
-  id: number;
-  first_name: string;
-  last_name: string;
-  address: string;
-  phone: string;
-  email: string;
-  machine_type_name: string;
-  repair_or_maintenance: string;
-  robot_code: string;
-  fault_description: string;
-  start_timer: Date | null;
-  working_time_in_sec: number;
-  replaced_part_list: {
-    quantity: number;
-    replacedPart: ReplacedPart;
-  }[];
-  state: string | null;
-  createdAt: string;
-  imageUrls: string[];
-  signatureUrl: string;
-  brand_name: string;
-  warranty?: boolean;
-  devis: boolean;
-  repairer_name: string | null;
-  remark: string | null;
-  city: string | null;
-  postal_code: string | null;
-}
+const CallTimesModal = ({
+  open,
+  onClose,
+  callTimes,
+  repair,
+  setRepair,
+  initialRepair,
+  setIsLoadingSaveCall,
+  setLoading,
+  auth,
+  id,
+  setInitialRepair,
+  closeAllEditableSections,
+}: {
+  open: boolean;
+  onClose: () => void;
+  callTimes: Date[];
+  repair: MachineRepair;
+  setRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>;
+  initialRepair: MachineRepair;
+  setIsLoadingSaveCall: (arg0: boolean) => void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  auth: { token: string };
+  id: string | undefined;
+  setInitialRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>;
+  closeAllEditableSections: () => void;
+}) => (
+  <Modal open={open} onClose={onClose}>
+    <Box
+      sx={{
+        padding: 4,
+        backgroundColor: 'white',
+        margin: 'auto',
+        marginTop: '10%',
+        width: '50%',
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        Historique des appels au client
+      </Typography>
+      <List>
+        {callTimes.map((time, index) => (
+          <ListItem key={index}>
+            <ListItemIcon>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() =>
+                  onRemoveCall(
+                    repair,
+                    setRepair,
+                    initialRepair,
+                    setIsLoadingSaveCall,
+                    setLoading,
+                    auth,
+                    id,
+                    setInitialRepair,
+                    closeAllEditableSections,
+                    index,
+                  )
+                }
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemIcon>
+            <ListItemText primary={time.toLocaleString('FR-fr')} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  </Modal>
+);
 
 const SingleRepair = () => {
   const theme = useTheme();
@@ -94,6 +145,7 @@ const SingleRepair = () => {
   const [loading, setLoading] = useState(true);
   const [isLoadingSendEmail, setIsLoadingSendEmail] = useState(false);
   const [isLoadingAddDrive, setIsLoadingAddDrive] = useState(false);
+  const [isLoadingSaveCall, setIsLoadingSaveCall] = useState(false);
   const [editableFields, setEditableFields] = useState<{
     [key: string]: boolean;
   }>({});
@@ -119,6 +171,7 @@ const SingleRepair = () => {
   const [email, setEmail] = useState<string>('');
   const [siteWeb, setSiteWeb] = useState<string>('');
   const [titreBonPdf, setTitreBonPdf] = useState<string>('');
+  const [isCallTimesModalOpen, setIsCallTimesModalOpen] = useState(false);
 
   const {
     totalSeconds,
@@ -180,13 +233,18 @@ const SingleRepair = () => {
     }
     const fetchData = async () => {
       try {
-        const repairData: { start_timer: string | null } & MachineRepair =
-          await fetchRepairById(id, auth.token);
-        const repairDataWithDate = {
+        const repairData: MachineRepairFromApi = await fetchRepairById(
+          id,
+          auth.token,
+        );
+        const repairDataWithDate: MachineRepair = {
           ...repairData,
           start_timer: repairData.start_timer
             ? new Date(repairData.start_timer)
             : null,
+          client_call_times: repairData.client_call_times.map(
+            (client_call_time: string) => new Date(client_call_time),
+          ),
         };
         setInitialRepair(repairDataWithDate);
         setRepair(repairDataWithDate);
@@ -205,7 +263,7 @@ const SingleRepair = () => {
   useEffect(() => {
     if (repair) {
       updateInstance(
-        getPdfDocument(
+        SingleRepairDocument(
           repair,
           hourlyRate,
           priceDevis,
@@ -245,7 +303,15 @@ const SingleRepair = () => {
     }
 
     if (repair.start_timer !== initialRepair.start_timer) {
-      handleUpdate(repair, initialRepair); // update the start_timer field in the backend
+      handleUpdate(
+        repair,
+        initialRepair,
+        setLoading,
+        auth,
+        id,
+        setInitialRepair,
+        closeAllEditableSections,
+      ); // update the start_timer field in the backend
     }
   }, [repair?.start_timer]);
 
@@ -369,7 +435,15 @@ const SingleRepair = () => {
         replaced_part_list: newReplacedPartList,
       };
       setRepair(newRepair);
-      handleUpdate(newRepair, initialRepair);
+      handleUpdate(
+        newRepair,
+        initialRepair,
+        setLoading,
+        auth,
+        id,
+        setInitialRepair,
+        closeAllEditableSections,
+      );
     },
     [repair, initialRepair],
   );
@@ -397,7 +471,15 @@ const SingleRepair = () => {
         replaced_part_list: newReplacedPartList,
       };
       setRepair(newRepair);
-      handleUpdate(newRepair, initialRepair);
+      handleUpdate(
+        newRepair,
+        initialRepair,
+        setLoading,
+        auth,
+        id,
+        setInitialRepair,
+        closeAllEditableSections,
+      );
     },
     [repair, initialRepair],
   );
@@ -414,7 +496,15 @@ const SingleRepair = () => {
           repair,
           initialRepair,
         });
-        handleUpdate(repair, initialRepair);
+        handleUpdate(
+          repair,
+          initialRepair,
+          setLoading,
+          auth,
+          id,
+          setInitialRepair,
+          closeAllEditableSections,
+        );
       }
     }
   }, [repair?.working_time_in_sec]);
@@ -432,7 +522,15 @@ const SingleRepair = () => {
         initialRepair,
       });
       // save action
-      handleUpdate(repair!, initialRepair!);
+      handleUpdate(
+        repair!,
+        initialRepair!,
+        setLoading,
+        auth,
+        id,
+        setInitialRepair,
+        closeAllEditableSections,
+      );
     }
   };
 
@@ -468,39 +566,6 @@ const SingleRepair = () => {
       );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleUpdate = async (
-    repairData: MachineRepair,
-    initialRepairData: MachineRepair,
-  ) => {
-    setLoading(true);
-
-    const updatedData: Record<keyof MachineRepair, any> = getKeys(
-      repairData,
-    ).reduce((acc: any, key: keyof MachineRepair) => {
-      if (repairData[key] !== initialRepairData[key]) {
-        acc[key] = repairData[key];
-      }
-      return acc;
-    }, {});
-
-    try {
-      await updateRepair(auth.token, id!, updatedData);
-      toast.success('Fiche mise à jour avec succès', {
-        toastId: 'successUpdateSingleRepair',
-        updateId: 'successUpdateSingleRepair',
-      });
-      setInitialRepair(repairData);
-    } catch (error) {
-      console.error('Error updating repair:', error);
-      toast.error(
-        "Une erreur s'est produite lors de la mise à jour de la réparation",
-      );
-    } finally {
-      setLoading(false);
-      closeAllEditableSections();
     }
   };
 
@@ -540,6 +605,7 @@ const SingleRepair = () => {
     value: string,
     isMultiline: boolean = false,
     xs?: 6 | 12 | 3,
+    endAdornment?: React.ReactNode,
   ) => (
     <RepairField
       label={label}
@@ -549,6 +615,7 @@ const SingleRepair = () => {
       editableFields={editableFields}
       handleChange={handleChange}
       xs={xs}
+      endAdornment={endAdornment}
     />
   );
 
@@ -594,7 +661,22 @@ const SingleRepair = () => {
         onClick2={() =>
           sendEmail(isRunning, setIsLoadingSendEmail, id!, instance, auth)
         }
+        onClickCall={async () => {
+          await onClickCall(
+            repair,
+            setRepair,
+            initialRepair,
+            setIsLoadingSaveCall,
+            setLoading,
+            auth,
+            id,
+            setInitialRepair,
+            closeAllEditableSections,
+          );
+        }}
+        loadingCall={isLoadingSaveCall}
         disabled1={isLoadingSendEmail}
+        setIsCallTimesModalOpen={setIsCallTimesModalOpen}
         instance={instance}
         onClick3={(e: React.MouseEvent<HTMLAnchorElement>) => {
           if (isRunning) {
@@ -602,6 +684,20 @@ const SingleRepair = () => {
             toast.warn('Arrêtez le chronomètre avant de télécharger le PDF');
           }
         }}
+      />
+      <CallTimesModal
+        open={isCallTimesModalOpen}
+        onClose={() => setIsCallTimesModalOpen(false)}
+        callTimes={repair?.client_call_times || []}
+        repair={repair!}
+        setRepair={setRepair}
+        initialRepair={initialRepair!}
+        setIsLoadingSaveCall={setIsLoadingSaveCall}
+        setLoading={setLoading}
+        auth={auth}
+        id={id}
+        setInitialRepair={setInitialRepair}
+        closeAllEditableSections={closeAllEditableSections}
       />
       {repair && (
         <Grid container spacing={2}>
@@ -681,7 +777,21 @@ const SingleRepair = () => {
               12,
               colorByState,
             )}
-            element8={renderSelect(
+            element8={renderField(
+              'Dernier appel au client',
+              'last_client_call_time',
+              repair.client_call_times.length
+                ? repair.client_call_times[
+                    repair.client_call_times.length - 1
+                  ].toLocaleString('FR-fr')
+                : 'Aucun appel',
+              false,
+              undefined,
+              repair.client_call_times.length ? (
+                <CheckCircleIcon color={'success'} />
+              ) : undefined,
+            )}
+            element9={renderSelect(
               'Réparateur',
               'repairer_name',
               repair.repairer_name || 'Non attribué',
@@ -689,7 +799,7 @@ const SingleRepair = () => {
               { marginTop: 2, marginBottom: 1, width: '80%' },
               12,
             )}
-            element9={renderField(
+            element10={renderField(
               'Remarques atelier',
               'remark',
               repair.remark ?? '',
