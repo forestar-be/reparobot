@@ -14,8 +14,8 @@ import {
   CameraAlt as CameraAltIcon,
 } from '@mui/icons-material';
 import Divider from '@mui/material/Divider';
-import { MachineRepair } from '../../pages/SingleRepair';
 import imageCompression from 'browser-image-compression';
+import { MachineRepair } from '../../utils/types';
 
 const maxSizeMB = 0.05;
 const maxWidthOrHeight = 1024;
@@ -105,6 +105,7 @@ export const RightGrid = function (props: {
           alt={'Signature client'}
           loading="lazy"
           width={150}
+          style={{ backgroundColor: 'white' }}
         />
         <Typography variant="caption" gutterBottom>
           Signature client

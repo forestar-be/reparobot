@@ -12,7 +12,8 @@ import {
   possibleReplacedPartToString,
 } from '../../utils/singleRepair.utils';
 import ReplacedPartSelect from './ReplacedPartSelect';
-import { MachineRepair, ReplacedPart } from '../../pages/SingleRepair';
+import { ReplacedPart } from '../../pages/SingleRepair';
+import { MachineRepair } from '../../utils/types';
 
 export const LeftGrid = (props: {
   onClick: () => void;
@@ -28,6 +29,7 @@ export const LeftGrid = (props: {
   element7: React.JSX.Element;
   element8: React.JSX.Element;
   element9: React.JSX.Element;
+  element10: React.JSX.Element;
   repair: MachineRepair;
   editableFields: { [p: string]: boolean };
   running: boolean;
@@ -93,7 +95,8 @@ export const LeftGrid = (props: {
     </Grid>
     {props.element7}
     {props.element8}
-    <Box width={'80%'}>{props.element9}</Box>
+    {props.element9}
+    <Box width={'80%'}>{props.element10}</Box>
     <TimePicker
       repair={props.repair}
       editableFields={props.editableFields}
