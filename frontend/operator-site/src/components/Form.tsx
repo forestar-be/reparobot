@@ -12,7 +12,6 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import formConfig from '../config/form.json';
 import '../styles/Form.css';
 import { useTheme } from '@mui/material/styles';
 import SignatureCanvas from 'react-signature-canvas';
@@ -21,6 +20,19 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import imageCompression from 'browser-image-compression';
 import { useAuth } from '../hooks/AuthProvider';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
+interface Config {
+  id: string;
+  label: string;
+  type: string;
+  isRequired: boolean;
+  optionsListName?: string;
+  options?: string[];
+}
+
+interface FormConfig {
+  fields: Config[];
+}
 
 const signatureCanvaWidth = 300;
 // max size input image in MB
@@ -43,6 +55,7 @@ const DynamicForm = () => {
   const [optionsListByName, setOptionsListByName] = useState<
     Record<string, string[]>
   >({});
+  const [formConfig, setFormConfig] = useState<FormConfig | null>(null);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -71,7 +84,34 @@ const DynamicForm = () => {
       }
     };
 
+    const fetchFormConfig = async () => {
+      try {
+        const response = await fetch(`${API_URL}/operator/formConfig`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+
+        // check if status 401 or 403
+        if (response.status === 401 || response.status === 403) {
+          auth.logOut();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const result: FormConfig = await response.json();
+        setFormConfig(result);
+      } catch (error) {
+        console.error('Error fetching options:', error);
+        alert('Erreur lors de la récupération des options');
+      }
+    };
+
     fetchOptions();
+    fetchFormConfig();
   }, []);
 
   const handleChange = (
@@ -433,20 +473,26 @@ const DynamicForm = () => {
       <Container>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            {formConfig.fields.map((field: any) => (
-              <Grid
-                item
-                xs={12}
-                sm={
-                  ['textarea', 'signature', 'file'].includes(field.type)
-                    ? 12
-                    : 6
-                }
-                key={field.label}
-              >
-                {renderField(field)}
+            {formConfig ? (
+              formConfig.fields.map((field: any) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={
+                    ['textarea', 'signature', 'file'].includes(field.type)
+                      ? 12
+                      : 6
+                  }
+                  key={field.label}
+                >
+                  {renderField(field)}
+                </Grid>
+              ))
+            ) : (
+              <Grid container justifyContent="center">
+                <CircularProgress size={50} color="inherit" />
               </Grid>
-            ))}
+            )}
           </Grid>
           <Box mt={4}>
             <Button

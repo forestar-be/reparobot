@@ -2,7 +2,14 @@ import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import { Paper, Typography, IconButton, Tooltip, Box } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  IconButton,
+  Tooltip,
+  Box,
+  TextField,
+} from '@mui/material';
 import { useAuth } from '../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
 import type { ColDef } from 'ag-grid-community/dist/types/core/entities/colDef';
@@ -10,13 +17,11 @@ import { AG_GRID_LOCALE_FR } from '@ag-grid-community/locale';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import '../styles/MachineRepairsTable.css';
-import { getAllMachineRepairs } from '../utils/api';
+import { fetchAllConfig, getAllMachineRepairs } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
-import _colorByState from '../config/color_state.json';
 import { MachineRepair, MachineRepairFromApi } from '../utils/types';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
-const colorByState: { [key: string]: string } = _colorByState;
+import SearchIcon from '@mui/icons-material/Search';
 
 const rowHeight = 40;
 
@@ -27,7 +32,11 @@ const MachineRepairsTable: React.FC = () => {
   const gridRef = React.createRef<AgGridReact>();
   const [machineRepairs, setMachineRepairs] = useState<MachineRepair[]>([]);
   const [loading, setLoading] = useState(true);
+  const [quickFilterText, setQuickFilterText] = useState('');
   const [paginationPageSize, setPaginationPageSize] = useState(10);
+  const [colorByState, setColorByState] = useState<{ [key: string]: string }>(
+    {},
+  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -53,7 +62,22 @@ const MachineRepairsTable: React.FC = () => {
     }
   };
 
+  const fetchAllConfigData = async () => {
+    try {
+      const {
+        config: { États: stateColorsStr },
+      } = await fetchAllConfig(auth.token);
+      setColorByState(JSON.parse(stateColorsStr));
+    } catch (error) {
+      console.error('Error fetching config:', error);
+      alert(
+        `Une erreur s'est produite lors de la récupération des données ${error}`,
+      );
+    }
+  };
+
   useEffect(() => {
+    fetchAllConfigData();
     fetchData();
   }, []);
 
@@ -105,6 +129,7 @@ const MachineRepairsTable: React.FC = () => {
         // flexDirection: 'row',
         // alignItems: 'center',
       },
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'N° de bon',
@@ -112,6 +137,7 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       width: 120,
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'État',
@@ -124,6 +150,7 @@ const MachineRepairsTable: React.FC = () => {
         backgroundColor: colorByState[params.value || 'Non commencé'],
         color: 'black',
       }),
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Appel client',
@@ -148,6 +175,7 @@ const MachineRepairsTable: React.FC = () => {
           );
         }
       },
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Type',
@@ -155,12 +183,14 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       width: 120,
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Type de machine',
       field: 'machine_type_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Réparateur',
@@ -168,6 +198,7 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       valueFormatter: (params: any) => params.value || 'Non affecté',
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Prénom',
@@ -192,6 +223,7 @@ const MachineRepairsTable: React.FC = () => {
         new Date(params.value).toLocaleString('fr-FR'),
       comparator: (valueA: string, valueB: string) =>
         new Date(valueA).getTime() - new Date(valueB).getTime(),
+      getQuickFilterText: () => '', // quick filter disabled on this column
     },
   ];
 
@@ -219,13 +251,35 @@ const MachineRepairsTable: React.FC = () => {
 
   return (
     <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: 16 }}>
-        <Typography variant="h6">Réparations/Entretiens</Typography>
-      </div>
-      <div
+      <Box
+        display={'flex'}
+        flexDirection={'row'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+      >
+        <div style={{ padding: 16 }}>
+          <Typography variant="h6">Réparations/Entretiens</Typography>
+        </div>
+        <TextField
+          id="search-client"
+          label="Rechercher un client"
+          variant="outlined"
+          sx={{ minWidth: 600, margin: 2 }}
+          value={quickFilterText}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setQuickFilterText(e.target.value)
+          }
+          slotProps={{
+            input: {
+              endAdornment: <SearchIcon />,
+            },
+          }}
+        />
+      </Box>
+      <Box
         id="machine-repairs-table"
         className={`machine-repairs-table ag-theme-quartz${theme.palette.mode === 'dark' ? '-dark' : ''}`}
-        style={{ height: '100%', width: '100%' }}
+        sx={{ height: '100%', width: '100%' }}
       >
         <AgGridReact
           rowHeight={rowHeight}
@@ -238,9 +292,10 @@ const MachineRepairsTable: React.FC = () => {
           autoSizeStrategy={{
             type: 'fitGridWidth',
           }}
+          quickFilterText={quickFilterText}
           paginationPageSizeSelector={false}
         />
-      </div>
+      </Box>
     </Paper>
   );
 };

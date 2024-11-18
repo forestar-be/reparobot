@@ -24,6 +24,7 @@ export const LeftGrid = (props: {
   element3: React.JSX.Element;
   element4: React.JSX.Element;
   element5: React.JSX.Element;
+  element51: React.JSX.Element;
   element6: React.JSX.Element;
   onClick1: () => void;
   element7: React.JSX.Element;
@@ -74,6 +75,9 @@ export const LeftGrid = (props: {
     <Grid item xs={12} display={'flex'} gap={'10px'}>
       {props.element4}
       {props.element5}
+    </Grid>
+    <Grid item xs={12} display={'flex'} gap={'10px'}>
+      {props.element51}
     </Grid>
     <Grid item xs={12} display={'flex'}>
       {props.element6}

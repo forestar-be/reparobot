@@ -218,4 +218,19 @@ router.get(
   }),
 );
 
+router.get(
+  '/formConfig',
+  asyncHandler(async (req, res) => {
+    const config = await prisma.config.findUnique({
+      where: { key: 'Formulaire Opérateur' },
+    });
+
+    if (!config) {
+      return res.status(404).json({ message: 'Configuration not found' });
+    }
+
+    res.json(JSON.parse(config.value));
+  }),
+);
+
 module.exports = router;
