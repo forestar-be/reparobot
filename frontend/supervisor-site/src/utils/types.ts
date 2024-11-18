@@ -29,6 +29,7 @@ export interface MachineRepair {
   city: string | null;
   postal_code: string | null;
   client_call_times: Date[];
+  hivernage: boolean;
 }
 
 export type MachineRepairFromApi = Omit<

@@ -2,7 +2,7 @@ import MyDocument from './Document';
 import React from 'react';
 import {
   getFormattedWorkingTime,
-  getSuffixPriceDevis,
+  getSuffixPrice,
   getTotalPrice,
   getTotalPriceParts,
   getWorkingTimePrice,
@@ -14,6 +14,7 @@ export const SingleRepairDocument = (
   repair: MachineRepair,
   hourlyRate: number,
   priceDevis: number,
+  priceHivernage: number,
   conditions: string,
   address: string,
   phone: string,
@@ -41,7 +42,12 @@ export const SingleRepairDocument = (
       }
       travailEffectue={repair.remark ?? ''}
       avecDevis={
-        repair.devis ? `Oui${getSuffixPriceDevis(repair, priceDevis)}` : 'Non'
+        repair.devis ? `Oui${getSuffixPrice(repair.devis, priceDevis)}` : 'Non'
+      }
+      avecHivernage={
+        repair.hivernage
+          ? `Oui${getSuffixPrice(repair.hivernage, priceHivernage)}`
+          : 'Non'
       }
       prixPieces={getTotalPriceParts(repair)}
       prixTotal={getTotalPrice(repair, hourlyRate)}

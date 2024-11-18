@@ -29,13 +29,12 @@ import { useAuth } from '../hooks/AuthProvider';
 import '../styles/SingleRepair.css';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useTheme } from '@mui/material/styles';
-import _colorByState from '../config/color_state.json';
 import { toast } from 'react-toastify';
 import RepairField from '../components/repair/RepairField';
 import ReactPDF from '@react-pdf/renderer';
 import { useStopwatch } from 'react-timer-hook';
 import {
-  getSuffixPriceDevis,
+  getSuffixPrice,
   handleManualTimeChange,
   handleUpdate,
   onClickCall,
@@ -55,8 +54,6 @@ import { RepairSelect } from '../components/repair/RepairSelect';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SingleRepairDocument } from '../components/repair/SingleRepairDocument';
 import { MachineRepair, MachineRepairFromApi } from '../utils/types';
-
-export const colorByState: { [key: string]: string } = _colorByState;
 
 export type ReplacedPart = { name: string; price: number };
 
@@ -86,52 +83,58 @@ const CallTimesModal = ({
   id: string | undefined;
   setInitialRepair: React.Dispatch<React.SetStateAction<MachineRepair | null>>;
   closeAllEditableSections: () => void;
-}) => (
-  <Modal open={open} onClose={onClose}>
-    <Box
-      sx={{
-        padding: 4,
-        backgroundColor: 'white',
-        margin: 'auto',
-        marginTop: '10%',
-        width: '50%',
-      }}
-    >
-      <Typography variant="h6" gutterBottom>
-        Historique des appels au client
-      </Typography>
-      <List>
-        {callTimes.map((time, index) => (
-          <ListItem key={index}>
-            <ListItemIcon>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() =>
-                  onRemoveCall(
-                    repair,
-                    setRepair,
-                    initialRepair,
-                    setIsLoadingSaveCall,
-                    setLoading,
-                    auth,
-                    id,
-                    setInitialRepair,
-                    closeAllEditableSections,
-                    index,
-                  )
-                }
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemIcon>
-            <ListItemText primary={time.toLocaleString('FR-fr')} />
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  </Modal>
-);
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Box
+        sx={{
+          padding: 4,
+          margin: 'auto',
+          marginTop: '10%',
+          width: '50%',
+          backgroundColor: theme.palette.background.default,
+          border: '2px solid white',
+          borderRadius: '5px',
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Historique des appels au client
+        </Typography>
+        <List>
+          {callTimes.map((time, index) => (
+            <ListItem key={index}>
+              <ListItemIcon>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() =>
+                    onRemoveCall(
+                      repair,
+                      setRepair,
+                      initialRepair,
+                      setIsLoadingSaveCall,
+                      setLoading,
+                      auth,
+                      id,
+                      setInitialRepair,
+                      closeAllEditableSections,
+                      index,
+                    )
+                  }
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemIcon>
+              <ListItemText primary={time.toLocaleString('FR-fr')} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Modal>
+  );
+};
 
 const SingleRepair = () => {
   const theme = useTheme();
@@ -164,6 +167,7 @@ const SingleRepair = () => {
   });
   const [hourlyRate, setHourlyRate] = useState(0);
   const [priceDevis, setPriceDevis] = useState(0);
+  const [priceHivernage, setPriceHivernage] = useState(0);
   const [machineTypes, setMachineTypes] = useState<string[]>([]);
   const [conditions, setConditions] = useState<string>('');
   const [adresse, setAdresse] = useState<string>('');
@@ -172,6 +176,9 @@ const SingleRepair = () => {
   const [siteWeb, setSiteWeb] = useState<string>('');
   const [titreBonPdf, setTitreBonPdf] = useState<string>('');
   const [isCallTimesModalOpen, setIsCallTimesModalOpen] = useState(false);
+  const [colorByState, setColorByState] = useState<{ [key: string]: string }>(
+    {},
+  );
 
   const {
     totalSeconds,
@@ -200,6 +207,8 @@ const SingleRepair = () => {
             Email: email,
             'Site web': website,
             'Titre bon pdf': pdfTitle,
+            'Prix hivernage': priceHivernage,
+            États: stateColorsStr,
           },
           machineType,
         } = await fetchAllConfig(auth.token);
@@ -208,6 +217,7 @@ const SingleRepair = () => {
         setPossibleReplacedParts(replacedParts);
         setHourlyRate(Number(hourlyRate));
         setPriceDevis(Number(priceDevis));
+        setPriceHivernage(priceHivernage);
         setMachineTypes(machineType);
         setConditions(conditions);
         setAdresse(address);
@@ -215,6 +225,7 @@ const SingleRepair = () => {
         setEmail(email);
         setSiteWeb(website);
         setTitreBonPdf(pdfTitle);
+        setColorByState(JSON.parse(stateColorsStr));
       } catch (error) {
         console.error('Error fetching config:', error);
         alert(
@@ -267,6 +278,7 @@ const SingleRepair = () => {
           repair,
           hourlyRate,
           priceDevis,
+          priceHivernage,
           conditions,
           adresse,
           telephone,
@@ -711,6 +723,7 @@ const SingleRepair = () => {
                 'brand_name',
                 'warranty',
                 'devis',
+                'hivernage',
               ])
             }
             editableSections={editableSections}
@@ -749,7 +762,13 @@ const SingleRepair = () => {
               'Devis',
               'devis',
               repair.devis,
-              getSuffixPriceDevis(repair, priceDevis),
+              getSuffixPrice(repair.devis, priceDevis),
+            )}
+            element51={renderCheckbox(
+              `Hivernage`,
+              'hivernage',
+              repair.hivernage,
+              getSuffixPrice(repair.hivernage, priceHivernage),
             )}
             element6={renderField(
               'Description',

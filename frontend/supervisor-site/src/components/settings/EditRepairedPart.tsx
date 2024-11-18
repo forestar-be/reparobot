@@ -168,6 +168,7 @@ const EditRepairedPart = () => {
             type: 'fitGridWidth',
           }}
           rowHeight={50}
+          localeText={AG_GRID_LOCALE_FR}
         />
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>

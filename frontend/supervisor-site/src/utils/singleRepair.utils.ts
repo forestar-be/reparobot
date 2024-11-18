@@ -59,8 +59,8 @@ export function getTotalPrice(repair: MachineRepair, hourlyRate: number) {
   return formatPrice(partsTotal + workingTimePrice);
 }
 
-export function getSuffixPriceDevis(repair: MachineRepair, priceDevis: number) {
-  return repair.devis ? ` +${String(priceDevis).replace('.', ',')}€` : '';
+export function getSuffixPrice(showPrice: boolean, priceDevis: number) {
+  return showPrice ? ` +${String(priceDevis).replace('.', ',')}€` : '';
 }
 
 export const onClickCall = async (

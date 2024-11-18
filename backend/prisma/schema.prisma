@@ -21,6 +21,7 @@ model MachineRepair {
   repair_or_maintenance String
   robot_code            String?
   devis                 Boolean                      @default(false)
+  hivernage             Boolean                      @default(false)
   fault_description     String
   warranty              Boolean?
   client_signature      String // URL or path to the PNG file in Supabase storage
