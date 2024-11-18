@@ -63,6 +63,8 @@ router.post(
         fault_description,
         brand_name,
         warranty,
+        devis,
+        hivernage,
         signature, // Base64 string
       } = req.body;
 
@@ -153,6 +155,8 @@ router.post(
           bucket_name: bucketName,
           brand_name,
           warranty: Boolean(warranty),
+          devis: Boolean(devis),
+          hivernage: Boolean(hivernage),
         },
       });
 
