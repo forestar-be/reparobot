@@ -51,6 +51,16 @@ router.post(
       orderBy: { [sortBy]: sortOrder }, // Apply sorting
       ...(skip && { skip }), // Apply pagination
       ...(take && { take }), // Apply pagination
+      include: {
+        replaced_part_list: {
+          select: {
+            machineRepairId: false,
+            replacedPartName: false,
+            quantity: true,
+            replacedPart: true,
+          },
+        },
+      },
     });
 
     // Get total count for pagination metadata

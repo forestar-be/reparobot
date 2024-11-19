@@ -50,7 +50,7 @@ export const SingleRepairDocument = (
           : 'Non'
       }
       prixPieces={getTotalPriceParts(repair)}
-      prixTotal={getTotalPrice(repair, hourlyRate)}
+      prixTotal={getTotalPrice(repair, hourlyRate, priceHivernage)}
       conditions={conditions}
       address={address}
       phone={phone}
