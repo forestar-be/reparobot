@@ -217,7 +217,7 @@ const SingleRepair = () => {
         setPossibleReplacedParts(replacedParts);
         setHourlyRate(Number(hourlyRate));
         setPriceDevis(Number(priceDevis));
-        setPriceHivernage(priceHivernage);
+        setPriceHivernage(Number(priceHivernage));
         setMachineTypes(machineType);
         setConditions(conditions);
         setAdresse(address);
@@ -838,6 +838,7 @@ const SingleRepair = () => {
             stopTimer={() => stopTimer(repair, setRepair, totalSeconds)}
             resetTimer={() => resetTimer(repair, setRepair)}
             hourlyRate={hourlyRate}
+            priceHivernage={priceHivernage}
             possibleValues={possibleReplacedParts}
             handleReplacedPartSelectChange={handleReplacedPartSelectChange}
             updateQuantityOfReplacedPart={updateQuantityOfReplacedPart}

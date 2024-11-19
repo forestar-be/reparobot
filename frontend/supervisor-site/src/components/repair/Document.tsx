@@ -199,14 +199,6 @@ const MyDocument = ({
             >
               Devis: {avecDevis}
             </Text>
-            <Text
-              style={{
-                ...styles.textBox,
-                borderTop: 'unset',
-              }}
-            >
-              Hivernage: {avecHivernage}
-            </Text>
           </div>
           <Text style={styles.header}>Remarques</Text>
           <Text style={{ ...styles.textBox, borderTop: 'unset' }}>
@@ -228,10 +220,20 @@ const MyDocument = ({
               style={{
                 ...styles.textBox,
                 borderTop: 'unset',
+                borderRight: 'unset',
                 borderBottom: 'unset',
               }}
             >
               Prix main d'œuvre: {prix}
+            </Text>
+            <Text
+              style={{
+                ...styles.textBox,
+                borderTop: 'unset',
+                borderBottom: 'unset',
+              }}
+            >
+              Hivernage: {avecHivernage}
             </Text>
           </div>
           <div style={styles.textBox}>

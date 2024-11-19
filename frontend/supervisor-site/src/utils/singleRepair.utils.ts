@@ -49,14 +49,20 @@ export function getTotalPriceParts(repair: MachineRepair) {
   return formatPrice(total);
 }
 
-export function getTotalPrice(repair: MachineRepair, hourlyRate: number) {
+export function getTotalPrice(
+  repair: MachineRepair,
+  hourlyRate: number,
+  priceHivernage: number,
+) {
   const partsTotal = repair.replaced_part_list.reduce(
     (acc, replacedPart) =>
       acc + replacedPart.replacedPart.price * replacedPart.quantity,
     0,
   );
   const workingTimePrice = repair.working_time_in_sec * (hourlyRate / 3600);
-  return formatPrice(partsTotal + workingTimePrice);
+  return formatPrice(
+    partsTotal + workingTimePrice + (repair.hivernage ? priceHivernage : 0),
+  );
 }
 
 export function getSuffixPrice(showPrice: boolean, priceDevis: number) {

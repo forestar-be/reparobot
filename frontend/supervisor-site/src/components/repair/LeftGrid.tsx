@@ -50,6 +50,7 @@ export const LeftGrid = (props: {
     replacedPart: MachineRepair['replaced_part_list'][0],
   ) => void;
   handleDeleteReplacedPart: (replacedPartName: string) => void;
+  priceHivernage: number;
 }) => (
   <Grid item xs={6}>
     <Grid item xs={12}>
@@ -145,7 +146,7 @@ export const LeftGrid = (props: {
         Total :
       </Typography>
       <Typography variant="subtitle1" fontWeight="bold">
-        {getTotalPrice(props.repair, props.hourlyRate)}
+        {getTotalPrice(props.repair, props.hourlyRate, props.priceHivernage)}
       </Typography>
     </Box>
   </Grid>

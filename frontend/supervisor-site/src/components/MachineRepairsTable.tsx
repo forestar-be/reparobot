@@ -1,4 +1,9 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react';
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
@@ -22,6 +27,7 @@ import { useNavigate } from 'react-router-dom';
 import { MachineRepair, MachineRepairFromApi } from '../utils/types';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
+import { IRowNode } from 'ag-grid-community';
 
 const rowHeight = 40;
 
@@ -32,10 +38,35 @@ const MachineRepairsTable: React.FC = () => {
   const gridRef = React.createRef<AgGridReact>();
   const [machineRepairs, setMachineRepairs] = useState<MachineRepair[]>([]);
   const [loading, setLoading] = useState(true);
-  const [quickFilterText, setQuickFilterText] = useState('');
+  const [customerFilterText, setCustomerFilterText] = useState('');
+  const [partFilterText, setPartFilterText] = useState('');
   const [paginationPageSize, setPaginationPageSize] = useState(10);
   const [colorByState, setColorByState] = useState<{ [key: string]: string }>(
     {},
+  );
+
+  const isExternalFilterPresent = useCallback((): boolean => {
+    return Boolean(customerFilterText) || Boolean(partFilterText);
+  }, [customerFilterText, partFilterText]);
+
+  const doesExternalFilterPass = useCallback(
+    (node: IRowNode<MachineRepair>): boolean => {
+      if (node.data) {
+        const { first_name, last_name, replaced_part_list } = node.data;
+        const customerSearchString = customerFilterText.toLowerCase();
+        const partSearchString = partFilterText.toLowerCase();
+        const customerMatch = !!(
+          first_name?.toLowerCase().includes(customerSearchString) ||
+          last_name?.toLowerCase().includes(customerSearchString)
+        );
+        const partMatch = replaced_part_list?.some((part) =>
+          part.replacedPart.name.toLowerCase().includes(partSearchString),
+        );
+        return customerMatch && partMatch;
+      }
+      return true;
+    },
+    [customerFilterText, partFilterText],
   );
 
   const fetchData = async () => {
@@ -129,15 +160,13 @@ const MachineRepairsTable: React.FC = () => {
         // flexDirection: 'row',
         // alignItems: 'center',
       },
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
-      headerName: 'N° de bon',
+      headerName: 'N°',
       field: 'id' as keyof MachineRepair,
       sortable: true,
       filter: true,
-      width: 120,
-      getQuickFilterText: () => '', // quick filter disabled on this column
+      width: 70,
     },
     {
       headerName: 'État',
@@ -150,7 +179,6 @@ const MachineRepairsTable: React.FC = () => {
         backgroundColor: colorByState[params.value || 'Non commencé'],
         color: 'black',
       }),
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Appel client',
@@ -175,7 +203,6 @@ const MachineRepairsTable: React.FC = () => {
           );
         }
       },
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Type',
@@ -183,14 +210,12 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       width: 120,
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Type de machine',
       field: 'machine_type_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
     {
       headerName: 'Réparateur',
@@ -198,19 +223,35 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       valueFormatter: (params: any) => params.value || 'Non affecté',
-      getQuickFilterText: () => '', // quick filter disabled on this column
+      width: 130,
     },
     {
       headerName: 'Prénom',
       field: 'first_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
+      width: 130,
     },
     {
       headerName: 'Nom',
       field: 'last_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
+      width: 130,
+    },
+    {
+      headerName: 'Pièces remplacées',
+      field: 'replaced_part_list' as keyof MachineRepair,
+      sortable: true,
+      filter: true,
+      minWidth: 300,
+      valueFormatter: (params: any) =>
+        params.value
+          ?.map(
+            (part: MachineRepair['replaced_part_list'][0]) =>
+              part.replacedPart.name,
+          )
+          .join(' | '),
     },
     {
       headerName: 'Date de création',
@@ -223,7 +264,6 @@ const MachineRepairsTable: React.FC = () => {
         new Date(params.value).toLocaleString('fr-FR'),
       comparator: (valueA: string, valueB: string) =>
         new Date(valueA).getTime() - new Date(valueB).getTime(),
-      getQuickFilterText: () => '', // quick filter disabled on this column
     },
   ];
 
@@ -260,21 +300,38 @@ const MachineRepairsTable: React.FC = () => {
         <div style={{ padding: 16 }}>
           <Typography variant="h6">Réparations/Entretiens</Typography>
         </div>
-        <TextField
-          id="search-client"
-          label="Rechercher un client"
-          variant="outlined"
-          sx={{ minWidth: 600, margin: 2 }}
-          value={quickFilterText}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setQuickFilterText(e.target.value)
-          }
-          slotProps={{
-            input: {
-              endAdornment: <SearchIcon />,
-            },
-          }}
-        />
+        <Box>
+          <TextField
+            id="search-client"
+            label="Rechercher un client"
+            variant="outlined"
+            sx={{ minWidth: 450, margin: 2 }}
+            value={customerFilterText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCustomerFilterText(e.target.value)
+            }
+            slotProps={{
+              input: {
+                endAdornment: <SearchIcon />,
+              },
+            }}
+          />
+          <TextField
+            id="search-part"
+            label="Rechercher une pièce"
+            variant="outlined"
+            sx={{ minWidth: 450, margin: 2 }}
+            value={partFilterText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPartFilterText(e.target.value)
+            }
+            slotProps={{
+              input: {
+                endAdornment: <SearchIcon />,
+              },
+            }}
+          />
+        </Box>
       </Box>
       <Box
         id="machine-repairs-table"
@@ -292,8 +349,9 @@ const MachineRepairsTable: React.FC = () => {
           autoSizeStrategy={{
             type: 'fitGridWidth',
           }}
-          quickFilterText={quickFilterText}
           paginationPageSizeSelector={false}
+          isExternalFilterPresent={isExternalFilterPresent}
+          doesExternalFilterPass={doesExternalFilterPass}
         />
       </Box>
     </Paper>
