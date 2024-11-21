@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Checkbox,
   FormControl,
   Grid,
   InputLabel,
@@ -9,16 +8,17 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
   Typography,
   IconButton,
   Chip,
+  TextField,
+  Divider,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Autocomplete from '@mui/material/Autocomplete';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import Divider from '@mui/material/Divider';
 
 interface ReplacedPart {
   name: string;
@@ -62,42 +62,25 @@ const ReplacedPartSelect: React.FC<ReplacedPartSelectProps> = ({
     <Grid item xs={12}>
       {editableFields[name] && (
         <FormControl sx={{ marginTop: 2, marginBottom: 1, width: '80%' }}>
-          <InputLabel id={`multiple-chip-label-${name}`}>{label}</InputLabel>
-          <Select
-            labelId={`multiple-chip-label-${name}`}
-            id={`multiple-chip-${name}`}
+          <Autocomplete
             multiple
-            value={values.map((val) => val.replacedPart.name)}
-            name={name}
-            onChange={handleReplacedPartSelectChange}
-            input={
-              <OutlinedInput
-                id={`select-multiple-chip-${name}`}
-                label={label}
-              />
+            id={`autocomplete-${name}`}
+            options={possibleValues}
+            getOptionLabel={possibleReplacedPartToString}
+            value={values.map((val) => val.replacedPart)}
+            onChange={(event, newValue) => {
+              handleReplacedPartSelectChange({
+                target: { name, value: newValue.map((val) => val.name) },
+              } as SelectChangeEvent<string[]>);
+            }}
+            filterSelectedOptions
+            renderInput={(params) => <TextField label={label} {...params} />}
+            renderTags={(selected, getTagProps) =>
+              selected.map((option, index) => (
+                <Chip label={option.name} {...getTagProps({ index })} />
+              ))
             }
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((val) => (
-                  <Chip key={val} label={val} />
-                ))}
-              </Box>
-            )}
-          >
-            {possibleValues.map((val) => {
-              const replacedPartString = possibleReplacedPartToString(val);
-              return (
-                <MenuItem key={val.name} value={val.name}>
-                  <Checkbox
-                    checked={values.some(
-                      (v) => v.replacedPart.name === val.name,
-                    )}
-                  />
-                  <ListItemText primary={replacedPartString} />
-                </MenuItem>
-              );
-            })}
-          </Select>
+          />
         </FormControl>
       )}
       <Box
