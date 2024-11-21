@@ -1,19 +1,14 @@
-import React, {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
-  Paper,
-  Typography,
-  IconButton,
-  Tooltip,
   Box,
+  IconButton,
+  Paper,
   TextField,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { useAuth } from '../hooks/AuthProvider';
 import { useTheme } from '@mui/material/styles';
@@ -39,34 +34,38 @@ const MachineRepairsTable: React.FC = () => {
   const [machineRepairs, setMachineRepairs] = useState<MachineRepair[]>([]);
   const [loading, setLoading] = useState(true);
   const [customerFilterText, setCustomerFilterText] = useState('');
-  const [partFilterText, setPartFilterText] = useState('');
   const [paginationPageSize, setPaginationPageSize] = useState(10);
   const [colorByState, setColorByState] = useState<{ [key: string]: string }>(
     {},
   );
 
   const isExternalFilterPresent = useCallback((): boolean => {
-    return Boolean(customerFilterText) || Boolean(partFilterText);
-  }, [customerFilterText, partFilterText]);
+    return Boolean(customerFilterText);
+  }, [customerFilterText]);
 
   const doesExternalFilterPass = useCallback(
     (node: IRowNode<MachineRepair>): boolean => {
       if (node.data) {
-        const { first_name, last_name, replaced_part_list } = node.data;
-        const customerSearchString = customerFilterText.toLowerCase();
-        const partSearchString = partFilterText.toLowerCase();
-        const customerMatch = !!(
-          first_name?.toLowerCase().includes(customerSearchString) ||
-          last_name?.toLowerCase().includes(customerSearchString)
+        const { first_name, last_name } = node.data;
+        const customerSearchWords = customerFilterText
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .split(' ');
+        const normalizeString = (str: string) =>
+          str
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+        return customerSearchWords.every(
+          (word) =>
+            normalizeString(first_name || '').includes(word) ||
+            normalizeString(last_name || '').includes(word),
         );
-        const partMatch = replaced_part_list?.some((part) =>
-          part.replacedPart.name.toLowerCase().includes(partSearchString),
-        );
-        return customerMatch && partMatch;
       }
       return true;
     },
-    [customerFilterText, partFilterText],
+    [customerFilterText],
   );
 
   const fetchData = async () => {
@@ -223,35 +222,21 @@ const MachineRepairsTable: React.FC = () => {
       sortable: true,
       filter: true,
       valueFormatter: (params: any) => params.value || 'Non affecté',
-      width: 130,
+      //  width: 130,
     },
     {
       headerName: 'Prénom',
       field: 'first_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
-      width: 130,
+      //  width: 130,
     },
     {
       headerName: 'Nom',
       field: 'last_name' as keyof MachineRepair,
       sortable: true,
       filter: true,
-      width: 130,
-    },
-    {
-      headerName: 'Pièces remplacées',
-      field: 'replaced_part_list' as keyof MachineRepair,
-      sortable: true,
-      filter: true,
-      minWidth: 300,
-      valueFormatter: (params: any) =>
-        params.value
-          ?.map(
-            (part: MachineRepair['replaced_part_list'][0]) =>
-              part.replacedPart.name,
-          )
-          .join(' | '),
+      //   width: 130,
     },
     {
       headerName: 'Date de création',
@@ -309,21 +294,6 @@ const MachineRepairsTable: React.FC = () => {
             value={customerFilterText}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setCustomerFilterText(e.target.value)
-            }
-            slotProps={{
-              input: {
-                endAdornment: <SearchIcon />,
-              },
-            }}
-          />
-          <TextField
-            id="search-part"
-            label="Rechercher une pièce"
-            variant="outlined"
-            sx={{ minWidth: 450, margin: 2 }}
-            value={partFilterText}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPartFilterText(e.target.value)
             }
             slotProps={{
               input: {
