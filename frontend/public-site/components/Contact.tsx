@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import List from '@mui/material/List'; // Import List component
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
@@ -113,135 +114,131 @@ const Contact = (): JSX.Element => {
                     itemType="https://schema.org/PostalAddress"
                     style={{ margin: 0 }}
                   >
-                    {/* Phone */}
-                    <Box
-                      component={ListItem}
-                      disableGutters
-                      width="auto"
-                      padding={0}
-                      marginLeft={5}
-                      marginBottom={2}
-                      aria-label="Phone number"
+                    {/* Wrap ListItems within List (ul) */}
+                    <List
+                      component="ul"
+                      aria-label="Contact Information"
+                      sx={{ padding: 0, listStyle: 'none' }} // Remove default padding and list styles
                     >
-                      <PhoneIcon
-                        sx={{
-                          color:
-                            theme.palette.mode === 'dark'
-                              ? theme.palette.primary.main
-                              : theme.palette.success.dark,
-                          width: 25,
-                          height: 25,
-                          marginRight: 1,
-                        }}
-                        aria-hidden="true"
-                      />
-                      <ListItemText
-                        primary={
-                          <a
-                            href={`tel:${item.phone}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                            title={`Call us at ${item.phone}`}
-                            onClick={handlePhoneClick}
-                          >
-                            {item.phone}
-                          </a>
-                        }
-                        sx={{
-                          '&:hover': {
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                          },
-                        }}
-                      />
-                    </Box>
+                      {/* Phone */}
+                      <ListItem
+                        component="li"
+                        disableGutters
+                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}
+                        aria-label="Phone number"
+                      >
+                        <PhoneIcon
+                          sx={{
+                            color:
+                              theme.palette.mode === 'dark'
+                                ? theme.palette.primary.main
+                                : theme.palette.success.dark,
+                            width: 25,
+                            height: 25,
+                            marginRight: 1,
+                          }}
+                          aria-hidden="true"
+                        />
+                        <ListItemText
+                          primary={
+                            <a
+                              href={`tel:${item.phone}`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              title={`Call us at ${item.phone}`}
+                              onClick={handlePhoneClick}
+                            >
+                              {item.phone}
+                            </a>
+                          }
+                          sx={{
+                            '&:hover': {
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                            },
+                          }}
+                        />
+                      </ListItem>
 
-                    {/* Email */}
-                    <Box
-                      component={ListItem}
-                      disableGutters
-                      width="auto"
-                      padding={0}
-                      marginLeft={5}
-                      marginBottom={2}
-                      aria-label="Email address"
-                    >
-                      <EmailIcon
-                        sx={{
-                          color:
-                            theme.palette.mode === 'dark'
-                              ? theme.palette.primary.main
-                              : theme.palette.success.dark,
-                          width: 25,
-                          height: 25,
-                          marginRight: 1,
-                        }}
-                        aria-hidden="true"
-                      />
-                      <ListItemText
-                        primary={
-                          <a
-                            href={`mailto:${item.email}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                            title={`Email us at ${item.email}`}
-                            onClick={handleEmailClick}
-                          >
-                            {item.email}
-                          </a>
-                        }
-                        sx={{
-                          '&:hover': {
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                          },
-                        }}
-                      />
-                    </Box>
+                      {/* Email */}
+                      <ListItem
+                        component="li"
+                        disableGutters
+                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}
+                        aria-label="Email address"
+                      >
+                        <EmailIcon
+                          sx={{
+                            color:
+                              theme.palette.mode === 'dark'
+                                ? theme.palette.primary.main
+                                : theme.palette.success.dark,
+                            width: 25,
+                            height: 25,
+                            marginRight: 1,
+                          }}
+                          aria-hidden="true"
+                        />
+                        <ListItemText
+                          primary={
+                            <a
+                              href={`mailto:${item.email}`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              title={`Email us at ${item.email}`}
+                              onClick={handleEmailClick}
+                            >
+                              {item.email}
+                            </a>
+                          }
+                          sx={{
+                            '&:hover': {
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                            },
+                          }}
+                        />
+                      </ListItem>
 
-                    {/* Address */}
-                    <Box
-                      component={ListItem}
-                      width="auto"
-                      padding={0}
-                      marginLeft={5}
-                      marginBottom={1}
-                      disableGutters
-                      aria-label="Physical address"
-                    >
-                      <LocationIcon
-                        sx={{
-                          color:
-                            theme.palette.mode === 'dark'
-                              ? theme.palette.primary.main
-                              : theme.palette.success.dark,
-                          width: 25,
-                          height: 25,
-                          marginRight: 1,
-                        }}
-                        aria-hidden="true"
-                      />
-                      <ListItemText
-                        primary={
-                          <a
-                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                              item.address
-                            )}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                            title={`Find us at ${item.address}`}
-                            onClick={handleAddressClick}
-                          >
-                            {item.address}
-                          </a>
-                        }
-                        sx={{
-                          '&:hover': {
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                          },
-                        }}
-                      />
-                    </Box>
+                      {/* Address */}
+                      <ListItem
+                        component="li"
+                        disableGutters
+                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}
+                        aria-label="Physical address"
+                      >
+                        <LocationIcon
+                          sx={{
+                            color:
+                              theme.palette.mode === 'dark'
+                                ? theme.palette.primary.main
+                                : theme.palette.success.dark,
+                            width: 25,
+                            height: 25,
+                            marginRight: 1,
+                          }}
+                          aria-hidden="true"
+                        />
+                        <ListItemText
+                          primary={
+                            <a
+                              href="https://maps.app.goo.gl/Ep9j27mJNvWGBBmY7"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              title={`Find us at ${item.address}`}
+                              onClick={handleAddressClick}
+                            >
+                              {item.address}
+                            </a>
+                          }
+                          sx={{
+                            '&:hover': {
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                            },
+                          }}
+                        />
+                      </ListItem>
+                    </List>
                   </address>
                 </Box>
               </Grid>
