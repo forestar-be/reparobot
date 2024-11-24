@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState, useContext } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import CalculatorDropdown from '../../components/CalculatorDropdown/CalculatorDropdown';
 import { Logo } from '../../components/Logo';
 import headerData from '../../config/header.json';
@@ -17,23 +17,29 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
   const { isDark } = useContext(ColorModeContext);
   const [header] = useState<HeaderProps>(headerData);
   const pathname = usePathname();
+  const router = useRouter();
 
-  const handleNavClick = (e: React.MouseEvent) => {
+  const handleNavClick = async (e: React.MouseEvent) => {
     // Always close the sidebar
     onClose();
     
-    // If we're not on the homepage, let the normal navigation happen
-    if (pathname !== '/') return;
-    
-    // If we are on homepage, handle the smooth scroll
     const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
-    if (href && href.startsWith('/#')) {
+    if (!href) return;
+
+    // If we're on the homepage and it's a hash link
+    if (pathname === '/' && href.startsWith('/#')) {
       e.preventDefault();
+      
+      // Update the URL without a page refresh
+      router.push(href, { scroll: false });
+      
+      // Handle smooth scroll
       const element = document.querySelector(href.substring(1));
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }
+    // For other pages, let the normal navigation happen
   };
 
   return (

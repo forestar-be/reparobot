@@ -4,10 +4,19 @@ html {
 
     -webkit-tap-highlight-color: transparent;
     /* For some browsers */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
+    /* -webkit-touch-callout: none;
+    -webkit-user-select: none; */
 }
 
+body{
+  /* padding: 0; */
+  margin:0;
+  font-family:sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family: "Poppins", sans-serif;
+}
 /* Global reset for links */
 a {
     color: inherit;
@@ -32,5 +41,5 @@ a {
   }
 
  
-
- 
+  
+  

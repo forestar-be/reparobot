@@ -1,101 +1,84 @@
-'use client'; // Mark this as a client component
+// app/layout.tsx
 
 import './globals.css';
-import { useState, useMemo, useEffect, Suspense } from 'react';
-import { HelmetProvider, Helmet } from 'react-helmet-async'; // Import Helmet
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { usePathname, useSearchParams } from 'next/navigation';
-import ColorModeContext from '../utils/ColorModeContext';
-import getTheme from '../theme/theme';
-import PageLayout from '../layout/PageLayout';
+import { Metadata } from 'next';
+import PageLayout from '../layout/PageLayout'; // Adjust the path if necessary
+import React from 'react';
 
+// Define your metadata using Next.js Metadata API
+export const metadata: Metadata = {
+  metadataBase: new URL('https://reparobot.be'),
+  title: {
+    template: '%s | Entretien Robot Husqvarna & Gardena',
+    default: 'Entretien et Réparation Robot Tondeuse Husqvarna & Gardena',
+  },
+  description: 'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
+  keywords: ['robot tondeuse', 'Husqvarna', 'Gardena', 'entretien', 'réparation', 'maintenance', 'installation'],
+  authors: [{ name: 'Forestar' }],
+  generator: 'Next.js',
+  openGraph: {
+    title: 'Entretien et Réparation Robot Tondeuse Husqvarna & Gardena',
+    description: 'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
+    url: 'https://reparobot.be',
+    siteName: 'Entretien Robot Husqvarna & Gardena',
+    locale: 'fr_BE',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+  alternates: {
+    canonical: 'https://reparobot.be',
+  },
+};
 
-const defaultTheme = 'light';
-
-function NavigationHandler() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const hash = window.location.hash;
-
-      if (pathname === '/' && hash) {
-        setTimeout(() => {
-          const element = document.querySelector(hash);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-      }
-    };
-
-    handleScroll();
-    window.addEventListener('hashchange', handleScroll);
-
-    return () => {
-      window.removeEventListener('hashchange', handleScroll);
-    };
-  }, [pathname, searchParams]);
-
-  return null;
-}
-
-function LayoutContent({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState(defaultTheme);
-
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        const newMode = mode === 'dark' ? 'light' : 'dark';
-        window.localStorage.setItem('themeMode', newMode);
-        setMode(newMode);
-      },
-      isDark: mode === 'dark',
-    }),
-    [mode]
-  );
-
-  useEffect(() => {
-    const localTheme = window.localStorage.getItem('themeMode');
-    if (localTheme && (localTheme === 'light' || localTheme === 'dark')) {
-      setMode(localTheme);
-    } else {
-      const prefersDarkMode = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches;
-      setMode(prefersDarkMode ? 'dark' : 'light');
-    }
-  }, []);
-
-  return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={getTheme(mode)}>
-        <CssBaseline />
-        <PageLayout>
-          <Suspense
-            fallback={
-              <div
-                style={{
-                  height: '100vh',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                Loading...
-              </div>
-            }
-          >
-            {children}
-          </Suspense>
-        </PageLayout>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
-  );
-}
+// Structured Data for SEO
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Entretien Robot Husqvarna & Gardena',
+  image: 'https://reparobot.be/images/logo/logo-70x70.png',
+  '@id': 'https://reparobot.be',
+  url: 'https://reparobot.be',
+  telephone: '+3267830706',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '160 Chaussée d\'ecaussinnes',
+    addressLocality: 'Braine le comte',
+    postalCode: '7090',
+    addressCountry: 'BE'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 50.6082, // Replace with actual coordinates
+    longitude: 4.1284  // Replace with actual coordinates
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday'
+    ],
+    opens: '09:00',
+    closes: '18:00'
+  },
+  priceRange: '€€',
+  vatID: 'BE0806-685-256'
+};
 
 export default function RootLayout({
   children,
@@ -103,36 +86,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="fr">
+      <head>
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body>
-        <HelmetProvider>
-          {/* Add metadata here */}
-          <Helmet>
-            <title>Entretien et Réparation Robot Tondeuse Husqvarna & Gardena</title>
-            <meta
-              name="description"
-              content="Expert en entretien, réparation et maintenance des robots tondeuses Husqvarna et Gardena. Services professionnels pour prolonger la vie de votre robot tondeuse."
-            />
-            <meta
-              name="keywords"
-              content="robot tondeuse, Husqvarna, Gardena, entretien, réparation, maintenance"
-            />
-            <link rel="canonical" href="http://localhost:3000/" />
-            <meta
-              property="og:title"
-              content="Entretien et Réparation Robot Tondeuse Husqvarna & Gardena"
-            />
-            <meta
-              property="og:description"
-              content="Expert en entretien, réparation et maintenance des robots tondeuses Husqvarna et Gardena."
-            />
-            <meta property="og:url" content="http://localhost:3000/" />
-            <meta property="og:type" content="website" />
-          </Helmet>
-          <Suspense fallback={<div>Loading navigation...</div>}>
-          <NavigationHandler /></Suspense>
-          <LayoutContent>{children}</LayoutContent>
-        </HelmetProvider>
+        <PageLayout>
+          {children}
+        </PageLayout>
       </body>
     </html>
   );

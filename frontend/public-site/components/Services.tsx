@@ -1,4 +1,6 @@
-'use client'; // Mark this component as a client component
+// components/Services.tsx
+
+'use client'; // Ensure this is a client component
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
@@ -110,17 +112,18 @@ const Services: React.FC = () => {
 
   const renderServiceCard = useCallback(
     (item: ServicesProps, i: number) => (
-      <Grid item xs={12} sm={6} key={i}>
-        <Tooltip title="Cliquez pour ouvrir le formulaire" followCursor>
+      <Grid item xs={12} sm={6} md={4} key={i}>
+        <Tooltip title="Cliquez pour ouvrir le formulaire" arrow>
           <Box
             component="article"
             itemScope
             itemType="https://schema.org/Service"
-            padding={4}
-            width={1}
-            height={1}
+            padding={3}
+            // Remove width="100%" to prevent overflow
+            // width="100%"
             bgcolor={theme.palette.background.paper}
             sx={{
+              boxSizing: 'border-box', // Ensure padding is included within the Box
               '&:hover': {
                 bgcolor: theme.palette.background.default,
                 color:
@@ -134,6 +137,7 @@ const Services: React.FC = () => {
                   ? theme.palette.action.selected
                   : theme.palette.background.paper,
               outline: 'none',
+              transition: 'background-color 0.3s, color 0.3s',
               '&:focus': {
                 outline: `2px solid ${
                   theme.palette.mode === 'dark'
@@ -142,6 +146,10 @@ const Services: React.FC = () => {
                 }`,
                 outlineOffset: '2px',
               },
+              // Ensure the Box takes full height to prevent uneven heights causing overlap
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
             }}
             onClick={() => handleServiceClick(item)}
             role="button"
@@ -154,21 +162,26 @@ const Services: React.FC = () => {
             }}
           >
             <Typography
-              variant="h3"
+              variant="h5"
               gutterBottom
-              sx={{ fontWeight: 600 }}
+              sx={{ fontWeight: 600, textAlign: 'center' }}
               itemProp="name"
             >
               {item.name}
             </Typography>
-            <Typography color="inherit" itemProp="description">
+            <Typography
+              color="inherit"
+              itemProp="description"
+              sx={{ textAlign: 'center', minHeight: '3em', flexGrow: 1 }}
+            >
               {item.description}
             </Typography>
-            <Box display="block" width={1} height={1}>
+            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
               <Card
                 sx={{
-                  width: 1,
-                  height: 1,
+                  width: '100%',
+                  maxWidth: 300,
+                  height: 200,
                   display: 'flex',
                   flexDirection: 'column',
                   boxShadow: 'none',
@@ -183,14 +196,14 @@ const Services: React.FC = () => {
                   loading="lazy"
                   itemProp="image"
                   sx={{
-                    height: 320,
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'cover',
                     borderRadius: 2,
                     filter:
                       theme.palette.mode === 'dark'
                         ? 'brightness(0.7)'
                         : 'brightness(0.9)',
-                    marginTop: 4,
                   }}
                 />
               </Card>
@@ -219,14 +232,15 @@ const Services: React.FC = () => {
         sx={{
           paddingTop: 5,
           paddingBottom: 10,
-          paddingX: 2,
+          paddingX: { xs: 2, sm: 4, md: 6 },
           backgroundColor: theme.palette.background.default,
+          overflowX: 'hidden', // Prevent horizontal overflow
         }}
       >
         <Box marginBottom={4}>
           <Typography
             id="services-title"
-            variant="h2"
+            variant="h4"
             component="h2"
             align="center"
             fontWeight={700}
@@ -235,6 +249,7 @@ const Services: React.FC = () => {
             sx={{
               color: theme.palette.text.primary,
               textTransform: 'uppercase',
+              fontSize: { xs: '1.75rem', sm: '2.5rem' }, // Responsive font size
             }}
             itemProp="headline"
           >
@@ -248,6 +263,7 @@ const Services: React.FC = () => {
             gutterBottom
             color={theme.palette.text.secondary}
             itemProp="description"
+            sx={{ maxWidth: 600, marginX: 'auto' }}
           >
             Nous vous proposons une large gamme de services pour l&apos;entretien de
             votre robot.
@@ -260,11 +276,14 @@ const Services: React.FC = () => {
           <Dialog
             open={!!selectedService}
             onClose={() => handleCloseForm()}
-            maxWidth="md"
+            maxWidth="sm" // Set maxWidth to prevent overflow
+            fullWidth
             aria-labelledby="service-form-dialog-title"
-            sx={{
-              '& .MuiPaper-root': {
-                background: 'transparent',
+            PaperProps={{
+              sx: {
+                borderRadius: 2,
+                padding: 2,
+                overflowY: 'auto',
               },
             }}
           >
@@ -281,6 +300,14 @@ const Services: React.FC = () => {
             onClose={handleCancelClose}
             aria-labelledby="confirm-dialog-title"
             aria-describedby="confirm-dialog-description"
+            maxWidth="xs"
+            fullWidth
+            PaperProps={{
+              sx: {
+                borderRadius: 2,
+                padding: 2,
+              },
+            }}
           >
             <DialogTitle id="confirm-dialog-title">Confirmer la fermeture</DialogTitle>
             <DialogContent>

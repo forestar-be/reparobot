@@ -1,0 +1,76 @@
+# robots.txt for Robot Lawnmower Maintenance Service
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Allow access to static assets
+Allow: /images/
+Allow: /fonts/
+Allow: /icons/
+
+# Main content pages
+Allow: /services
+Allow: /produits
+Allow: /pieces-detachees
+Allow: /contact
+Allow: /a-propos
+Allow: /blog
+Allow: /faq
+
+# Block access to API routes
+Disallow: /api/
+
+# Block access to development-specific routes
+Disallow: /dev/
+Disallow: /test/
+Disallow: /staging/
+
+# Block access to admin and authentication pages
+Disallow: /admin/
+Disallow: /login
+Disallow: /compte
+Disallow: /dashboard
+
+# Block access to preview pages
+Disallow: /preview/
+
+# Block access to internal tools and utilities
+Disallow: /outils-internes/
+Disallow: /debug/
+
+# Block specific file types
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# Sitemap location
+Sitemap: https://reparobot.be/sitemap.xml
+
+# Crawl-delay directive for rate limiting
+Crawl-delay: 10
+
+# Additional rules for specific bots
+
+# Googlebot-specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Bingbot-specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Rules for Google Mobile
+User-agent: Googlebot-Mobile
+Allow: /
+Disallow: /desktop-only/
+
+# Rules for Google Image
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /photos/
+Disallow: /private-images/

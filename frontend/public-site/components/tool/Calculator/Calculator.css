@@ -1,129 +1,209 @@
+/* Calculator.css */
+
+/* 1. Global Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fafafa; /* Optional: Slight background to differentiate from the quiz */
+}
+
+/* 2. Container Styling */
 .diagnostic-quiz {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 90%; /* Make it responsive */
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. Header Styling */
+.diagnostic-quiz h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+/* 4. Quiz Step Styling */
+.quiz-step {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.quiz-step h3 {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 1.4rem;
+}
+
+.quiz-step p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* 5. Form Elements Styling */
+.quiz-step select,
+.quiz-step input[type="text"],
+.quiz-step input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px; /* Reduced margin to prevent overflow */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+}
+
+.quiz-step select:focus,
+.quiz-step input[type="text"]:focus,
+.quiz-step input[type="number"]:focus {
+  border-color: #43a047; /* Green color */
+  outline: none;
+}
+
+/* 6. Checkbox Group Styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap; /* Allow wrapping to prevent overflow */
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 12px;
+  transform: scale(1.2);
+}
+
+.checkbox-group label {
+  flex: 1 1 200px; /* Ensure labels wrap and don't cause overflow */
+  font-size: 1rem;
+  color: #444;
+}
+
+/* 7. Navigation Buttons Styling */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap; /* Allow buttons to stack on smaller screens */
+}
+
+.navigation-buttons button {
+  padding: 10px 25px;
+  background-color: #43a047; /* Green color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  min-width: 120px; /* Ensure buttons have a minimum size */
+  margin: 5px 0; /* Add vertical margin when stacked */
+}
+
+.navigation-buttons button:hover:not([disabled]) {
+  background-color: #2e7031; /* Darker green */
+}
+
+.navigation-buttons button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 8. Cost Breakdown and Explanations Styling */
+.cost-breakdown,
+.explanations {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.cost-breakdown li,
+.explanations li {
+  margin-bottom: 10px;
+  color: #444;
+  font-size: 1rem;
+}
+
+/* 9. Total Cost Styling */
+.total-cost {
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e8f5e9; /* Light green background */
+  border-radius: 6px;
+}
+
+.total-cost h2 {
+  font-size: 1.8rem;
+  color: #43a047; /* Green color */
+}
+
+/* 10. Result Button Styling */
+.result-button {
+  display: block;
+  margin: 30px auto 0;
+  padding: 10px 20px;
+  background-color: #43a047; /* Green color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.result-button:hover {
+  background-color: #2e7031; /* Darker green */
+}
+
+/* 11. Responsive Media Queries */
+@media (max-width: 600px) {
+  .diagnostic-quiz {
+    padding: 20px;
   }
-  
-  .diagnostic-quiz h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
-  }
-  
+
   .quiz-step {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
+    padding: 20px;
   }
-  
+
+  .diagnostic-quiz h2 {
+    font-size: 1.6rem;
+  }
+
   .quiz-step h3 {
-    margin-bottom: 15px;
-    color: #555;
+    font-size: 1.2rem;
   }
-  
-  .quiz-step p {
-    margin-bottom: 20px;
-    font-size: 1.1em;
-    color: #666;
-  }
-  
-  .quiz-step select,
-  .quiz-step input[type="text"],
-  .quiz-step input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 25px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-  }
-  
-  .quiz-step select:focus,
-  .quiz-step input[type="text"]:focus,
-  .quiz-step input[type="number"]:focus {
-    border-color: #00796b;
-    outline: none;
-  }
-  
-  .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .navigation-buttons button {
-    padding: 10px 25px;
-    background-color: #00796b;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-  }
-  
-  .navigation-buttons button:hover:not([disabled]) {
-    background-color: #005f56;
-  }
-  
-  .navigation-buttons button[disabled] {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .checkbox-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .checkbox-group input[type="checkbox"] {
-    margin-right: 12px;
-    transform: scale(1.2);
-  }
-  
-  .cost-breakdown,
-  .explanations {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin-bottom: 20px;
-  }
-  
+
+  .quiz-step p,
   .cost-breakdown li,
   .explanations li {
-    margin-bottom: 10px;
-    color: #444;
+    font-size: 1rem;
   }
-  
-  .total-cost {
-    text-align: center;
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #e0f7fa;
-    border-radius: 6px;
+
+  .navigation-buttons {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  .total-cost h2 {
-    font-size: 1.8em;
-    color: #00796b;
+
+  .navigation-buttons button {
+    width: 100%;
+    margin: 5px 0;
   }
-  
-  .result-button {
-    display: block;
-    margin: 30px auto 0;
-    padding: 10px 20px;
-    background-color: #d32f2f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
+  .checkbox-group label {
+    flex: 1 1 100%; /* Full width on smaller screens */
   }
-  
-  .result-button:hover {
-    background-color: #b71c1c;
-  }
-  
+}

@@ -27,14 +27,14 @@ const CalculatorDropdown = ({onClose}: Props): JSX.Element => {
       {/* Dropdown Menu */}
       {isOpen && (
         <div className={styles.menu}>
-          <Link onClick={onClose} href="/calculator" passHref>
+          <Link onClick={onClose} href="/calculateur-cout-entretien-robot-tondeuse" passHref>
             <span className={styles.menuItem} onClick={closeMenu}>
-              Calculateur entretien
+              Estimation coûts d'entretien
             </span>
           </Link>
-          <Link onClick={onClose} href="/roi-calculator" passHref>
+          <Link onClick={onClose} href="/calculateur-retour-sur-investissement-robot-tondeuse" passHref>
             <span className={styles.menuItem} onClick={closeMenu}>
-              Calculateur économies
+              Calculateur d'économies
             </span>
           </Link>
         </div>

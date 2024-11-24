@@ -471,8 +471,18 @@ const ServiceForm = ({
         type="submit"
         disabled={isLoading}
         aria-busy={isLoading}
+        sx={{
+          bgcolor: '#43a047',
+          '&:hover': {
+            bgcolor: '#2e7031',
+          },
+          '&:disabled': {
+            bgcolor: '#43a047',
+            opacity: 0.7,
+          }
+        }}
       >
-        {isLoading ? <CircularProgress size={24} /> : 'Envoyer'}
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Envoyer'}
       </Button>
 
       {/* Submission Modal */}

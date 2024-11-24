@@ -8,11 +8,11 @@ import Contact from '../components/Contact';
 
 const Home = (): JSX.Element => {
   return (
-    <div id="home">
-      <Hero />
-      <Presentation/>
-      <Services />
-      <About />
+    <div id="home"> 
+       <Hero /> 
+       <Presentation/>
+      <Services /> 
+       <About />
       <Contact />
     </div>
   );
