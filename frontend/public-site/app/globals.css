@@ -6,7 +6,6 @@ html {
     /* For some browsers */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    user-select: none;
 }
 
 /* Global reset for links */
