@@ -409,10 +409,10 @@ const ServiceForm = ({
         display: 'flex',
         flexWrap: 'wrap',
         gap: 2,
-        marginTop: 4,
+        // marginTop: 4,
         padding: 2,
         backgroundColor: 'background.paper',
-        borderRadius: 2,
+        borderRadius: '32px 0 0px 32px',
         position: 'relative',
         '& > *': {
           flex: isLargeScreen ? '1 1 calc(50% - 16px)' : '1 1 100%',
