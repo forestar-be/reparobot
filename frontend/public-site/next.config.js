@@ -6,7 +6,7 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     AUTH_TOKEN: process.env.AUTH_TOKEN,
   },
-  productionBrowserSourceMaps: true,
+ // productionBrowserSourceMaps: true,
   images: {
     domains: ['reparobot.be'],
     formats: ['image/avif', 'image/webp'],
