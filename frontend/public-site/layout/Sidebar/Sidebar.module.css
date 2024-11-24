@@ -1,0 +1,65 @@
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 300px; /* Adjust width as needed */
+  background-color: #ffffff; /* Sidebar background color */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.logo {
+  margin-bottom: 20px; /* Space below the logo */
+  text-decoration: none;
+  color: inherit;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between navigation links */
+  flex-grow: 1; /* Push the navigation to fill the top area */
+}
+
+.navLink {
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  padding: 10px 0;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #43a047; /* Change to your hover color */
+}
+
+.calculatorDropdown {
+  margin-top: auto; /* Push CalculatorDropdown to the bottom */
+}
+
