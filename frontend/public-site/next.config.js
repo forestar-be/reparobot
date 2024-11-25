@@ -17,6 +17,10 @@ const nextConfig = {
   //   locales: ['fr'],
   //   defaultLocale: 'fr',
   // },
+  experimental: {
+    optimizeImages: true,
+    optimizeCss: true,
+  },
   async headers() {
     return [
       {

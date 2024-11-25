@@ -67,7 +67,7 @@ const Hero = (): JSX.Element => {
     <div id="home" ref={heroRef}>
       <Box
         sx={{
-          backgroundImage: 'url(/images/hero.jpg)',
+          backgroundImage: 'url(/images/hero.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

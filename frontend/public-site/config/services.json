@@ -77,7 +77,7 @@
   {
     "name": "Réparation de robot",
     "description": "Réparation de votre robot Husqvarna ou Gardena",
-    "image": "/images/reparation-robot.jpg",
+    "image": "/images/reparation-robot.webp",
     "formFields": [
       {
         "label": "Marque du robot",
@@ -115,7 +115,7 @@
   {
     "name": "Problème d'installation",
     "description": "Installation de votre robot Husqvarna ou Gardena",
-    "image": "/images/installation-robot.jpg",
+    "image": "/images/installation-robot.webp",
     "formFields": [
       {
         "label": "Marque du robot",

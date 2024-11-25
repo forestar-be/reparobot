@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: 'Reparobot',
     images: [
       {
-        url: 'https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.jpg',
+        url: 'https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.webp',
         width: 1200,
         height: 630,
         alt: 'Calculateur de Coût Entretien Robot Tondeuse'
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Calculateur Coût Entretien Robot Tondeuse | Diagnostic & Estimation',
     description: 'Estimation précise des coûts d\'entretien robot tondeuse basée sur vos besoins spécifiques.',
-    images: ['https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.jpg'],
+    images: ['https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.webp'],
   },
   alternates: {
     canonical: 'https://reparobot.be/calculateur-cout-entretien-robot-tondeuse'

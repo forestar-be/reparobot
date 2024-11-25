@@ -113,10 +113,13 @@ const PageLayout = ({ children }: Props): JSX.Element => {
   const [openSidebar, setOpenSidebar] = useState(false);
 
   const handleSidebarOpen = (): void => {
+   
     setOpenSidebar(true);
+
   };
 
   const handleSidebarClose = (): void => {
+    if(openSidebar)
     setOpenSidebar(false);
   };
 
@@ -145,7 +148,7 @@ const PageLayout = ({ children }: Props): JSX.Element => {
         backgroundColor: theme.palette.background.default,
         height: '100%',
       }}
-
+      onClick={handleSidebarClose}
     >
       <Header onSidebarOpen={handleSidebarOpen} />
       <Sidebar onClose={handleSidebarClose} open={open} />
