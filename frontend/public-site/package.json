@@ -32,12 +32,14 @@
     ]
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/cache": "^11.13.5",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
     "@mui/x-date-pickers": "^7.18.0",
     "axios": "^1.7.7",
+    "critters": "^0.0.25",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "leaflet": "^1.9.4",
@@ -51,6 +53,7 @@
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
     "react-visibility-sensor": "^5.1.1",
+    "sharp": "^0.33.5",
     "web-vitals": "^3.4.0"
   },
   "devDependencies": {
