@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: 'Reparobot',
     images: [
       {
-        url: 'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.jpg',
+        url: 'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',
         width: 1200,
         height: 630,
         alt: 'Calculateur Retour sur Investissement Robot Tondeuse'
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Calculateur Retour sur Investissement Robot Tondeuse | Reparobot',
     description: 'Comparez les coûts d\'entretien traditionnel avec un robot tondeuse. Calculez vos économies sur plusieurs années incluant essence, maintenance et services.',
-    images: ['https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.jpg'],
+    images: ['https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp'],
   },
   alternates: {
     canonical: 'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse'
