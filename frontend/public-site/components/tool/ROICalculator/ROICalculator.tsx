@@ -162,7 +162,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCEssence(e.target.value)}
               required
               min="0"
-              step="10"
+              step="1"
               ref={essenceRef}
             />
             {errors.cEssence && <span className="error-message">{errors.cEssence}</span>}
@@ -178,7 +178,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCTondeuseManuelle(e.target.value)}
               required
               min="0"
-              step="10"
+              step="1"
               ref={tondeuseManuelleRef}
             />
             {errors.cTondeuseManuelle && <span className="error-message">{errors.cTondeuseManuelle}</span>}
@@ -194,7 +194,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCServiceJardinage(e.target.value)}
               required
               min="0"
-              step="10"
+              step="1"
               ref={serviceJardinageRef}
             />
             {errors.cServiceJardinage && <span className="error-message">{errors.cServiceJardinage}</span>}
@@ -231,7 +231,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCAchatRobot(e.target.value)}
               required
               min="0"
-              step="10"
+              step="1"
               ref={achatRobotRef}
             />
             {errors.cAchatRobot && <span className="error-message">{errors.cAchatRobot}</span>}
@@ -247,7 +247,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCMaintenanceRobot(e.target.value)}
               required
               min="0"
-              step="10"
+              step="1"
               ref={maintenanceRobotRef}
             />
             {errors.cMaintenanceRobot && <span className="error-message">{errors.cMaintenanceRobot}</span>}
@@ -283,7 +283,7 @@ const ROICalculateur = ({ theme }: ROICalculateurProps): JSX.Element => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSuperficiePelouse(e.target.value)}
               required
               min="1"
-              step="10"
+              step="1"
               ref={superficieRef}
             />
             {errors.superficiePelouse && <span className="error-message">{errors.superficiePelouse}</span>}
