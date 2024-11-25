@@ -379,14 +379,14 @@ const CostCalculator = ({ theme }: CalculatorProps): JSX.Element => {
         {step === 9 && estimatedCost !== null && (
           <>
             <h3>Résultat du Diagnostic</h3>
-            <p>Sur la base de vos réponses, voici une estimation détaillée de votre coût annuel de maintenance :</p>
+            <p>Sur la base de vos réponses, voici une estimation détaillée du coût annuel d'entretien de votre robot tondeuse :</p>
             <ul className="cost-breakdown">
               {costBreakdown.map((item, index) => (
                 <li key={index}>{item}</li>
               ))}
             </ul>
             <div className="total-cost">
-              <h2>Coût total estimé : {estimatedCost.toFixed(2)} €</h2>
+              <h2>Coût d'entretien annuel estimé : {estimatedCost.toFixed(2)} €</h2>
             </div>
             <h4>Explications :</h4>
             <ul className="explanations">
