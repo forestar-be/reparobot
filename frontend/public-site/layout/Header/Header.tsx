@@ -87,7 +87,7 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
           >
             Contact
           </Link>
-          <CalculatorDropdown />
+          {/* <CalculatorDropdown /> */}
         </nav>
 
         {/* Mobile Sidebar Toggle */}
