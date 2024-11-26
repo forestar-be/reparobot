@@ -88,7 +88,7 @@
       { "label": "Modèle", "type": "text", "isRequired": true },
       { "label": "Problème à décrire", "type": "textarea", "isRequired": true },
       {
-        "label": "Enlèvement et redémarrage à domicile dans un rayon de 50 km de Braine-le-Comte",
+        "label": "Enlèvement et redémarrage à domicile dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 80,
         "type": "checkbox_price",
         "isRequired": false
@@ -126,7 +126,7 @@
       { "label": "Modèle", "type": "text", "isRequired": true },
       { "label": "Problème à décrire", "type": "textarea", "isRequired": true },
       {
-        "label": "Déplacement dans un rayon de 50 km",
+        "label": "Déplacement dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 60,
         "type": "checkbox_price",
         "isRequired": false
