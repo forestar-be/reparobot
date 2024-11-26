@@ -402,6 +402,20 @@ const ServiceForm = ({
   };
 
   return (
+    <>
+     {/* Form Header */}
+      <IconButton
+        onClick={() => onClose()}
+        sx={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+          zIndex:500
+        }}
+        aria-label="Fermer le formulaire"
+      >
+        <CloseIcon />
+      </IconButton>
     <Box
       ref={formRef} // Attach ref here for visibility tracking
       component="form"
@@ -424,18 +438,7 @@ const ServiceForm = ({
       itemScope
       itemType="https://schema.org/ContactPage"
     >
-      {/* Form Header */}
-      <IconButton
-        onClick={() => onClose()}
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-        }}
-        aria-label="Fermer le formulaire"
-      >
-        <CloseIcon />
-      </IconButton>
+     
       <Typography
         id="service-form-title"
         variant="h6" // Maintained existing style with h6
@@ -530,6 +533,7 @@ const ServiceForm = ({
         </DialogActions>
       </Dialog>
     </Box>
+    </>
   );
 };
 
