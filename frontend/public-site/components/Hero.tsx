@@ -121,6 +121,7 @@ const Hero = (): JSX.Element => {
               </Box>
               <Box marginBottom={3}>
                 <Typography
+                  align="center"
                   variant="h6"
                   component="p"
                   color={dark.text.primary}
