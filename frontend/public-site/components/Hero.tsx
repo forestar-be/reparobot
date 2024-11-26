@@ -2,6 +2,7 @@
 
 'use client'; // Ensure this is a client component
 
+import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -24,6 +25,18 @@ const Hero = (): JSX.Element => {
   const heroRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
   const [urlQuery, setUrlQuery] = useState<{ [key: string]: string | undefined }>({});
+
+  // const [urlQuery, setUrlQuery] = useState({});
+  const searchParams = useSearchParams();
+  // console.log("searchParams : ", searchParams)
+  // console.log("searchParams.get('x') : ", searchParams.get("x"));
+
+  // useEffect(() => {
+  //   if (searchParams) {
+  //     const xParam = searchParams.get("x");
+  //     setUrlQuery((prev) => ({ ...prev, x: xParam }));
+  //   }
+  // }, [searchParams]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -63,6 +76,8 @@ const Hero = (): JSX.Element => {
     }
   }, []);
 
+  // console.log("urlQuery.x : ", urlQuery.x)
+
   return (
     <div id="home" ref={heroRef}>
       <Box
@@ -101,7 +116,7 @@ const Hero = (): JSX.Element => {
                   }}
                   gutterBottom
                 >
-                  {urlQuery.x || item.description}
+                  {searchParams.get("x") ? searchParams.get("x") : item.description}
                 </Typography>
               </Box>
               <Box marginBottom={3}>
