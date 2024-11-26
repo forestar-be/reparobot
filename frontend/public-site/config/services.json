@@ -13,7 +13,7 @@
       },
       { "label": "Modèle", "type": "text", "isRequired": true },
       {
-        "label": "Enlèvement dans un rayon de 50 km de Braine-le-Comte",
+        "label": "Enlèvement dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 40,
         "type": "checkbox_price",
         "isRequired": false

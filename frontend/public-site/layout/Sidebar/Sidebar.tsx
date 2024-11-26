@@ -83,7 +83,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
           >
             Contact
           </Link>
-          <CalculatorDropdown onClose={onClose} />
+          {/* <CalculatorDropdown onClose={onClose} /> */}
         </nav>
       </div>
     </div>
