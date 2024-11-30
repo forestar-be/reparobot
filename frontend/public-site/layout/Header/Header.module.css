@@ -1,0 +1,81 @@
+.header {
+    background-color: #fff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center; /* Vertically centers all items in the header */
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center; /* Vertically centers the logo and title */
+    text-decoration: none;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #333;
+  }
+  
+  .spacer {
+    flex-grow: 1;
+  }
+  
+  .nav {
+    display: flex;
+    align-items: center; /* Vertically centers the navigation links */
+    gap: 20px;
+  }
+  
+  .navLink {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .navLink:hover {
+    color: #fff;
+    background-color: #43a047;
+    border-radius: 4px;
+  }
+  
+  .themeToggle {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .sidebarToggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+  }
+  
+  /* Show sidebar toggle button on small screens */
+  @media (max-width: 768px) {
+    .sidebarToggle {
+      display: block;
+    }
+  
+    .nav {
+      display: none;
+    }
+  }
+  
