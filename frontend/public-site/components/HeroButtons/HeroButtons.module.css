@@ -1,0 +1,76 @@
+.heroButtonsNav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0 1rem; /* Ensure padding inside the viewport */
+    width: 100%; /* Ensure the container doesn't exceed screen width */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+@media (min-width: 600px) {
+    .heroButtonsNav {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.button {
+    backdrop-filter: blur(10px);
+    padding: 10px 20px; /* Reduced padding for smaller screens */
+    font-size: 18px; /* Adjust font size for mobile */
+    text-transform: uppercase;
+    border: 2px solid #43a047;
+    color: #43a047;
+    white-space: normal; /* Allow text to wrap */
+    overflow-wrap: break-word; /* Enable word wrapping */
+    word-break: break-word; /* Ensure long words are wrapped */
+    min-width: 0; /* Ensure buttons shrink to fit content */
+    text-align: center;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    width: 100%; /* Buttons take full width on small screens */
+    box-sizing: border-box;
+}
+
+
+a.primaryButton {
+    color: #ffffff;
+    background-color: #43a047;
+    border-color: #43a047;
+    margin-right: 0;
+}
+
+.primaryButton:hover {
+    background-color: #66bb6a;
+    color: #ffffff;
+}
+
+a.secondaryButton {
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #43a047;
+}
+
+.secondaryButton:hover {
+    background-color: #43a047;
+    color: #ffffff;
+}
+
+@media (min-width: 960px) {
+    .primaryButton {
+        margin-right: 15px;
+    }
+
+    .secondaryButton {
+        margin-left: 15px;
+    }
+
+    .button {
+        width: auto; /* Buttons revert to natural width on larger screens */
+        padding: 15px 30px; /* Restore padding for larger screens */
+        font-size: 20px; /* Restore font size */
+    }
+}
