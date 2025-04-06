@@ -5,14 +5,11 @@
   "license": "Copyright © All Rights Reserved Charles HILD LÊ",
   "private": true,
   "scripts": {
-    "react:start": "react-scripts start",
-    "react:build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --ext .ts,.tsx ./src",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "prettier": "prettier \"**/*.+(json|ts|tsx)\"",
-    "format:check": "npm run prettier -- --check",
-    "format:fix": "npm run prettier -- --write",
+    "format:check": "pnpm prettier -- --check",
+    "format:fix": "pnpm prettier -- --write",
     "types:check": "bash -c tsc --noEmit --pretty",
     "dev": "next dev",
     "build": "next build --no-lint",
@@ -20,15 +17,9 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npm run lint",
-      "npm run types:check",
-      "npm run format:check"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
+      "pnpm lint",
+      "pnpm types:check",
+      "pnpm format:check"
     ]
   },
   "dependencies": {
@@ -37,6 +28,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
+    "@mui/material-nextjs": "^7.0.0",
     "@mui/x-date-pickers": "^7.18.0",
     "axios": "^1.7.7",
     "critters": "^0.0.25",
@@ -51,48 +43,28 @@
     "react-intersection-observer": "^9.13.1",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.15.0",
-    "react-scripts": "5.0.1",
     "react-visibility-sensor": "^5.1.1",
     "sharp": "^0.33.5",
     "web-vitals": "^3.4.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@testing-library/jest-dom": "^6.1.6",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.4",
     "@types/leaflet": "^1.9.14",
     "@types/node": "^20.5.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.56.0",
+    "eslint-config-next": "^15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.1",
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
-    "jest": "^29.7.0",
-    "jest-canvas-mock": "^2.5.2",
-    "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.2.0",
     "prettier": "^3.3.3",
-    "ts-jest": "^29.1.1",
     "typescript": "^5.7.2"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

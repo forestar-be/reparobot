@@ -33,11 +33,21 @@ const Contact = (): JSX.Element => {
   };
 
   const handleEmailClick = () => {
-    trackEvent('contact_email_click', 'contact_interaction', 'email_address', 1);
+    trackEvent(
+      'contact_email_click',
+      'contact_interaction',
+      'email_address',
+      1,
+    );
   };
 
   const handleAddressClick = () => {
-    trackEvent('contact_address_click', 'contact_interaction', 'physical_address', 1);
+    trackEvent(
+      'contact_address_click',
+      'contact_interaction',
+      'physical_address',
+      1,
+    );
   };
 
   return (
@@ -52,11 +62,11 @@ const Contact = (): JSX.Element => {
           paddingTop: 5,
           paddingBottom: 10,
           paddingX: 2,
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.default,
         }}
       >
         {/* Title Section */}
-        <Box marginBottom={4}>
+        <Box marginBottom={2}>
           <Typography
             id="contact-title"
             variant="h2"
@@ -85,7 +95,7 @@ const Contact = (): JSX.Element => {
             N&apos;hésitez pas à nous contacter pour toute information.
           </Typography>
         </Box>
-        
+
         {/* Contact Information */}
         {contact.slice(0, 1).map((item, i) => (
           <Container key={i}>
@@ -124,7 +134,11 @@ const Contact = (): JSX.Element => {
                       <ListItem
                         component="li"
                         disableGutters
-                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginBottom: 2,
+                        }}
                         aria-label="Phone number"
                       >
                         <PhoneIcon
@@ -143,7 +157,10 @@ const Contact = (): JSX.Element => {
                           primary={
                             <a
                               href={`tel:${item.phone}`}
-                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              style={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                              }}
                               title={`Call us at ${item.phone}`}
                               onClick={handlePhoneClick}
                             >
@@ -163,7 +180,11 @@ const Contact = (): JSX.Element => {
                       <ListItem
                         component="li"
                         disableGutters
-                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginBottom: 2,
+                        }}
                         aria-label="Email address"
                       >
                         <EmailIcon
@@ -182,7 +203,10 @@ const Contact = (): JSX.Element => {
                           primary={
                             <a
                               href={`mailto:${item.email}`}
-                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              style={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                              }}
                               title={`Email us at ${item.email}`}
                               onClick={handleEmailClick}
                             >
@@ -202,7 +226,11 @@ const Contact = (): JSX.Element => {
                       <ListItem
                         component="li"
                         disableGutters
-                        sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginBottom: 1,
+                        }}
                         aria-label="Physical address"
                       >
                         <LocationIcon
@@ -223,7 +251,10 @@ const Contact = (): JSX.Element => {
                               href="https://maps.app.goo.gl/Ep9j27mJNvWGBBmY7"
                               target="_blank"
                               rel="noopener noreferrer"
-                              style={{ textDecoration: 'none', color: 'inherit' }}
+                              style={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                              }}
                               title={`Find us at ${item.address}`}
                               onClick={handleAddressClick}
                             >

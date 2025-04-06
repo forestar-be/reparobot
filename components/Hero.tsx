@@ -2,7 +2,7 @@
 
 'use client'; // Ensure this is a client component
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -24,7 +24,9 @@ const Hero = (): JSX.Element => {
   const [hero] = useState<HeroProps[]>(heroData);
   const heroRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
-  const [urlQuery, setUrlQuery] = useState<{ [key: string]: string | undefined }>({});
+  const [urlQuery, setUrlQuery] = useState<{
+    [key: string]: string | undefined;
+  }>({});
 
   // const [urlQuery, setUrlQuery] = useState({});
   const searchParams = useSearchParams();
@@ -45,9 +47,9 @@ const Hero = (): JSX.Element => {
           if (entry.isIntersecting && !hasTrackedView) {
             // Track Hero section visibility
             trackEvent(
-              'section_view',        // More consistent event name in snake_case
-              'user_engagement',     // More standard GA4 category
-              'hero_section',        // Keep the section identifier
+              'section_view', // More consistent event name in snake_case
+              'user_engagement', // More standard GA4 category
+              'hero_section', // Keep the section identifier
             );
             setHasTrackedView(true); // Prevent duplicate tracking
           }
@@ -55,7 +57,7 @@ const Hero = (): JSX.Element => {
       },
       {
         threshold: 0.5, // Trigger when 50% of the Hero section is visible
-      }
+      },
     );
 
     if (heroRef.current) {
@@ -116,7 +118,9 @@ const Hero = (): JSX.Element => {
                   }}
                   gutterBottom
                 >
-                  {searchParams.get("x") ? searchParams.get("x") : item.description}
+                  {searchParams.get('x')
+                    ? searchParams.get('x')
+                    : item.description}
                 </Typography>
               </Box>
               <Box marginBottom={3}>
@@ -137,7 +141,6 @@ const Hero = (): JSX.Element => {
           ))}
         </Box>
       </Box>
-      <Spacer sx={{ paddingTop: 6 }} />
     </div>
   );
 };

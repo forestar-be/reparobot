@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 // import dynamic from 'next/dynamic';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import ROICalculateurWrapper from  '../../components/tool/ROICalculator/ROICalculatorWrapper'
+import ROICalculateurWrapper from '../../components/tool/ROICalculator/ROICalculatorWrapper';
 
 // // Dynamically import the wrapper with no SSR
 // const ROICalculateurWrapper = dynamic(
@@ -15,11 +15,13 @@ const theme = createTheme(); // You can customize the theme here
 
 export default function ROICalculatorPage(): JSX.Element {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        Loading ROI calculator...
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading ROI calculator...
+        </div>
+      }
+    >
       <ThemeProvider theme={theme}>
         <div id="roi-calculator-page">
           <ROICalculateurWrapper />

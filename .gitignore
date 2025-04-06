@@ -32,3 +32,5 @@ frontend/public-site/build/
 
 frontend/supervisor-site/build/
 /backend/secrets/
+
+.next/

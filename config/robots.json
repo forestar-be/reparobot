@@ -1,0 +1,184 @@
+{
+  "categories": [
+    {
+      "id": "wired",
+      "name": "Robots Filaires",
+      "description": "Installation avec câble périphérique, idéal pour jardins standards. Gestion multi-zones et réglages via l'application Automower® Connect."
+    },
+    {
+      "id": "wireless",
+      "name": "Robots Sans Fil",
+      "description": "Installation facile avec zones virtuelles (pas de câble périphérique). Gestion multi-zones et réglages via l'application Automower® Connect. Fonctionnement via le système Husqvarna EPOS (RTK GPS)."
+    }
+  ],
+  "robots": [
+    {
+      "id": "305",
+      "name": "Automower® 305",
+      "category": "wired",
+      "description": "Robot tondeuse filaire pour petites surfaces jusqu'à 600 m²",
+      "image": "/images/robots/automower_305.jpg",
+      "maxSurface": 600,
+      "maxSlope": 40,
+      "price": 1199,
+      "installationPrice": 219
+    },
+    {
+      "id": "310",
+      "name": "Automower® 310",
+      "category": "wired",
+      "description": "Robot tondeuse filaire pour surfaces moyennes jusqu'à 1000 m²",
+      "image": "/images/robots/automower_310.jpg",
+      "maxSurface": 1000,
+      "maxSlope": 40,
+      "price": 1499,
+      "installationPrice": 219
+    },
+    {
+      "id": "315",
+      "name": "Automower® 315",
+      "category": "wired",
+      "description": "Robot tondeuse filaire pour surfaces moyennes jusqu'à 1500 m²",
+      "image": "/images/robots/automower_315.jpg",
+      "maxSurface": 1500,
+      "maxSlope": 40,
+      "price": 1699,
+      "installationPrice": 219
+    },
+    {
+      "id": "405X",
+      "name": "Automower® 405X",
+      "category": "wired",
+      "description": "Robot tondeuse filaire premium pour petites surfaces jusqu'à 600 m²",
+      "image": "/images/robots/automower_405x.jpg",
+      "maxSurface": 600,
+      "maxSlope": 40,
+      "price": 1899,
+      "installationPrice": 219
+    },
+    {
+      "id": "415X",
+      "name": "Automower® 415X",
+      "category": "wired",
+      "description": "Robot tondeuse filaire premium pour surfaces moyennes jusqu'à 1500 m²",
+      "image": "/images/robots/automower_415x.jpg",
+      "maxSurface": 1500,
+      "maxSlope": 40,
+      "price": 2199,
+      "installationPrice": 219,
+      "promotion": "Coupe-bordure Accu 110iL (valeur 249 €) offert"
+    },
+    {
+      "id": "305E",
+      "name": "Automower® 305E",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour petites surfaces jusqu'à 600 m²",
+      "image": "/images/robots/automower_305e.jpg",
+      "maxSurface": 600,
+      "maxSlope": 40,
+      "price": 2349,
+      "priceExVAT": 1944,
+      "installationPrice": 349
+    },
+    {
+      "id": "310E",
+      "name": "Automower® 310E",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour surfaces moyennes jusqu'à 1000 m²",
+      "image": "/images/robots/automower_310e.jpg",
+      "maxSurface": 1000,
+      "maxSlope": 40,
+      "price": 2448,
+      "priceExVAT": 2023,
+      "installationPrice": 349
+    },
+    {
+      "id": "315E",
+      "name": "Automower® 315E",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour surfaces moyennes jusqu'à 1500 m²",
+      "image": "/images/robots/automower_315e.jpg",
+      "maxSurface": 1500,
+      "maxSlope": 40,
+      "price": 2548,
+      "priceExVAT": 2106,
+      "installationPrice": 349
+    },
+    {
+      "id": "320NERA",
+      "name": "Automower® 320 NERA",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour grandes surfaces jusqu'à 2200 m²",
+      "image": "/images/robots/automower_320nera.jpg",
+      "maxSurface": 2200,
+      "maxSlope": 40,
+      "price": 2749,
+      "priceExVAT": 2272,
+      "installationPrice": 349
+    },
+    {
+      "id": "405XE",
+      "name": "Automower® 405XE",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil premium pour petites surfaces jusqu'à 600 m²",
+      "image": "/images/robots/automower_405xe.jpg",
+      "maxSurface": 600,
+      "maxSlope": 40,
+      "price": 2495,
+      "priceExVAT": 2062,
+      "installationPrice": 349
+    },
+    {
+      "id": "415XE",
+      "name": "Automower® 415XE",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil premium pour surfaces moyennes jusqu'à 1500 m²",
+      "image": "/images/robots/automower_415xe.jpg",
+      "maxSurface": 1500,
+      "maxSlope": 40,
+      "price": 2899,
+      "priceExVAT": 2396,
+      "installationPrice": 349
+    },
+    {
+      "id": "430XNERA",
+      "name": "Automower® 430X NERA",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour grandes surfaces jusqu'à 3200 m²",
+      "image": "/images/robots/automower_430xnera.jpg",
+      "maxSurface": 3200,
+      "maxSlope": 50,
+      "price": 3989,
+      "priceExVAT": 3297,
+      "installationPrice": 349
+    },
+    {
+      "id": "435XAWD",
+      "name": "Automower® 435X AWD",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil à traction intégrale pour surfaces complexes jusqu'à 3500 m²",
+      "image": "/images/robots/automower_435xawd.jpg",
+      "maxSurface": 3500,
+      "maxSlope": 70,
+      "price": 4989,
+      "priceExVAT": 4124,
+      "installationPrice": 349
+    },
+    {
+      "id": "450XNERA",
+      "name": "Automower® 450X NERA",
+      "category": "wireless",
+      "description": "Robot tondeuse sans fil pour très grandes surfaces jusqu'à 5000 m²",
+      "image": "/images/robots/automower_450xnera.jpg",
+      "maxSurface": 5000,
+      "maxSlope": 50,
+      "price": 5479,
+      "priceExVAT": 4528,
+      "installationPrice": 349
+    }
+  ],
+  "maintenance": {
+    "description": "Entretien de fin d'année (remise à l'abri, nettoyage complet, mise à jour)",
+    "price": 79
+  }
+}

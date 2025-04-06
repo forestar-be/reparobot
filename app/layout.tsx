@@ -1,8 +1,6 @@
-// app/layout.tsx
-
 import './globals.css';
 import { Metadata } from 'next';
-import PageLayout from '../layout/PageLayout'; // Adjust the path if necessary
+import PageLayout from '../layout/PageLayout';
 import React from 'react';
 
 // Define your metadata using Next.js Metadata API
@@ -10,15 +8,27 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://reparobot.be'),
   title: {
     template: '%s | Entretien Robot Husqvarna & Gardena',
-    default: 'Entretien et Réparation Robot Tondeuse Husqvarna & Gardena',
+    default:
+      'Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena',
   },
-  description: 'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
-  keywords: ['robot tondeuse', 'Husqvarna', 'Gardena', 'entretien', 'réparation', 'maintenance', 'installation'],
+  description:
+    'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
+  keywords: [
+    'robot tondeuse',
+    'Husqvarna',
+    'Gardena',
+    'entretien',
+    'réparation',
+    'maintenance',
+    'installation',
+  ],
   authors: [{ name: 'Forestar' }],
   generator: 'Next.js',
   openGraph: {
-    title: 'Entretien et Réparation Robot Tondeuse Husqvarna & Gardena',
-    description: 'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
+    title:
+      'Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena',
+    description:
+      'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
     url: 'https://reparobot.be',
     siteName: 'Entretien Robot Husqvarna & Gardena',
     locale: 'fr_BE',
@@ -54,30 +64,24 @@ const structuredData = {
   telephone: '+3267830706',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '160 Chaussée d\'ecaussinnes',
+    streetAddress: "160 Chaussée d'ecaussinnes",
     addressLocality: 'Braine le comte',
     postalCode: '7090',
-    addressCountry: 'BE'
+    addressCountry: 'BE',
   },
   geo: {
     '@type': 'GeoCoordinates',
     latitude: 50.6082, // Replace with actual coordinates
-    longitude: 4.1284  // Replace with actual coordinates
+    longitude: 4.1284, // Replace with actual coordinates
   },
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
-    dayOfWeek: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday'
-    ],
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     opens: '09:00',
-    closes: '18:00'
+    closes: '18:00',
   },
   priceRange: '€€',
-  vatID: 'BE0806-685-256'
+  vatID: 'BE0806-685-256',
 };
 
 export default function RootLayout({
@@ -95,9 +99,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <PageLayout>
-          {children}
-        </PageLayout>
+        <PageLayout>{children}</PageLayout>
       </body>
     </html>
   );
