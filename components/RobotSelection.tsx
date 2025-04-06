@@ -5,7 +5,6 @@ import {
   Box,
   Container,
   Typography,
-  Grid,
   Card,
   CardActionArea,
   CardContent,
@@ -16,6 +15,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import robotsData from '../config/robots.json';
 import RobotContactForm from './RobotContactForm';
 import { trackEvent } from '../utils/analytics';
@@ -46,7 +46,7 @@ const RobotSelection = (): JSX.Element => {
   const [selectedRobot, setSelectedRobot] = useState<Robot | null>(null);
   const [isFormEdited, setIsFormEdited] = useState(false);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
   const topRef = useRef<HTMLDivElement>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
 
@@ -88,7 +88,7 @@ const RobotSelection = (): JSX.Element => {
             mb: 4,
           }}
         >
-          Robots Tondeuses Husqvarna
+          Réservation de Robots Tondeuses Husqvarna
         </Typography>
 
         {categories.map((category) => (
@@ -116,7 +116,25 @@ const RobotSelection = (): JSX.Element => {
               {category.description}
             </Typography>
 
-            <Grid container spacing={3}>
+            <Grid
+              container
+              spacing={3}
+              sx={(theme) => ({
+                maxWidth: '100%',
+                mx: 'auto',
+                justifyContent: 'center',
+                ml: {
+                  xs: theme.spacing(-1.5),
+                  sm: theme.spacing(-1.5),
+                  md: theme.spacing(-1.5),
+                },
+                width: {
+                  xs: `calc(100% + ${theme.spacing(3)})`,
+                  sm: `calc(100% + ${theme.spacing(3)})`,
+                  md: `calc(100% + ${theme.spacing(3)})`,
+                },
+              })}
+            >
               {robots
                 .filter((robot) => robot.category === category.id)
                 .map((robot) => (
@@ -255,7 +273,8 @@ const RobotSelection = (): JSX.Element => {
             borderRadius: isSmallScreen ? 0 : 2,
             padding: 0,
             overflowY: 'auto',
-            maxHeight: '90vh',
+            maxHeight: isSmallScreen ? '100vh' : '90vh',
+            m: isSmallScreen ? 0 : 2,
           },
         }}
       >
