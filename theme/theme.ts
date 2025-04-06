@@ -5,47 +5,30 @@ import { light, dark } from './palette';
 const getTheme = (mode: string): Theme =>
   responsiveFontSizes(
     createTheme({
+      cssVariables: true,
       palette: mode === 'light' ? light : dark,
       typography: {
         fontFamily: '"Poppins", sans-serif',
       },
       components: {
-        MuiButton: {
+        MuiPaper: {
           styleOverrides: {
             root: {
-              fontWeight: 600,
-              borderRadius: 0,
-              paddingTop: 10,
-              paddingBottom: 10,
+              backgroundColor: '#f9fafb',
             },
-          } as ComponentsOverrides['MuiButton'],
-        },
-        MuiInputBase: {
-          styleOverrides: {
-            root: {
-              borderRadius: 0,
-            },
-          } as ComponentsOverrides['MuiInputBase'],
-        },
-        MuiOutlinedInput: {
-          styleOverrides: {
-            root: {
-              borderRadius: 0,
-            },
-            input: {
-              borderRadius: 0,
-            },
-          } as ComponentsOverrides['MuiOutlinedInput'],
+          },
         },
         MuiCard: {
           styleOverrides: {
             root: {
-              borderRadius: 0,
+              boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
+              borderRadius: '1rem',
+              border: '1px solid #e5e7eb',
             },
-          } as ComponentsOverrides['MuiCard'],
+          },
         },
       },
-    })
+    }),
   );
 
 export default getTheme;

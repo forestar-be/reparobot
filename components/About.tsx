@@ -32,12 +32,12 @@ const CountUpWrapper = ({ value, suffix, description }: AboutProps) => {
               'view_stat_counter',
               'engagement',
               `stat_${description.toLowerCase().replace(/\s+/g, '_')}`,
-              value
+              value,
             );
           }
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (counterRef.current) {
@@ -77,7 +77,7 @@ const About: React.FC = () => {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     const aboutSection = document.getElementById('about');
@@ -102,14 +102,14 @@ const About: React.FC = () => {
       <Box
         sx={{
           paddingTop: 5,
-          paddingBottom: 12,
+          paddingBottom: 5,
           paddingX: 2,
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Container>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
+        <Container sx={{ p: '0!important', maxWidth: '1000px!important' }}>
+          <Grid container>
+            <Grid item xs={12} pb={2}>
               <Typography
                 id="about-title"
                 variant="h2"
@@ -138,13 +138,21 @@ const About: React.FC = () => {
               </Typography>
             </Grid>
             {about.map((item, i) => (
-              <Grid item xs={12} md={4} key={i}>
+              <Grid
+                item
+                xs={12}
+                md={4}
+                key={i}
+                pr={i === about.length - 1 ? 0 : 2}
+              >
                 <Box
+                  sx={{
+                    backgroundColor: theme.palette.background.default,
+                  }}
                   component={Card}
                   height={1}
                   display="flex"
                   flexDirection="column"
-                  boxShadow={0}
                   aria-label={`Statistic ${item.value}${item.suffix}`}
                   onMouseEnter={() => handleHover(item.description)}
                 >

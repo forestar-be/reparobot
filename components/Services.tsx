@@ -2,7 +2,13 @@
 
 'use client'; // Ensure this is a client component
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   Box,
   Tooltip,
@@ -17,6 +23,7 @@ import {
   useTheme,
   Card,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import servicesData from '../config/services.json';
 import ServiceForm from './ServiceForm';
 import { trackEvent } from '../utils/analytics';
@@ -27,6 +34,8 @@ export interface ServicesProps {
   image: string;
   formFields: FormField[];
   basePrice?: number;
+  isExternalLink?: boolean;
+  externalUrl?: string;
 }
 
 interface FormField {
@@ -41,8 +50,29 @@ interface FormField {
 
 const Services: React.FC = () => {
   const theme = useTheme();
-  const [services] = useState<ServicesProps[]>(servicesData);
-  const [selectedService, setSelectedService] = useState<ServicesProps | null>(null);
+  const router = useRouter();
+
+  // Modify the existing "Réservation de robot" service to redirect to /robots
+  const modifiedServices = useMemo(() => {
+    return servicesData.map((service) => {
+      if (service.name.toLowerCase() === 'réservation de robot') {
+        return {
+          ...service,
+          name: 'Réservation de Robot',
+          description:
+            'Réservez votre robot tondeuse Husqvarna parmi notre gamme de 14 modèles filaires et sans fil.',
+          isExternalLink: true,
+          externalUrl: '/robots',
+        };
+      }
+      return service;
+    });
+  }, []);
+
+  const [services] = useState<ServicesProps[]>(modifiedServices);
+  const [selectedService, setSelectedService] = useState<ServicesProps | null>(
+    null,
+  );
   const [isFormEdited, setIsFormEdited] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isSectionViewed, setIsSectionViewed] = useState(false);
@@ -59,7 +89,7 @@ const Services: React.FC = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (topRef.current) {
@@ -73,14 +103,24 @@ const Services: React.FC = () => {
     };
   }, [isSectionViewed]);
 
-  const handleServiceClick = useCallback((service: ServicesProps) => {
-    trackEvent(
-      'service_card_click',
-      'service_interaction',
-      `service_${service.name.toLowerCase().replace(/\s+/g, '_')}`
-    );
-    setSelectedService(service);
-  }, []);
+  const handleServiceClick = useCallback(
+    (service: ServicesProps) => {
+      trackEvent(
+        'service_card_click',
+        'service_interaction',
+        `service_${service.name.toLowerCase().replace(/\s+/g, '_')}`,
+      );
+
+      // If the service is configured to link externally, navigate to that URL
+      if (service.isExternalLink && service.externalUrl) {
+        router.push(service.externalUrl);
+        return;
+      }
+
+      setSelectedService(service);
+    },
+    [router],
+  );
 
   const closeForm = useCallback(() => {
     setSelectedService(null);
@@ -98,7 +138,7 @@ const Services: React.FC = () => {
         closeForm();
       }
     },
-    [isFormEdited, closeForm]
+    [isFormEdited, closeForm],
   );
 
   const handleConfirmClose = useCallback(() => {
@@ -112,10 +152,17 @@ const Services: React.FC = () => {
 
   const renderServiceCard = useCallback(
     (item: ServicesProps, i: number) => (
-      <Grid item xs={12} sm={6} md={4} key={i}>
-        <Tooltip title="Cliquez pour ouvrir le formulaire" arrow>
+      <Grid item xs={12} sm={6} md={6} key={i}>
+        <Tooltip
+          title={
+            item.isExternalLink
+              ? 'Cliquez pour voir les robots'
+              : 'Cliquez pour ouvrir le formulaire'
+          }
+          arrow
+        >
           <Box
-            component="article"
+            component={Card}
             itemScope
             itemType="https://schema.org/Service"
             padding={3}
@@ -154,7 +201,11 @@ const Services: React.FC = () => {
             onClick={() => handleServiceClick(item)}
             role="button"
             tabIndex={0}
-            aria-label={`Ouvrir le formulaire pour ${item.name}`}
+            aria-label={
+              item.isExternalLink
+                ? `Voir les robots`
+                : `Ouvrir le formulaire pour ${item.name}`
+            }
             onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 handleServiceClick(item);
@@ -176,7 +227,12 @@ const Services: React.FC = () => {
             >
               {item.description}
             </Typography>
-            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              mt={2}
+            >
               <Card
                 sx={{
                   width: '100%',
@@ -212,12 +268,12 @@ const Services: React.FC = () => {
         </Tooltip>
       </Grid>
     ),
-    [theme, selectedService, handleServiceClick]
+    [theme, selectedService, handleServiceClick],
   );
 
   const memoizedServices = useMemo(
     () => services.map(renderServiceCard),
-    [services, renderServiceCard]
+    [services, renderServiceCard],
   );
 
   return (
@@ -231,13 +287,13 @@ const Services: React.FC = () => {
       <Box
         sx={{
           paddingTop: 5,
-          paddingBottom: 10,
+          paddingBottom: 5,
           paddingX: { xs: 2, sm: 4, md: 6 },
           backgroundColor: theme.palette.background.default,
           overflowX: 'hidden', // Prevent horizontal overflow
         }}
       >
-        <Box marginBottom={4}>
+        <Box marginBottom={1}>
           <Typography
             id="services-title"
             variant="h4"
@@ -265,18 +321,18 @@ const Services: React.FC = () => {
             itemProp="description"
             sx={{ maxWidth: 600, marginX: 'auto' }}
           >
-            Nous vous proposons une large gamme de services pour l&apos;entretien de
-            votre robot.
+            Nous vous proposons une large gamme de services pour
+            l&apos;entretien de votre robot.
           </Typography>
         </Box>
         <Box>
-          <Grid container spacing={4}>
+          <Grid container spacing={4} sx={{ maxWidth: '1000px', mx: 'auto' }}>
             {memoizedServices}
           </Grid>
           <Dialog
             open={!!selectedService}
             onClose={() => handleCloseForm()}
-            maxWidth="sm" // Set maxWidth to prevent overflow
+            maxWidth="lg" // Set maxWidth to prevent overflow
             fullWidth
             aria-labelledby="service-form-dialog-title"
             PaperProps={{
@@ -309,7 +365,9 @@ const Services: React.FC = () => {
               },
             }}
           >
-            <DialogTitle id="confirm-dialog-title">Confirmer la fermeture</DialogTitle>
+            <DialogTitle id="confirm-dialog-title">
+              Confirmer la fermeture
+            </DialogTitle>
             <DialogContent>
               <DialogContentText id="confirm-dialog-description">
                 Vous avez des modifications non enregistrées. Êtes-vous sûr de

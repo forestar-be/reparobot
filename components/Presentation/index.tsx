@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import styles from './Presentation.module.css';
 
 const Presentation = () => {
-  const defaultText =  `Entretien et Réparation Robot Tondeuse Husqvarna & Gardena est
+  const defaultText = `Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena est
   votre expert en robotique pour l'entretien, la réparation et la
   maintenance des robots tondeuses des marques Husqvarna et Gardena.
   Forte de plusieurs années d'expérience, notre entreprise propose
@@ -27,7 +27,7 @@ const Presentation = () => {
   optimiser la performance énergétique de vos équipements, et bien
   d'autres composants.
 
-  Chez Entretien et Réparation Robot Tondeuse, notre mission est de
+  Chez Entretien, Réservation et Réparation Robot Tondeuse, notre mission est de
   vous offrir un service client exceptionnel, avec des diagnostics
   rapides, des interventions sur mesure, et une prise en charge
   complète pour tous vos besoins en matière de robotique extérieure.
@@ -41,13 +41,12 @@ const Presentation = () => {
   Contactez-nous dès aujourd'hui pour un devis gratuit ou pour en
   savoir plus sur nos solutions sur mesure.`;
 
- 
   // Access the search parameters synchronously
   const searchParams = useSearchParams();
-  
+
   // Get the 'text' parameter from the URL
   const urlText = searchParams.get('text');
-  
+
   // Initialize 'text' based on the URL parameter or fallback to defaultText
   const text = urlText ? urlText : defaultText;
 
@@ -56,9 +55,10 @@ const Presentation = () => {
    * @param {string} inputText
    * @returns {string[]} Array of sentences.
    */
-  const splitIntoSentences =(inputText: string): string[] =>   {
+  const splitIntoSentences = (inputText: string): string[] => {
     // Regular expression to split at sentence-ending punctuation
-    const sentenceEndRegex = /(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=[.?!])\s+(?=[A-Z])/g;
+    const sentenceEndRegex =
+      /(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=[.?!])\s+(?=[A-Z])/g;
     return inputText.split(sentenceEndRegex).map((sentence) => sentence.trim());
   };
 
@@ -74,16 +74,17 @@ const Presentation = () => {
       <div className={styles['presentation-content']}>
         <div className={styles['presentation-card']}>
           <div className={styles['presentation-inner']}>
-            <h1 className={styles['presentation-title']}>Pourquoi nous choisir ?</h1>
+            <h1 className={styles['presentation-title']}>
+              Pourquoi nous choisir ?
+            </h1>
             <div className={styles['presentation-paragraphs']}>
               {sentences.map((sentence, index) => (
-                <div
-                  key={index}
-                  className={styles['presentation-paragraph']}
-                >
+                <div key={index} className={styles['presentation-paragraph']}>
                   <p className={styles['presentation-text']}>
-                    {sentence.endsWith('.') || sentence.endsWith('?') || sentence.endsWith('!') 
-                      ? sentence 
+                    {sentence.endsWith('.') ||
+                    sentence.endsWith('?') ||
+                    sentence.endsWith('!')
+                      ? sentence
                       : `${sentence}.`}
                   </p>
                 </div>

@@ -7,6 +7,7 @@ import ColorModeContext from '../../utils/ColorModeContext';
 import headerData from '../../config/header.json';
 import { Logo } from '../../components/Logo';
 import styles from './Header.module.css';
+import { Box, Typography } from '@mui/material';
 
 interface Props {
   onSidebarOpen: () => void;
@@ -25,11 +26,11 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
   const handleNavClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const href = e.currentTarget.getAttribute('href'); // Get the link's href
-  
+
     if (!href) return;
-  
+
     const targetId = href.startsWith('/#') ? href.substring(2) : href; // Extract the target ID
-  
+
     if (pathname === '/') {
       // If already on the homepage, perform smooth scrolling
       const element = document.getElementById(targetId);
@@ -49,16 +50,18 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
       }, 100); // Delay to ensure the page has fully loaded
     }
   };
-  
+
   return (
-    <header className={styles.header}>
+    <header className={styles.header} id="header">
       <div className={styles.container}>
         {/* Logo Section */}
         <Link href="/" className={styles.logo}>
-          <div>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Logo isDark={isDark} />
-            <span className={styles.title}>{header.title}</span>
-          </div>
+            <Typography component="span" className={styles.title}>
+              {header.title}
+            </Typography>
+          </Box>
         </Link>
 
         {/* Spacer */}
@@ -66,23 +69,33 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
 
         {/* Navigation Links */}
         <nav className={styles.nav}>
-          <Link 
-            href="/#services" 
-            className={styles.navLink} 
+          <Link
+            href="/#home"
+            className={styles.navLink}
+            onClick={handleNavClick}
+          >
+            Accueil
+          </Link>
+          <Link
+            href="/#services"
+            className={styles.navLink}
             onClick={handleNavClick}
           >
             Services
           </Link>
-          <Link 
-            href="/#about" 
-            className={styles.navLink} 
+          <Link href="/robots" className={styles.navLink}>
+            Réservation
+          </Link>
+          <Link
+            href="/#about"
+            className={styles.navLink}
             onClick={handleNavClick}
           >
             À propos
           </Link>
-          <Link 
-            href="/#contact" 
-            className={styles.navLink} 
+          <Link
+            href="/#contact"
+            className={styles.navLink}
             onClick={handleNavClick}
           >
             Contact

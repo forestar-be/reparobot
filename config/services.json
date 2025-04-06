@@ -1,5 +1,54 @@
 [
   {
+    "name": "Réservation de robot",
+    "description": "Réservez votre robot pour une intervention ou une présentation",
+    "image": "/images/reservation-robot.webp",
+    "basePrice": 50,
+    "formFields": [
+      {
+        "label": "Marque du robot",
+        "type": "select",
+        "options": ["Husqvarna", "Gardena"],
+        "isRequired": true
+      },
+      { "label": "Modèle", "type": "text", "isRequired": true },
+      {
+        "label": "Date souhaitée pour la réservation",
+        "type": "date",
+        "isRequired": true,
+        "minFuturDateRange": 1
+      },
+      {
+        "label": "Service de retrait à domicile",
+        "price": 50,
+        "type": "checkbox_price",
+        "isRequired": false
+      },
+      {
+        "label": "Lieu de rendez-vous",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Options supplémentaires",
+        "type": "textarea",
+        "isRequired": false
+      },
+      { "label": "Code du robot", "type": "text", "isRequired": true },
+      { "label": "Nom de famille", "type": "text", "isRequired": true },
+      { "label": "Prénom", "type": "text", "isRequired": true },
+      { "label": "Adresse", "type": "text", "isRequired": true },
+      { "label": "Adresse e-mail", "type": "email", "isRequired": true },
+      { "label": "Numéro de téléphone", "type": "tel", "isRequired": true },
+      { "label": "Remarques", "type": "textarea", "isRequired": false },
+      {
+        "label": "Accepter les conditions générales",
+        "type": "checkbox_term",
+        "isRequired": true
+      }
+    ]
+  },
+  {
     "name": "Entretien de robot",
     "description": "Entretien de votre robot Husqvarna ou Gardena",
     "image": "/images/entretien-robot.webp",

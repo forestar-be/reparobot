@@ -22,17 +22,17 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
   const handleNavClick = async (e: React.MouseEvent) => {
     // Always close the sidebar
     onClose();
-    
+
     const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
     if (!href) return;
 
     // If we're on the homepage and it's a hash link
     if (pathname === '/' && href.startsWith('/#')) {
       e.preventDefault();
-      
+
       // Update the URL without a page refresh
       router.push(href, { scroll: false });
-      
+
       // Handle smooth scroll
       const element = document.querySelector(href.substring(1));
       if (element) {
@@ -59,7 +59,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
 
         {/* Navigation Links */}
         <nav className={styles.nav}>
-          <Link 
+          <Link
             href="/#services"
             className={styles.navLink}
             scroll={false}
@@ -67,7 +67,15 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
           >
             Services
           </Link>
-          <Link 
+          <Link
+            href="/robots"
+            className={styles.navLink}
+            scroll={false}
+            onClick={handleNavClick}
+          >
+            Réservation
+          </Link>
+          <Link
             href="/#about"
             className={styles.navLink}
             scroll={false}
@@ -75,7 +83,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
           >
             À propos
           </Link>
-          <Link 
+          <Link
             href="/#contact"
             className={styles.navLink}
             scroll={false}

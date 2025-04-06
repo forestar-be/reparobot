@@ -1,45 +1,47 @@
 html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 68px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 68px;
 
-    -webkit-tap-highlight-color: transparent;
-    /* For some browsers */
-    /* -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  /* For some browsers */
+  /* -webkit-touch-callout: none;
     -webkit-user-select: none; */
 }
 
-body{
+body {
   /* padding: 0; */
-  margin:0;
-  font-family:sans-serif;
+  margin: 0;
+  font-family: sans-serif;
+  overflow-x: hidden;
 }
 
-h1,h2,h3,h4,h5,h6{
-  font-family: "Poppins", sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Poppins', sans-serif;
 }
 /* Global reset for links */
 a {
-    color: inherit;
-    text-decoration: none;
-    -webkit-text-decoration: none;
-  }
-  
-  /* Specifically target webkit browsers */
-  a:-webkit-any-link {
-    color: inherit;
-    text-decoration: none;
-    -webkit-text-decoration: none;
-  }
-  
-  /* Target all link states */
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    text-decoration: none;
-    -webkit-text-decoration: none;
-  }
+  color: inherit;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+}
 
- 
-  
-  
+/* Specifically target webkit browsers */
+a:-webkit-any-link {
+  color: inherit;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+}
+
+/* Target all link states */
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  -webkit-text-decoration: none;
+}
