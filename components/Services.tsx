@@ -22,6 +22,7 @@ import {
   Button,
   useTheme,
   Card,
+  Container,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import servicesData from '../config/services.json';
@@ -166,11 +167,10 @@ const Services: React.FC = () => {
             itemScope
             itemType="https://schema.org/Service"
             padding={3}
-            // Remove width="100%" to prevent overflow
-            // width="100%"
             bgcolor={theme.palette.background.paper}
             sx={{
-              boxSizing: 'border-box', // Ensure padding is included within the Box
+              boxSizing: 'border-box',
+              width: '100%',
               '&:hover': {
                 bgcolor: theme.palette.background.default,
                 color:
@@ -193,7 +193,6 @@ const Services: React.FC = () => {
                 }`,
                 outlineOffset: '2px',
               },
-              // Ensure the Box takes full height to prevent uneven heights causing overlap
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
@@ -284,107 +283,127 @@ const Services: React.FC = () => {
       itemScope
       itemType="https://schema.org/Service"
     >
-      <Box
-        sx={{
-          paddingTop: 5,
-          paddingBottom: 5,
-          paddingX: { xs: 2, sm: 4, md: 6 },
-          backgroundColor: theme.palette.background.default,
-          overflowX: 'hidden', // Prevent horizontal overflow
-        }}
-      >
-        <Box marginBottom={1}>
-          <Typography
-            id="services-title"
-            variant="h4"
-            component="h2"
-            align="center"
-            fontWeight={700}
-            marginTop={theme.spacing(1)}
-            gutterBottom
-            sx={{
-              color: theme.palette.text.primary,
-              textTransform: 'uppercase',
-              fontSize: { xs: '1.75rem', sm: '2.5rem' }, // Responsive font size
-            }}
-            itemProp="headline"
-          >
-            Services
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            component="p"
-            align="center"
-            marginTop={theme.spacing(1)}
-            gutterBottom
-            color={theme.palette.text.secondary}
-            itemProp="description"
-            sx={{ maxWidth: 600, marginX: 'auto' }}
-          >
-            Nous vous proposons une large gamme de services pour
-            l&apos;entretien de votre robot.
-          </Typography>
+      <Container maxWidth="lg" disableGutters>
+        <Box
+          sx={{
+            paddingTop: 5,
+            paddingBottom: 5,
+            paddingX: { xs: 1, sm: 2, md: 4 },
+            backgroundColor: theme.palette.background.default,
+            overflowX: 'hidden',
+          }}
+        >
+          <Box marginBottom={1}>
+            <Typography
+              id="services-title"
+              variant="h4"
+              component="h2"
+              align="center"
+              fontWeight={700}
+              marginTop={theme.spacing(1)}
+              gutterBottom
+              sx={{
+                color: theme.palette.text.primary,
+                textTransform: 'uppercase',
+                fontSize: { xs: '1.75rem', sm: '2.5rem' }, // Responsive font size
+              }}
+              itemProp="headline"
+            >
+              Services
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component="p"
+              align="center"
+              marginTop={theme.spacing(1)}
+              gutterBottom
+              color={theme.palette.text.secondary}
+              itemProp="description"
+              sx={{ maxWidth: 600, marginX: 'auto' }}
+            >
+              Nous vous proposons une large gamme de services pour
+              l&apos;entretien de votre robot.
+            </Typography>
+          </Box>
+          <Box sx={{ width: '100%' }}>
+            <Grid
+              container
+              spacing={{ xs: 2, sm: 3, md: 4 }}
+              sx={(theme) => ({
+                maxWidth: '100%',
+                mx: 'auto',
+                justifyContent: 'center',
+                ml: {
+                  xs: theme.spacing(-1),
+                  sm: theme.spacing(-1.5),
+                  md: theme.spacing(-2),
+                },
+                width: {
+                  xs: `calc(100% + ${theme.spacing(2)})`,
+                  sm: `calc(100% + ${theme.spacing(3)})`,
+                  md: `calc(100% + ${theme.spacing(4)})`,
+                },
+              })}
+            >
+              {memoizedServices}
+            </Grid>
+            <Dialog
+              open={!!selectedService}
+              onClose={() => handleCloseForm()}
+              maxWidth="lg" // Set maxWidth to prevent overflow
+              fullWidth
+              aria-labelledby="service-form-dialog-title"
+              PaperProps={{
+                sx: {
+                  borderRadius: 2,
+                  padding: 2,
+                  overflowY: 'auto',
+                },
+              }}
+            >
+              {selectedService && (
+                <ServiceForm
+                  service={selectedService}
+                  onClose={handleCloseForm}
+                  onFormEdit={setIsFormEdited}
+                />
+              )}
+            </Dialog>
+            <Dialog
+              open={isConfirmDialogOpen}
+              onClose={handleCancelClose}
+              aria-labelledby="confirm-dialog-title"
+              aria-describedby="confirm-dialog-description"
+              maxWidth="xs"
+              fullWidth
+              PaperProps={{
+                sx: {
+                  borderRadius: 2,
+                  padding: 2,
+                },
+              }}
+            >
+              <DialogTitle id="confirm-dialog-title">
+                Confirmer la fermeture
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="confirm-dialog-description">
+                  Vous avez des modifications non enregistrées. Êtes-vous sûr de
+                  vouloir fermer le formulaire ?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCancelClose} color="primary">
+                  Annuler
+                </Button>
+                <Button onClick={handleConfirmClose} color="primary" autoFocus>
+                  Confirmer
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
         </Box>
-        <Box>
-          <Grid container spacing={4} sx={{ maxWidth: '1000px', mx: 'auto' }}>
-            {memoizedServices}
-          </Grid>
-          <Dialog
-            open={!!selectedService}
-            onClose={() => handleCloseForm()}
-            maxWidth="lg" // Set maxWidth to prevent overflow
-            fullWidth
-            aria-labelledby="service-form-dialog-title"
-            PaperProps={{
-              sx: {
-                borderRadius: 2,
-                padding: 2,
-                overflowY: 'auto',
-              },
-            }}
-          >
-            {selectedService && (
-              <ServiceForm
-                service={selectedService}
-                onClose={handleCloseForm}
-                onFormEdit={setIsFormEdited}
-              />
-            )}
-          </Dialog>
-          <Dialog
-            open={isConfirmDialogOpen}
-            onClose={handleCancelClose}
-            aria-labelledby="confirm-dialog-title"
-            aria-describedby="confirm-dialog-description"
-            maxWidth="xs"
-            fullWidth
-            PaperProps={{
-              sx: {
-                borderRadius: 2,
-                padding: 2,
-              },
-            }}
-          >
-            <DialogTitle id="confirm-dialog-title">
-              Confirmer la fermeture
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="confirm-dialog-description">
-                Vous avez des modifications non enregistrées. Êtes-vous sûr de
-                vouloir fermer le formulaire ?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCancelClose} color="primary">
-                Annuler
-              </Button>
-              <Button onClick={handleConfirmClose} color="primary" autoFocus>
-                Confirmer
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </Box>
+      </Container>
     </section>
   );
 };

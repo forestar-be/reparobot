@@ -108,7 +108,27 @@ const About: React.FC = () => {
         }}
       >
         <Container sx={{ p: '0!important', maxWidth: '1000px!important' }}>
-          <Grid container>
+          <Grid
+            container
+            spacing={2}
+            sx={(theme) => ({
+              justifyContent: 'center',
+              ml: {
+                xs: theme.spacing(-1),
+                sm: theme.spacing(-1),
+                md: theme.spacing(-1),
+              },
+              width: {
+                xs: `calc(100% + ${theme.spacing(2)})`,
+                sm: `calc(100% + ${theme.spacing(2)})`,
+                md: `calc(100% + ${theme.spacing(2)})`,
+              },
+              '& > .MuiGrid-item': {
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+              },
+            })}
+          >
             <Grid item xs={12} pb={2}>
               <Typography
                 id="about-title"
@@ -138,16 +158,11 @@ const About: React.FC = () => {
               </Typography>
             </Grid>
             {about.map((item, i) => (
-              <Grid
-                item
-                xs={12}
-                md={4}
-                key={i}
-                pr={i === about.length - 1 ? 0 : 2}
-              >
+              <Grid item xs={12} md={4} key={i}>
                 <Box
                   sx={{
                     backgroundColor: theme.palette.background.default,
+                    width: '100%',
                   }}
                   component={Card}
                   height={1}
@@ -162,7 +177,7 @@ const About: React.FC = () => {
                     }}
                   >
                     <Box
-                      marginBottom={4}
+                      marginBottom={0}
                       display="flex"
                       flexDirection="column"
                       alignItems="center"

@@ -150,13 +150,16 @@ const PageLayout = ({ children }: Props): JSX.Element => {
   };
 
   return (
-    <AppRouterCacheProvider options={{key: 'css', enableCssLayer: true }}>
+    <AppRouterCacheProvider options={{ key: 'css', enableCssLayer: true }}>
       <ThemeProvider theme={getTheme('light')}>
         <Box
           id="page-top"
           sx={{
             backgroundColor: theme.palette.background.default,
             height: '100%',
+            width: '100%',
+            overflowX: 'hidden',
+            position: 'relative',
           }}
           onClick={handleSidebarClose}
         >
