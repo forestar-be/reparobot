@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   },
   description:
     'Expert en entretien et réparation de robots tondeuses Husqvarna et Gardena. Services professionnels, maintenance et installation.',
+  icons: {
+    icon: '/images/logo/favicon.ico',
+    shortcut: '/images/logo/favicon.ico',
+    apple: '/images/logo/logo-70x70.png',
+  },
   keywords: [
     'robot tondeuse',
     'Husqvarna',

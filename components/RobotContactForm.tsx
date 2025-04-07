@@ -133,6 +133,7 @@ const RobotContactForm = ({
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const isMobileOnly = useMediaQuery(theme.breakpoints.down('sm'));
 
   const formRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
@@ -464,7 +465,7 @@ const RobotContactForm = ({
       {/* Robot Info Section */}
       <Box
         sx={{
-          width: isLargeScreen ? '40%' : '100%',
+          width: isLargeScreen ? '40%' : undefined,
           bgcolor:
             theme.palette.mode === 'dark'
               ? 'rgba(0,0,0,0.2)'
@@ -497,32 +498,34 @@ const RobotContactForm = ({
           {robot.name}
         </Typography>
 
-        <Card
-          sx={{
-            width: '100%',
-            mb: 3,
-            boxShadow: 'none',
-            bgcolor: 'transparent',
-          }}
-        >
-          <CardMedia
-            component="img"
-            image={robot.image}
-            alt={robot.name}
+        {isLargeScreen && (
+          <Card
             sx={{
               width: '100%',
-              height: 240,
-              objectFit: 'contain',
-              mb: 2,
+              mb: 3,
+              boxShadow: 'none',
+              bgcolor: 'transparent',
             }}
-          />
-        </Card>
+          >
+            <CardMedia
+              component="img"
+              image={robot.image}
+              alt={robot.name}
+              sx={{
+                width: '100%',
+                height: 240,
+                objectFit: 'contain',
+                mb: 2,
+              }}
+            />
+          </Card>
+        )}
 
         <Typography variant="body1" sx={{ mb: 2 }}>
           {robot.description}
         </Typography>
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           <Chip
             label={`Surface: ${robot.maxSurface} m²`}
             size="small"
@@ -558,9 +561,144 @@ const RobotContactForm = ({
           />
         </Box>
 
-        <Divider sx={{ my: 2 }} />
+        {isLargeScreen && (
+          <>
+            <Divider sx={{ my: 2, mt: 2 }} />
+            <Box sx={{ mt: 'auto' }}>
+              <Typography variant="h6" gutterBottom>
+                Détails de prix:
+              </Typography>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
+                <Typography>Prix du robot:</Typography>
+                <Typography fontWeight="bold">{robot.price} €</Typography>
+              </Box>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
+                <Typography>Installation:</Typography>
+                <Typography fontWeight="bold">
+                  {robot.installationPrice} €
+                </Typography>
+              </Box>
+              {formValues['Entretien annuel (79€)'] && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                  }}
+                >
+                  <Typography>Entretien annuel:</Typography>
+                  <Typography fontWeight="bold">79 €</Typography>
+                </Box>
+              )}
+              <Divider sx={{ my: 1 }} />
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
+                <Typography fontWeight="bold">Total:</Typography>
+                <Typography fontWeight="bold" color="primary">
+                  {totalPrice} €
+                </Typography>
+              </Box>
 
-        <Box sx={{ mt: 'auto' }}>
+              {robot.promotion && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mt: 2,
+                    color: theme.palette.error.main,
+                    fontWeight: 600,
+                    p: 1,
+                    bgcolor:
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(211, 47, 47, 0.1)'
+                        : 'rgba(211, 47, 47, 0.05)',
+                    borderRadius: 1,
+                  }}
+                >
+                  Promotion: {robot.promotion}
+                </Typography>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
+
+      {/* Form Section */}
+      <Box
+        ref={formRef}
+        component="form"
+        sx={{
+          width: isLargeScreen ? '60%' : undefined,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 2,
+          p: 3,
+          backgroundColor: 'background.paper',
+          '& > *': {
+            flex: isMobileOnly ? '1 1 100%' : '1 1 calc(50% - 16px)',
+          },
+        }}
+        onSubmit={handleSubmit}
+        noValidate
+        aria-labelledby="robot-form-title"
+      >
+        <Typography
+          id="robot-form-title"
+          variant="h5"
+          sx={{
+            flex: '1 1 100%',
+            mb: 3,
+          }}
+        >
+          Formulaire de réservation
+        </Typography>
+
+        {/* Form Fields */}
+        {formFields.map(renderField)}
+
+        {/* Submit Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={isLoading}
+          aria-busy={isLoading}
+          sx={{
+            mt: 2,
+            color: 'white',
+            bgcolor: '#43a047',
+            '&:hover': {
+              bgcolor: '#2e7031',
+            },
+            '&:disabled': {
+              bgcolor: '#43a047',
+              opacity: 0.7,
+            },
+          }}
+        >
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            'Réserver ce robot'
+          )}
+        </Button>
+      </Box>
+
+      {/* Price Details Section for Small Screens */}
+      {!isLargeScreen && (
+        <Box
+          sx={{
+            p: 3,
+            bgcolor:
+              theme.palette.mode === 'dark'
+                ? 'rgba(0,0,0,0.2)'
+                : 'rgba(67, 160, 71, 0.05)',
+          }}
+        >
           <Typography variant="h6" gutterBottom>
             Détails de prix:
           </Typography>
@@ -609,67 +747,7 @@ const RobotContactForm = ({
             </Typography>
           )}
         </Box>
-      </Box>
-
-      {/* Form Section */}
-      <Box
-        ref={formRef}
-        component="form"
-        sx={{
-          width: isLargeScreen ? '60%' : '100%',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 2,
-          p: 3,
-          backgroundColor: 'background.paper',
-          '& > *': {
-            flex: '1 1 calc(50% - 16px)',
-          },
-        }}
-        onSubmit={handleSubmit}
-        noValidate
-        aria-labelledby="robot-form-title"
-      >
-        <Typography
-          id="robot-form-title"
-          variant="h5"
-          sx={{
-            flex: '1 1 100%',
-            mb: 3,
-          }}
-        >
-          Formulaire de réservation
-        </Typography>
-
-        {/* Form Fields */}
-        {formFields.map(renderField)}
-
-        {/* Submit Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled={isLoading}
-          aria-busy={isLoading}
-          sx={{
-            mt: 2,
-            bgcolor: '#43a047',
-            '&:hover': {
-              bgcolor: '#2e7031',
-            },
-            '&:disabled': {
-              bgcolor: '#43a047',
-              opacity: 0.7,
-            },
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            'Réserver ce robot'
-          )}
-        </Button>
-      </Box>
+      )}
 
       {/* Submission Modal */}
       <Dialog
