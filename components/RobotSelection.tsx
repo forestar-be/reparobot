@@ -46,7 +46,7 @@ const RobotSelection = (): JSX.Element => {
   const [selectedRobot, setSelectedRobot] = useState<Robot | null>(null);
   const [isFormEdited, setIsFormEdited] = useState(false);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const topRef = useRef<HTMLDivElement>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
 

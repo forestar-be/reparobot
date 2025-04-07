@@ -23,6 +23,7 @@ import {
   useTheme,
   Card,
   Container,
+  useMediaQuery,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import servicesData from '../config/services.json';
@@ -78,6 +79,7 @@ const Services: React.FC = () => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isSectionViewed, setIsSectionViewed] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   // Track when the Services section enters the viewport
   useEffect(() => {
@@ -348,6 +350,7 @@ const Services: React.FC = () => {
               {memoizedServices}
             </Grid>
             <Dialog
+              fullScreen={fullScreen}
               open={!!selectedService}
               onClose={() => handleCloseForm()}
               maxWidth="lg" // Set maxWidth to prevent overflow

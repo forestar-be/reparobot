@@ -1,5 +1,5 @@
 // src/components/ServiceForm.tsx
-"use client"
+'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
@@ -58,6 +58,7 @@ const ServiceForm = ({
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const formRef = useRef<HTMLDivElement | null>(null); // Reference to the form container
   const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
@@ -66,7 +67,11 @@ const ServiceForm = ({
   useEffect(() => {
     const initialFormValues: { [key: string]: any } = {};
     service.formFields.forEach((field) => {
-      if (field.type === 'checkbox' || field.type === 'checkbox_price' || field.type === 'checkbox_term') {
+      if (
+        field.type === 'checkbox' ||
+        field.type === 'checkbox_price' ||
+        field.type === 'checkbox_term'
+      ) {
         initialFormValues[field.label] = false;
       } else {
         initialFormValues[field.label] = '';
@@ -82,9 +87,9 @@ const ServiceForm = ({
           if (entry.isIntersecting && !hasTrackedView) {
             // Track ServiceForm section visibility
             trackEvent(
-              'section_view',           // Action: consistent with other section views
-              'form_interaction',      // Category: snake_case, consistent category naming
-              'service_form_section'   // Label: snake_case, more consistent naming
+              'section_view', // Action: consistent with other section views
+              'form_interaction', // Category: snake_case, consistent category naming
+              'service_form_section', // Label: snake_case, more consistent naming
             );
             setHasTrackedView(true); // Prevent duplicate tracking
           }
@@ -92,7 +97,7 @@ const ServiceForm = ({
       },
       {
         threshold: 0.5, // Trigger when 50% of the form is visible
-      }
+      },
     );
 
     if (formRef.current) {
@@ -154,9 +159,9 @@ const ServiceForm = ({
     if (!validateForm()) {
       // Track form submission with validation errors
       trackEvent(
-        'form_submit_error',        // Action: snake_case, more specific
-        'form_interaction',        // Category: already good, keep snake_case
-        'validation_failed'        // Label: snake_case, more specific
+        'form_submit_error', // Action: snake_case, more specific
+        'form_interaction', // Category: already good, keep snake_case
+        'validation_failed', // Label: snake_case, more specific
       );
       return;
     }
@@ -198,10 +203,10 @@ const ServiceForm = ({
 
       // Track successful form submission
       trackEvent(
-        'form_submission',          // Keep it snake_case
-        'form_interaction',         // Category
-        'form_submission_success',   // Label
-        99
+        'form_submission', // Keep it snake_case
+        'form_interaction', // Category
+        'form_submission_success', // Label
+        99,
       );
     } catch (error) {
       console.error('Error submitting form', error);
@@ -212,9 +217,9 @@ const ServiceForm = ({
 
       // Track failed form submission
       trackEvent(
-        'form_submit_error',        // Action: snake_case, clearer error event
-        'form_interaction',        // Category: already good, keep snake_case
-        'submission_failed'        // Label: snake_case, more consistent
+        'form_submit_error', // Action: snake_case, clearer error event
+        'form_interaction', // Category: already good, keep snake_case
+        'submission_failed', // Label: snake_case, more consistent
       );
     } finally {
       setIsLoading(false);
@@ -232,9 +237,9 @@ const ServiceForm = ({
   const handleOpenTerms = () => {
     setTermsOpen(true);
     trackEvent(
-      'dialog_open',            // Action: snake_case, more generic for reuse
-      'form_interaction',      // Category: already good, keep snake_case
-      'terms_dialog'          // Label: snake_case, more concise
+      'dialog_open', // Action: snake_case, more generic for reuse
+      'form_interaction', // Category: already good, keep snake_case
+      'terms_dialog', // Label: snake_case, more concise
     );
   };
 
@@ -353,7 +358,8 @@ const ServiceForm = ({
                     </Link>
                   </span>
                 ) : (
-                  `${field.label} ${field.type === 'checkbox_price' ? `+${field.price} €` : ''
+                  `${field.label} ${
+                    field.type === 'checkbox_price' ? `+${field.price} €` : ''
                   }`
                 )
               }
@@ -403,136 +409,143 @@ const ServiceForm = ({
 
   return (
     <>
-     {/* Form Header */}
+      {/* Form Header */}
       <IconButton
         onClick={() => onClose()}
         sx={{
           position: 'absolute',
-          top: 8,
-          right: 8,
-          zIndex:500
+          top: 23,
+          right: 11,
+          zIndex: 500,
         }}
         aria-label="Fermer le formulaire"
       >
         <CloseIcon />
       </IconButton>
-    <Box
-      ref={formRef} // Attach ref here for visibility tracking
-      component="form"
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 2,
-        // marginTop: 4,
-        padding: 2,
-        backgroundColor: 'background.paper',
-        borderRadius: '32px 0 0px 32px',
-        position: 'relative',
-        '& > *': {
-          flex: isLargeScreen ? '1 1 calc(50% - 16px)' : '1 1 100%',
-        },
-      }}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-labelledby="service-form-title"
-      itemScope
-      itemType="https://schema.org/ContactPage"
-    >
-     
-      <Typography
-        id="service-form-title"
-        variant="h6" // Maintained existing style with h6
+      <Box
+        ref={formRef} // Attach ref here for visibility tracking
+        component="form"
         sx={{
-          flex: '1 1 100%',
-          marginBottom: 2,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 2,
+          // marginTop: 4,
+          padding: 2,
+          backgroundColor: 'background.paper',
+          borderRadius: '32px 0 0px 32px',
+          position: 'relative',
+          '& > *': {
+            flex: isLargeScreen ? '1 1 calc(50% - 16px)' : '1 1 100%',
+          },
         }}
+        onSubmit={handleSubmit}
+        noValidate
+        aria-labelledby="service-form-title"
+        itemScope
+        itemType="https://schema.org/ContactPage"
       >
-        Formulaire du service: {service.name}
-      </Typography>
-
-      {/* Form Fields */}
-      {service.formFields.map(renderField)}
-
-      {/* Total Price */}
-      {totalPrice !== undefined && (
         <Typography
-          variant="h6"
+          id="service-form-title"
+          variant="h6" // Maintained existing style with h6
           sx={{
             flex: '1 1 100%',
-            marginTop: 2,
+            marginBottom: 2,
           }}
-          itemProp="price"
         >
-          Prix total: {totalPrice} €
+          Formulaire du service: {service.name}
         </Typography>
-      )}
 
-      {/* Submit Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        disabled={isLoading}
-        aria-busy={isLoading}
-        sx={{
-          bgcolor: '#43a047',
-          '&:hover': {
-            bgcolor: '#2e7031',
-          },
-          '&:disabled': {
+        {/* Form Fields */}
+        {service.formFields.map(renderField)}
+
+        {/* Total Price */}
+        {totalPrice !== undefined && (
+          <Typography
+            variant="h6"
+            sx={{
+              flex: '1 1 100%',
+              marginTop: 2,
+            }}
+            itemProp="price"
+          >
+            Prix total: {totalPrice} €
+          </Typography>
+        )}
+
+        {/* Submit Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={isLoading}
+          aria-busy={isLoading}
+          sx={{
+            color: 'white',
             bgcolor: '#43a047',
-            opacity: 0.7,
-          }
-        }}
-      >
-        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Envoyer'}
-      </Button>
-
-      {/* Submission Modal */}
-      <Dialog
-        open={modalOpen}
-        onClose={handleCloseModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Envoi du formulaire</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {modalMessage}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary" autoFocus>
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Terms and Conditions Dialog */}
-      <Dialog
-        open={termsOpen}
-        onClose={handleCloseTerms}
-        aria-labelledby="terms-dialog-title"
-        aria-describedby="terms-dialog-description"
-      >
-        <DialogTitle id="terms-dialog-title">Conditions Générales</DialogTitle>
-        <DialogContent>
-          {Object.values(conditions.terms_and_conditions).map(
-            (section, index) => (
-              <Box key={index} mb={2}>
-                <Typography variant="h6">{section.title}</Typography>
-                <DialogContentText>{section.content}</DialogContentText>
-              </Box>
-            ),
+            '&:hover': {
+              bgcolor: '#2e7031',
+            },
+            '&:disabled': {
+              bgcolor: '#43a047',
+              opacity: 0.7,
+            },
+          }}
+        >
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            'Envoyer'
           )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseTerms} color="primary" autoFocus>
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        </Button>
+
+        {/* Submission Modal */}
+        <Dialog
+          open={modalOpen}
+          onClose={handleCloseModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Envoi du formulaire</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {modalMessage}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary" autoFocus>
+              Fermer
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Terms and Conditions Dialog */}
+        <Dialog
+          fullScreen={fullScreen}
+          open={termsOpen}
+          onClose={handleCloseTerms}
+          aria-labelledby="terms-dialog-title"
+          aria-describedby="terms-dialog-description"
+        >
+          <DialogTitle id="terms-dialog-title">
+            Conditions Générales
+          </DialogTitle>
+          <DialogContent>
+            {Object.values(conditions.terms_and_conditions).map(
+              (section, index) => (
+                <Box key={index} mb={2}>
+                  <Typography variant="h6">{section.title}</Typography>
+                  <DialogContentText>{section.content}</DialogContentText>
+                </Box>
+              ),
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseTerms} color="primary" autoFocus>
+              Fermer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </>
   );
 };
