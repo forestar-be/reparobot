@@ -288,7 +288,7 @@ const Services: React.FC = () => {
       <Container maxWidth="lg" disableGutters>
         <Box
           sx={{
-            paddingTop: 5,
+            paddingTop: 2,
             paddingBottom: 5,
             paddingX: { xs: 1, sm: 2, md: 4 },
             backgroundColor: theme.palette.background.default,

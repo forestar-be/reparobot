@@ -4,6 +4,20 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Fix Leaflet icon issues
+const DefaultIcon = L.icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  iconRetinaUrl:
+    'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
 // Define proper types for coordinates
 type LatLngTuple = [number, number];
 
@@ -29,7 +43,12 @@ const Map = ({
     if (!containerRef.current) return;
 
     // Validate center coordinates
-    if (!center || center.length !== 2 || typeof center[0] !== 'number' || typeof center[1] !== 'number') {
+    if (
+      !center ||
+      center.length !== 2 ||
+      typeof center[0] !== 'number' ||
+      typeof center[1] !== 'number'
+    ) {
       console.error('Invalid center coordinates provided:', center);
       return;
     }
@@ -55,7 +74,8 @@ const Map = ({
 
       // Add tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
       // Add marker if position is provided
@@ -71,7 +91,6 @@ const Map = ({
       requestAnimationFrame(() => {
         map.invalidateSize();
       });
-
     } catch (error) {
       console.error('Error initializing map:', error);
     }
@@ -86,9 +105,9 @@ const Map = ({
   }, [center, zoom, markerPosition, popupContent]);
 
   return (
-    <div 
-      ref={containerRef} 
-      className="w-full h-96" 
+    <div
+      ref={containerRef}
+      className="w-full h-96"
       style={{ minHeight: '24rem' }}
       role="region"
       aria-label={ariaLabel || 'Interactive map'}

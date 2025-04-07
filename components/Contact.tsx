@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List'; // Import List component
+import GridLegacy from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
@@ -59,7 +60,7 @@ const Contact = (): JSX.Element => {
     >
       <Box
         sx={{
-          paddingTop: 5,
+          paddingTop: 2,
           paddingBottom: 10,
           paddingX: 2,
           backgroundColor: theme.palette.background.default,
@@ -69,7 +70,7 @@ const Contact = (): JSX.Element => {
         <Box marginBottom={2}>
           <Typography
             id="contact-title"
-            variant="h2"
+            variant="h4"
             component="h2"
             align="center"
             fontWeight={700}
@@ -78,6 +79,7 @@ const Contact = (): JSX.Element => {
             sx={{
               color: theme.palette.text.primary,
               textTransform: 'uppercase',
+              fontSize: { xs: '1.75rem', sm: '2.5rem' }, // Responsive font size
             }}
             itemProp="name"
           >
@@ -99,9 +101,16 @@ const Contact = (): JSX.Element => {
         {/* Contact Information */}
         {contact.slice(0, 1).map((item, i) => (
           <Container key={i}>
-            <Grid container spacing={4}>
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
               {/* Map Section */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <ClientMapWrapper
                   latitude={item.latitude}
                   longitude={item.longitude}
@@ -111,13 +120,11 @@ const Contact = (): JSX.Element => {
               </Grid>
 
               {/* Contact Details Section */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box
                   display="flex"
                   flexDirection="column"
                   justifyContent="center"
-                  marginTop={15}
-                  marginBottom={6}
                 >
                   <address
                     itemScope

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Head from 'next/head';
 import {
   Box,
   Container,
@@ -69,224 +70,258 @@ const RobotSelection = (): JSX.Element => {
   };
 
   return (
-    <Box
-      sx={{
-        py: 6,
-        bgcolor: theme.palette.background.default,
-        minHeight: '100vh',
-      }}
-      ref={topRef}
-    >
-      <Container maxWidth="lg">
-        <Typography
-          variant="h3"
-          component="h1"
-          align="center"
-          gutterBottom
-          sx={{
-            fontWeight: 700,
-            mb: 4,
-          }}
-        >
-          Réservation de Robots Tondeuses Husqvarna
-        </Typography>
+    <>
+      <Head>
+        <title>
+          Robots Tondeuses Husqvarna | Réservation et Installation | ReparObot
+        </title>
+        <meta
+          name="description"
+          content="Découvrez et réservez votre robot tondeuse Husqvarna. Large gamme de modèles filaires et sans fil avec installation professionnelle incluse. Livraison rapide en Belgique."
+        />
+        <meta
+          name="keywords"
+          content="robot tondeuse, Husqvarna, tondeuse automatique, installation robot tondeuse, robot jardin, Automower"
+        />
+        <meta
+          property="og:title"
+          content="Robots Tondeuses Husqvarna | Réservation et Installation"
+        />
+        <meta
+          property="og:description"
+          content="Réservez votre robot tondeuse Husqvarna avec installation professionnelle incluse. Livraison rapide en Belgique."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://reparobot.be/robots" />
+        <meta
+          property="og:image"
+          content="https://reparobot.be/images/robots-husqvarna.jpg"
+        />
+        <link rel="canonical" href="https://reparobot.be/robots" />
+      </Head>
+      <Box
+        sx={{
+          py: 3,
+          bgcolor: theme.palette.background.default,
+          minHeight: '100vh',
+        }}
+        ref={topRef}
+      >
+        <Container maxWidth="lg">
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            gutterBottom
+            sx={{
+              fontWeight: 700,
+              mb: 2,
+            }}
+          >
+            Réservation de Robots Tondeuses Husqvarna
+          </Typography>
 
-        {categories.map((category) => (
-          <Box key={category.id} sx={{ mb: 8 }}>
-            <Typography
-              variant="h4"
-              component="h2"
-              gutterBottom
-              sx={{
-                fontWeight: 600,
-                color: theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
-                px: 2,
-              }}
-            >
-              {category.name}
-            </Typography>
+          {categories.map((category) => (
+            <Box key={category.id} sx={{ mb: 4 }}>
+              <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{
+                  fontWeight: 600,
+                  color: theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
+                  px: 2,
+                }}
+              >
+                {category.name}
+              </Typography>
 
-            <Typography
-              variant="body1"
-              sx={{
-                mb: 4,
-                px: 2,
-              }}
-            >
-              {category.description}
-            </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  mb: 0,
+                  px: 2,
+                }}
+              >
+                {category.description}
+              </Typography>
 
-            <Grid
-              container
-              spacing={3}
-              sx={(theme) => ({
-                maxWidth: '100%',
-                mx: 'auto',
-                justifyContent: 'center',
-                ml: {
-                  xs: theme.spacing(-1.5),
-                  sm: theme.spacing(-1.5),
-                  md: theme.spacing(-1.5),
-                },
-                width: {
-                  xs: `calc(100% + ${theme.spacing(3)})`,
-                  sm: `calc(100% + ${theme.spacing(3)})`,
-                  md: `calc(100% + ${theme.spacing(3)})`,
-                },
-              })}
-            >
-              {robots
-                .filter((robot) => robot.category === category.id)
-                .map((robot) => (
-                  <Grid item xs={12} sm={6} md={4} key={robot.id}>
-                    <Card
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-8px)',
-                          boxShadow: 8,
-                        },
-                        borderRadius: 2,
-                      }}
-                    >
-                      <CardActionArea
-                        onClick={() => handleRobotClick(robot)}
+              <Grid
+                container
+                spacing={3}
+                sx={(theme) => ({
+                  maxWidth: '100%',
+                  mx: 'auto',
+                  justifyContent: 'center',
+                  ml: {
+                    xs: theme.spacing(-1.5),
+                    sm: theme.spacing(-1.5),
+                    md: theme.spacing(-1.5),
+                  },
+                  width: {
+                    xs: `calc(100% + ${theme.spacing(3)})`,
+                    sm: `calc(100% + ${theme.spacing(3)})`,
+                    md: `calc(100% + ${theme.spacing(3)})`,
+                  },
+                })}
+              >
+                {robots
+                  .filter((robot) => robot.category === category.id)
+                  .map((robot) => (
+                    <Grid item xs={12} sm={6} md={4} key={robot.id}>
+                      <Card
                         sx={{
-                          flexGrow: 1,
+                          height: '100%',
                           display: 'flex',
                           flexDirection: 'column',
-                          alignItems: 'stretch',
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                            transform: 'translateY(-8px)',
+                            boxShadow: 8,
+                          },
+                          borderRadius: 2,
                         }}
                       >
-                        <CardMedia
-                          component="img"
-                          height="240"
-                          image={robot.image}
-                          alt={robot.name}
-                          sx={{
-                            objectFit: 'contain',
-                            p: 2,
-                            bgcolor:
-                              theme.palette.mode === 'dark'
-                                ? 'rgba(255,255,255,0.05)'
-                                : 'rgba(0,0,0,0.03)',
-                          }}
-                        />
-                        <CardContent
+                        <CardActionArea
+                          onClick={() => handleRobotClick(robot)}
                           sx={{
                             flexGrow: 1,
                             display: 'flex',
                             flexDirection: 'column',
+                            alignItems: 'stretch',
                           }}
                         >
-                          <Typography variant="h6" component="h3" gutterBottom>
-                            {robot.name}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mb: 2, flexGrow: 1 }}
-                          >
-                            {robot.description}
-                          </Typography>
-                          <Divider sx={{ mb: 2 }} />
-                          <Box
+                          <CardMedia
+                            component="img"
+                            height="130"
+                            image={robot.image}
+                            alt={robot.name}
                             sx={{
+                              objectFit: 'cover',
+                              objectPosition: '0 60%',
+                              bgcolor:
+                                theme.palette.mode === 'dark'
+                                  ? 'rgba(255,255,255,0.05)'
+                                  : 'rgba(0,0,0,0.03)',
+                            }}
+                          />
+                          <CardContent
+                            sx={{
+                              flexGrow: 1,
                               display: 'flex',
-                              flexWrap: 'wrap',
-                              gap: 1,
-                              mb: 2,
+                              flexDirection: 'column',
                             }}
                           >
-                            <Chip
-                              label={`Surface: ${robot.maxSurface} m²`}
-                              size="small"
-                              sx={{
-                                bgcolor:
-                                  theme.palette.mode === 'dark'
-                                    ? 'rgba(67, 160, 71, 0.2)'
-                                    : 'rgba(67, 160, 71, 0.1)',
-                                color:
-                                  theme.palette.mode === 'dark'
-                                    ? '#43a047'
-                                    : '#2e7031',
-                              }}
-                            />
-                            <Chip
-                              label={`Pente: ${robot.maxSlope}%`}
-                              size="small"
-                              sx={{
-                                bgcolor:
-                                  theme.palette.mode === 'dark'
-                                    ? 'rgba(67, 160, 71, 0.2)'
-                                    : 'rgba(67, 160, 71, 0.1)',
-                                color:
-                                  theme.palette.mode === 'dark'
-                                    ? '#43a047'
-                                    : '#2e7031',
-                              }}
-                            />
-                          </Box>
-                          <Typography
-                            variant="h6"
-                            component="p"
-                            sx={{ fontWeight: 700 }}
-                          >
-                            {robot.price} €
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Installation: {robot.installationPrice} €
-                          </Typography>
-                          {robot.promotion && (
+                            <Typography
+                              variant="h6"
+                              component="h3"
+                              gutterBottom
+                            >
+                              {robot.name}
+                            </Typography>
                             <Typography
                               variant="body2"
+                              color="text.secondary"
+                              sx={{ mb: 2, flexGrow: 1 }}
+                            >
+                              {robot.description}
+                            </Typography>
+                            <Divider sx={{ mb: 2 }} />
+                            <Box
                               sx={{
-                                mt: 1,
-                                color: theme.palette.error.main,
-                                fontWeight: 600,
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: 1,
+                                mb: 2,
                               }}
                             >
-                              Promo: {robot.promotion}
+                              <Chip
+                                label={`Surface: ${robot.maxSurface} m²`}
+                                size="small"
+                                sx={{
+                                  bgcolor:
+                                    theme.palette.mode === 'dark'
+                                      ? 'rgba(67, 160, 71, 0.2)'
+                                      : 'rgba(67, 160, 71, 0.1)',
+                                  color:
+                                    theme.palette.mode === 'dark'
+                                      ? '#43a047'
+                                      : '#2e7031',
+                                }}
+                              />
+                              <Chip
+                                label={`Pente: ${robot.maxSlope}%`}
+                                size="small"
+                                sx={{
+                                  bgcolor:
+                                    theme.palette.mode === 'dark'
+                                      ? 'rgba(67, 160, 71, 0.2)'
+                                      : 'rgba(67, 160, 71, 0.1)',
+                                  color:
+                                    theme.palette.mode === 'dark'
+                                      ? '#43a047'
+                                      : '#2e7031',
+                                }}
+                              />
+                            </Box>
+                            <Typography
+                              variant="h6"
+                              component="p"
+                              sx={{ fontWeight: 700 }}
+                            >
+                              {robot.price} €
                             </Typography>
-                          )}
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Grid>
-                ))}
-            </Grid>
-          </Box>
-        ))}
-      </Container>
+                            <Typography variant="body2" color="text.secondary">
+                              Installation: {robot.installationPrice} €
+                            </Typography>
+                            {robot.promotion && (
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  mt: 1,
+                                  color: theme.palette.error.main,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Promo: {robot.promotion}
+                              </Typography>
+                            )}
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Box>
+          ))}
+        </Container>
 
-      <Dialog
-        open={!!selectedRobot}
-        onClose={() => handleCloseForm()}
-        maxWidth="lg"
-        fullWidth
-        fullScreen={isSmallScreen}
-        PaperProps={{
-          sx: {
-            borderRadius: isSmallScreen ? 0 : 2,
-            padding: 0,
-            overflowY: 'auto',
-            maxHeight: isSmallScreen ? '100vh' : '90vh',
-            m: isSmallScreen ? 0 : 2,
-          },
-        }}
-      >
-        {selectedRobot && (
-          <RobotContactForm
-            robot={selectedRobot}
-            onClose={handleCloseForm}
-            onFormEdit={setIsFormEdited}
-          />
-        )}
-      </Dialog>
-    </Box>
+        <Dialog
+          open={!!selectedRobot}
+          onClose={() => handleCloseForm()}
+          maxWidth="lg"
+          fullWidth
+          fullScreen={isSmallScreen}
+          PaperProps={{
+            sx: {
+              borderRadius: isSmallScreen ? 0 : 2,
+              padding: 0,
+              overflowY: 'auto',
+              maxHeight: isSmallScreen ? '100vh' : '90vh',
+              m: isSmallScreen ? 0 : 2,
+            },
+          }}
+        >
+          {selectedRobot && (
+            <RobotContactForm
+              robot={selectedRobot}
+              onClose={handleCloseForm}
+              onFormEdit={setIsFormEdited}
+            />
+          )}
+        </Dialog>
+      </Box>
+    </>
   );
 };
 

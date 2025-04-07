@@ -458,9 +458,44 @@ const RobotContactForm = ({
     }
   };
 
+  // Schema.org structured data for the product
+  const generateStructuredData = () => {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: robot.name,
+      description: robot.description,
+      brand: {
+        '@type': 'Brand',
+        name: 'Husqvarna',
+      },
+      offers: {
+        '@type': 'Offer',
+        price: robot.price,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        priceValidUntil: dayjs().add(30, 'day').format('YYYY-MM-DD'),
+      },
+      additionalProperty: [
+        {
+          '@type': 'PropertyValue',
+          name: 'Surface maximale',
+          value: `${robot.maxSurface} m²`,
+        },
+        {
+          '@type': 'PropertyValue',
+          name: 'Pente maximale',
+          value: `${robot.maxSlope}%`,
+        },
+      ],
+    };
+  };
+
   return (
     <Box
       sx={{ display: 'flex', flexDirection: isLargeScreen ? 'row' : 'column' }}
+      itemScope
+      itemType="https://schema.org/Product"
     >
       {/* Robot Info Section */}
       <Box
@@ -494,6 +529,7 @@ const RobotContactForm = ({
           component="h2"
           gutterBottom
           sx={{ fontWeight: 600 }}
+          itemProp="name"
         >
           {robot.name}
         </Typography>
@@ -511,6 +547,7 @@ const RobotContactForm = ({
               component="img"
               image={robot.image}
               alt={robot.name}
+              itemProp="image"
               sx={{
                 width: '100%',
                 height: 240,
@@ -521,7 +558,7 @@ const RobotContactForm = ({
           </Card>
         )}
 
-        <Typography variant="body1" sx={{ mb: 2 }}>
+        <Typography variant="body1" sx={{ mb: 2 }} itemProp="description">
           {robot.description}
         </Typography>
 
@@ -572,7 +609,10 @@ const RobotContactForm = ({
                 sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
               >
                 <Typography>Prix du robot:</Typography>
-                <Typography fontWeight="bold">{robot.price} €</Typography>
+                <Typography fontWeight="bold" itemProp="price">
+                  {robot.price} €
+                </Typography>
+                <meta itemProp="priceCurrency" content="EUR" />
               </Box>
               <Box
                 sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
@@ -645,6 +685,8 @@ const RobotContactForm = ({
         onSubmit={handleSubmit}
         noValidate
         aria-labelledby="robot-form-title"
+        itemScope
+        itemType="https://schema.org/ContactPoint"
       >
         <Typography
           id="robot-form-title"
@@ -817,6 +859,14 @@ const RobotContactForm = ({
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Invisible structured data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData()),
+        }}
+      />
     </Box>
   );
 };

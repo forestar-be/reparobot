@@ -10,7 +10,12 @@ interface ClientMapWrapperProps {
   isDarkMode: boolean;
 }
 
-const ClientMapWrapper = ({ latitude, longitude, address, isDarkMode }: ClientMapWrapperProps): JSX.Element => {
+const ClientMapWrapper = ({
+  latitude,
+  longitude,
+  address,
+  isDarkMode,
+}: ClientMapWrapperProps): JSX.Element => {
   const [MapComponent, setMapComponent] = useState<any>(null);
 
   useEffect(() => {
@@ -41,6 +46,8 @@ const ClientMapWrapper = ({ latitude, longitude, address, isDarkMode }: ClientMa
       <MapComponent
         center={[latitude, longitude]}
         zoom={13}
+        markerPosition={[latitude, longitude]}
+        popupContent={address}
         aria-label={`Map location of ${address}`}
       />
     </Box>

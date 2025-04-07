@@ -2,7 +2,7 @@
   {
     "name": "Réservation de robot",
     "description": "Réservez votre robot pour une intervention ou une présentation",
-    "image": "/images/reservation-robot.webp",
+    "image": "/images/reservation_robot.webp",
     "basePrice": 50,
     "formFields": [
       {

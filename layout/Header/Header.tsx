@@ -69,11 +69,7 @@ const Header = ({ onSidebarOpen }: Props): JSX.Element => {
 
         {/* Navigation Links */}
         <nav className={styles.nav}>
-          <Link
-            href="/#home"
-            className={styles.navLink}
-            onClick={handleNavClick}
-          >
+          <Link href="/" className={styles.navLink} onClick={handleNavClick}>
             Accueil
           </Link>
           <Link
