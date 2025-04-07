@@ -101,7 +101,7 @@ const About: React.FC = () => {
     <section id="about" aria-labelledby="about-title">
       <Box
         sx={{
-          paddingTop: 5,
+          paddingTop: 2,
           paddingBottom: 5,
           paddingX: 2,
           backgroundColor: theme.palette.background.paper,
@@ -129,10 +129,10 @@ const About: React.FC = () => {
               },
             })}
           >
-            <Grid item xs={12} pb={2}>
+            <Grid item xs={12} pb={0}>
               <Typography
                 id="about-title"
-                variant="h2"
+                variant="h4"
                 component="h2"
                 align="center"
                 fontWeight={700}
@@ -140,6 +140,7 @@ const About: React.FC = () => {
                 sx={{
                   color: theme.palette.text.primary,
                   textTransform: 'uppercase',
+                  fontSize: { xs: '1.75rem', sm: '2.5rem' }, // Responsive font size
                 }}
                 itemProp="name"
               >

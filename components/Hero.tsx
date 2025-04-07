@@ -81,7 +81,7 @@ const Hero = (): JSX.Element => {
   // console.log("urlQuery.x : ", urlQuery.x)
 
   return (
-    <div id="home" ref={heroRef}>
+    <div ref={heroRef}>
       <Box
         sx={{
           backgroundImage: 'url(/images/hero.webp)',
