@@ -1,20 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
-import NoSsr from '@mui/material/NoSsr';
-import Zoom from '@mui/material/Zoom';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import Header from './Header/Header';
+import { ChevronUp } from 'lucide-react';
 import Footer from './Footer/Footer';
+import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
-import getTheme from '../theme/theme';
 
 function NavigationHandler() {
   const pathname = usePathname();
@@ -117,12 +108,35 @@ interface Props {
 }
 
 const PageLayout = ({ children }: Props): JSX.Element => {
-  const theme = useTheme();
-  const isLg = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true,
-  });
-
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLg, setIsLg] = useState(true);
+
+  // Handle responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLg(window.innerWidth >= 1024);
+      if (window.innerWidth >= 1024) {
+        setOpenSidebar(false);
+      }
+    };
+
+    // Set initial value
+    handleResize();
+
+    // Add scroll listener for scroll-to-top button
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleSidebarOpen = (): void => {
     setOpenSidebar(true);
@@ -133,11 +147,6 @@ const PageLayout = ({ children }: Props): JSX.Element => {
   };
 
   const open = isLg ? false : openSidebar;
-
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 100,
-  });
 
   const scrollTo = (id: string): void => {
     setTimeout(() => {
@@ -150,59 +159,33 @@ const PageLayout = ({ children }: Props): JSX.Element => {
   };
 
   return (
-    <AppRouterCacheProvider options={{ key: 'css', enableCssLayer: true }}>
-      <ThemeProvider theme={getTheme('light')}>
-        <Box
-          id="page-top"
-          sx={{
-            backgroundColor: theme.palette.background.default,
-            height: '100%',
-            width: '100%',
-            overflowX: 'hidden',
-            position: 'relative',
-          }}
-          onClick={handleSidebarClose}
-        >
-          <Header onSidebarOpen={handleSidebarOpen} />
-          <Sidebar onClose={handleSidebarClose} open={open} />
-          <Box width={1} margin="0 auto">
-            {children}
-          </Box>
-          <Footer />
-          <NoSsr>
-            <Zoom in={trigger}>
-              <Box
-                onClick={() => scrollTo('page-top')}
-                role="presentation"
-                sx={{ position: 'fixed', bottom: 24, right: 32 }}
-              >
-                <Fab
-                  color="primary"
-                  size="small"
-                  aria-label="scroll back to top"
-                  sx={{
-                    backgroundColor: '#43a047', // Explicitly set the background color
-                    color: '#ffffff',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      color:
-                        theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
-                      border: `2px solid ${theme.palette.mode === 'dark' ? '#43a047' : '#2e7031'}`,
-                    },
-                    transition: 'all 0.3s ease-in-out',
-                  }}
-                >
-                  <KeyboardArrowUpIcon />
-                </Fab>
-              </Box>
-            </Zoom>
-          </NoSsr>
-          {/* <Suspense fallback={<div>Loading navigation...</div>}> */}
-          <NavigationHandler />
-          {/* </Suspense> */}
-        </Box>
-      </ThemeProvider>
-    </AppRouterCacheProvider>
+    <div
+      id="page-top"
+      className="relative min-h-screen w-full overflow-x-hidden bg-white"
+      onClick={handleSidebarClose}
+    >
+      <Header />
+      <Sidebar onClose={handleSidebarClose} open={open} />
+
+      <main className="mx-auto w-full">{children}</main>
+
+      <Footer />
+
+      {/* Scroll to top button */}
+      <button
+        onClick={() => scrollTo('page-top')}
+        className={`fixed bottom-6 right-8 z-50 transform rounded-full bg-primary-500 p-3 text-white shadow-lg transition-all duration-300 hover:bg-primary-600 ${
+          showScrollTop
+            ? 'translate-y-0 scale-100 opacity-100'
+            : 'translate-y-16 scale-90 opacity-0'
+        }`}
+        aria-label="scroll back to top"
+      >
+        <ChevronUp className="h-5 w-5" />
+      </button>
+
+      <NavigationHandler />
+    </div>
   );
 };
 

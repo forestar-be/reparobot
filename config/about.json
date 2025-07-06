@@ -1,11 +1,11 @@
 [
   {
-    "value": 10,
+    "value": 12,
     "suffix": "+",
-    "description": "Années d'expériences"
+    "description": "Années d'expertise"
   },
   {
-    "value": 500,
+    "value": 850,
     "suffix": "+",
     "description": "Robots entretenus"
   },
@@ -13,5 +13,35 @@
     "value": 100,
     "suffix": "%",
     "description": "Satisfaction client"
+  },
+  {
+    "value": 14,
+    "suffix": "",
+    "description": "Modèles disponibles"
+  },
+  {
+    "value": 2400,
+    "suffix": "+",
+    "description": "Heures de maintenance"
+  },
+  {
+    "value": 48,
+    "suffix": "h",
+    "description": "Délai de réparation moyen"
+  },
+  {
+    "value": 30,
+    "suffix": "km",
+    "description": "Rayon d'intervention"
+  },
+  {
+    "value": 95,
+    "suffix": "%",
+    "description": "Pannes résolues en 1ère intervention"
+  },
+  {
+    "value": 365,
+    "suffix": "",
+    "description": "Jours de support par an"
   }
 ]

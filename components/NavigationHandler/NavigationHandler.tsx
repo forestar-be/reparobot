@@ -1,5 +1,3 @@
-// src/components/NavigationHandler/NavigationHandler.tsx
-
 'use client';
 
 import { useEffect, useRef } from 'react';
@@ -35,7 +33,9 @@ const NavigationHandler = () => {
 
     return () => {
       window.removeEventListener('hashchange', handleScroll);
-      console.log('NavigationHandler unmounted and hashchange listener removed.');
+      console.log(
+        'NavigationHandler unmounted and hashchange listener removed.',
+      );
     };
   }, [pathname, searchParams]);
 

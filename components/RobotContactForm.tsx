@@ -1,37 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Box,
-  IconButton,
-  Typography,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  CircularProgress,
-  FormControl,
-  FormHelperText,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Link,
-  useTheme,
-  useMediaQuery,
-  Grid,
-  Divider,
-  Chip,
-  Card,
-  CardMedia,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
 import { trackEvent } from '../utils/analytics';
+import React, { useEffect, useRef, useState } from 'react';
+import dayjs from 'dayjs';
+import { X } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
@@ -130,10 +102,6 @@ const RobotContactForm = ({
     robot.price + robot.installationPrice,
   );
   const [isLoading, setIsLoading] = useState(false);
-
-  const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
-  const isMobileOnly = useMediaQuery(theme.breakpoints.down('sm'));
 
   const formRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
@@ -328,546 +296,342 @@ const RobotContactForm = ({
   };
 
   const renderField = (field: any, index: number) => {
+    const inputClass = `w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+      errors[field.label] ? 'border-red-500' : 'border-gray-300'
+    }`;
+
     switch (field.type) {
       case 'text':
       case 'email':
       case 'tel':
         return (
-          <TextField
-            key={index}
-            id={`field-${index}`}
-            name={field.label}
-            label={field.label}
-            type={field.type}
-            variant="outlined"
-            fullWidth
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            helperText={errors[field.label]}
-            value={formValues[field.label] || ''} // Ensure value is never undefined
-            onChange={(e) => handleChange(field.label, e.target.value)}
-            aria-describedby={`${field.label}-error`}
-            inputProps={{
-              'aria-required': field.isRequired,
-            }}
-          />
+          <div key={index} className="flex flex-col">
+            <label className="mb-2 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <input
+              type={field.type}
+              className={inputClass}
+              required={field.isRequired}
+              value={formValues[field.label] || ''}
+              onChange={(e) => handleChange(field.label, e.target.value)}
+            />
+            {errors[field.label] && (
+              <span className="mt-1 text-sm text-red-500">
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       case 'textarea':
         return (
-          <TextField
-            key={index}
-            id={`field-${index}`}
-            name={field.label}
-            label={field.label}
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            helperText={errors[field.label]}
-            value={formValues[field.label] || ''} // Ensure value is never undefined
-            onChange={(e) => handleChange(field.label, e.target.value)}
-            aria-describedby={`${field.label}-error`}
-            inputProps={{
-              'aria-required': field.isRequired,
-            }}
-          />
+          <div key={index} className="col-span-2 flex flex-col">
+            <label className="mb-2 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <textarea
+              rows={4}
+              className={inputClass}
+              required={field.isRequired}
+              value={formValues[field.label] || ''}
+              onChange={(e) => handleChange(field.label, e.target.value)}
+            />
+            {errors[field.label] && (
+              <span className="mt-1 text-sm text-red-500">
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       case 'checkbox':
       case 'checkbox_term':
       case 'checkbox_price':
         return (
-          <FormControl
-            key={index}
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            component="fieldset"
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id={`field-${index}`}
-                  name={field.label}
-                  checked={formValues[field.label] || false}
-                  onChange={(e) => handleChange(field.label, e.target.checked)}
-                  aria-describedby={`${field.label}-error`}
-                  inputProps={{
-                    'aria-required': field.isRequired,
-                  }}
-                />
-              }
-              label={
-                field.type === 'checkbox_term' ? (
+          <div key={index} className="col-span-2 flex flex-col">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                checked={formValues[field.label] || false}
+                onChange={(e) => handleChange(field.label, e.target.checked)}
+              />
+              <label className="ml-2 text-sm text-gray-700">
+                {field.type === 'checkbox_term' ? (
                   <span>
                     {field.label}{' '}
-                    <Link
-                      component="button"
-                      variant="body2"
+                    <button
+                      type="button"
                       onClick={handleOpenTerms}
-                      aria-label="Lire les conditions générales"
+                      className="text-primary-600 underline"
                     >
                       (Lire)
-                    </Link>
+                    </button>
                   </span>
                 ) : (
-                  `${field.label}`
+                  field.label
+                )}
+              </label>
+            </div>
+            {errors[field.label] && (
+              <span className="mt-1 text-sm text-red-500">
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
+        );
+
+      case 'date':
+        return (
+          <div key={index} className="flex flex-col">
+            <label className="mb-2 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <input
+              type="date"
+              className={inputClass}
+              required={field.isRequired}
+              min={
+                field.minFuturDateRange
+                  ? dayjs()
+                      .add(field.minFuturDateRange, 'day')
+                      .format('YYYY-MM-DD')
+                  : undefined
+              }
+              value={
+                formValues[field.label]
+                  ? dayjs(formValues[field.label]).format('YYYY-MM-DD')
+                  : ''
+              }
+              onChange={(e) =>
+                handleChange(
+                  field.label,
+                  e.target.value ? dayjs(e.target.value) : null,
                 )
               }
             />
-            {!!errors[field.label] && (
-              <FormHelperText id={`${field.label}-error`}>
+            {errors[field.label] && (
+              <span className="mt-1 text-sm text-red-500">
                 {errors[field.label]}
-              </FormHelperText>
+              </span>
             )}
-          </FormControl>
+          </div>
         );
-      case 'date':
-        return (
-          <LocalizationProvider key={index} dateAdapter={AdapterDayjs}>
-            <DatePicker
-              disablePast={!!field.minFuturDateRange}
-              minDate={
-                field.minFuturDateRange
-                  ? dayjs && dayjs().add(field.minFuturDateRange, 'day')
-                  : undefined
-              }
-              label={field.label}
-              format={'DD/MM/YYYY'}
-              value={formValues[field.label] || null} // Ensure value is never undefined
-              onChange={(date) => handleChange(field.label, date)}
-              slotProps={{
-                textField: {
-                  id: `field-${index}`,
-                  name: field.label,
-                  required: field.isRequired,
-                  error: !!errors[field.label],
-                  helperText: errors[field.label],
-                  fullWidth: true,
-                  inputProps: {
-                    'aria-describedby': `${field.label}-error`,
-                    'aria-required': field.isRequired,
-                  },
-                },
-              }}
-            />
-          </LocalizationProvider>
-        );
+
       default:
         return null;
     }
   };
 
-  // Schema.org structured data for the product
-  const generateStructuredData = () => {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name: robot.name,
-      description: robot.description,
-      brand: {
-        '@type': 'Brand',
-        name: 'Husqvarna',
-      },
-      offers: {
-        '@type': 'Offer',
-        price: robot.price,
-        priceCurrency: 'EUR',
-        availability: 'https://schema.org/InStock',
-        priceValidUntil: dayjs().add(30, 'day').format('YYYY-MM-DD'),
-      },
-      additionalProperty: [
-        {
-          '@type': 'PropertyValue',
-          name: 'Surface maximale',
-          value: `${robot.maxSurface} m²`,
-        },
-        {
-          '@type': 'PropertyValue',
-          name: 'Pente maximale',
-          value: `${robot.maxSlope}%`,
-        },
-      ],
-    };
-  };
-
   return (
-    <Box
-      sx={{ display: 'flex', flexDirection: isLargeScreen ? 'row' : 'column' }}
-      itemScope
-      itemType="https://schema.org/Product"
-    >
+    <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:flex-row">
       {/* Robot Info Section */}
-      <Box
-        sx={{
-          width: isLargeScreen ? '40%' : undefined,
-          bgcolor:
-            theme.palette.mode === 'dark'
-              ? 'rgba(0,0,0,0.2)'
-              : 'rgba(67, 160, 71, 0.05)',
-          p: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }}
-      >
-        <IconButton
+      <div className="relative bg-primary-50 p-6 lg:w-2/5">
+        <button
           onClick={() => onClose()}
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            zIndex: 500,
-          }}
+          className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100"
           aria-label="Fermer le formulaire"
         >
-          <CloseIcon />
-        </IconButton>
+          <X className="h-5 w-5" />
+        </button>
 
-        <Typography
-          variant="h5"
-          component="h2"
-          gutterBottom
-          sx={{ fontWeight: 600 }}
-          itemProp="name"
-        >
-          {robot.name}
-        </Typography>
+        <h2 className="mb-4 text-2xl font-bold">{robot.name}</h2>
 
-        {isLargeScreen && (
-          <Card
-            sx={{
-              width: '100%',
-              mb: 3,
-              boxShadow: 'none',
-              bgcolor: 'transparent',
-            }}
-          >
-            <CardMedia
-              component="img"
-              image={robot.image}
-              alt={robot.name}
-              itemProp="image"
-              sx={{
-                width: '100%',
-                height: 240,
-                objectFit: 'contain',
-                mb: 2,
-              }}
-            />
-          </Card>
-        )}
-
-        <Typography variant="body1" sx={{ mb: 2 }} itemProp="description">
-          {robot.description}
-        </Typography>
-
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          <Chip
-            label={`Surface: ${robot.maxSurface} m²`}
-            size="small"
-            sx={{
-              bgcolor:
-                theme.palette.mode === 'dark'
-                  ? 'rgba(67, 160, 71, 0.2)'
-                  : 'rgba(67, 160, 71, 0.1)',
-              color: theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
-            }}
+        <div className="mb-6 hidden lg:block">
+          <img
+            src={robot.image}
+            alt={robot.name}
+            className="h-60 w-full rounded-lg object-contain"
           />
-          <Chip
-            label={`Pente: ${robot.maxSlope}%`}
-            size="small"
-            sx={{
-              bgcolor:
-                theme.palette.mode === 'dark'
-                  ? 'rgba(67, 160, 71, 0.2)'
-                  : 'rgba(67, 160, 71, 0.1)',
-              color: theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
-            }}
-          />
-          <Chip
-            label={robot.category === 'wired' ? 'Filaire' : 'Sans fil'}
-            size="small"
-            sx={{
-              bgcolor:
-                theme.palette.mode === 'dark'
-                  ? 'rgba(67, 160, 71, 0.2)'
-                  : 'rgba(67, 160, 71, 0.1)',
-              color: theme.palette.mode === 'dark' ? '#43a047' : '#2e7031',
-            }}
-          />
-        </Box>
+        </div>
 
-        {isLargeScreen && (
-          <>
-            <Divider sx={{ my: 2, mt: 2 }} />
-            <Box sx={{ mt: 'auto' }}>
-              <Typography variant="h6" gutterBottom>
-                Détails de prix:
-              </Typography>
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-              >
-                <Typography>Prix du robot:</Typography>
-                <Typography fontWeight="bold" itemProp="price">
-                  {robot.price} €
-                </Typography>
-                <meta itemProp="priceCurrency" content="EUR" />
-              </Box>
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-              >
-                <Typography>Installation:</Typography>
-                <Typography fontWeight="bold">
-                  {robot.installationPrice} €
-                </Typography>
-              </Box>
+        <p className="mb-4 text-gray-700">{robot.description}</p>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          <span className="rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-800">
+            Surface: {robot.maxSurface} m²
+          </span>
+          <span className="rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-800">
+            Pente: {robot.maxSlope}%
+          </span>
+          <span className="rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-800">
+            {robot.category === 'wired' ? 'Filaire' : 'Sans fil'}
+          </span>
+        </div>
+
+        <div className="hidden lg:block">
+          <hr className="my-4 border-gray-200" />
+          <div className="mt-auto">
+            <h3 className="mb-3 text-lg font-semibold">Détails de prix:</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Prix du robot:</span>
+                <span className="font-bold">{robot.price} €</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Installation:</span>
+                <span className="font-bold">{robot.installationPrice} €</span>
+              </div>
               {formValues['Entretien annuel (79€)'] && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    mb: 1,
-                  }}
-                >
-                  <Typography>Entretien annuel:</Typography>
-                  <Typography fontWeight="bold">79 €</Typography>
-                </Box>
+                <div className="flex justify-between">
+                  <span>Entretien annuel:</span>
+                  <span className="font-bold">79 €</span>
+                </div>
               )}
-              <Divider sx={{ my: 1 }} />
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-              >
-                <Typography fontWeight="bold">Total:</Typography>
-                <Typography fontWeight="bold" color="primary">
+              <hr className="border-gray-200" />
+              <div className="flex justify-between text-lg">
+                <span className="font-bold">Total:</span>
+                <span className="font-bold text-primary-600">
                   {totalPrice} €
-                </Typography>
-              </Box>
+                </span>
+              </div>
+            </div>
 
-              {robot.promotion && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    mt: 2,
-                    color: theme.palette.error.main,
-                    fontWeight: 600,
-                    p: 1,
-                    bgcolor:
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(211, 47, 47, 0.1)'
-                        : 'rgba(211, 47, 47, 0.05)',
-                    borderRadius: 1,
-                  }}
-                >
+            {robot.promotion && (
+              <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3">
+                <p className="font-medium text-red-800">
                   Promotion: {robot.promotion}
-                </Typography>
-              )}
-            </Box>
-          </>
-        )}
-      </Box>
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Form Section */}
-      <Box
-        ref={formRef}
-        component="form"
-        sx={{
-          width: isLargeScreen ? '60%' : undefined,
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 2,
-          p: 3,
-          backgroundColor: 'background.paper',
-          '& > *': {
-            flex: isMobileOnly ? '1 1 100%' : '1 1 calc(50% - 16px)',
-          },
-        }}
-        onSubmit={handleSubmit}
-        noValidate
-        aria-labelledby="robot-form-title"
-        itemScope
-        itemType="https://schema.org/ContactPoint"
-      >
-        <Typography
-          id="robot-form-title"
-          variant="h5"
-          sx={{
-            flex: '1 1 100%',
-            mb: 3,
-          }}
-        >
-          Formulaire de réservation
-        </Typography>
+      <div ref={formRef} className="p-6 lg:w-3/5">
+        <h2 className="mb-6 text-2xl font-bold">Formulaire de réservation</h2>
 
-        {/* Form Fields */}
-        {formFields.map(renderField)}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {formFields.map(renderField)}
+          </div>
 
-        {/* Submit Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled={isLoading}
-          aria-busy={isLoading}
-          sx={{
-            mt: 2,
-            color: 'white',
-            bgcolor: '#43a047',
-            '&:hover': {
-              bgcolor: '#2e7031',
-            },
-            '&:disabled': {
-              bgcolor: '#43a047',
-              opacity: 0.7,
-            },
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            'Réserver ce robot'
-          )}
-        </Button>
-      </Box>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+                Envoi en cours...
+              </span>
+            ) : (
+              'Réserver ce robot'
+            )}
+          </button>
+        </form>
+      </div>
 
       {/* Price Details Section for Small Screens */}
-      {!isLargeScreen && (
-        <Box
-          sx={{
-            p: 3,
-            bgcolor:
-              theme.palette.mode === 'dark'
-                ? 'rgba(0,0,0,0.2)'
-                : 'rgba(67, 160, 71, 0.05)',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Détails de prix:
-          </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography>Prix du robot:</Typography>
-            <Typography fontWeight="bold">{robot.price} €</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography>Installation:</Typography>
-            <Typography fontWeight="bold">
-              {robot.installationPrice} €
-            </Typography>
-          </Box>
+      <div className="border-t bg-primary-50 p-6 lg:hidden">
+        <h3 className="mb-3 text-lg font-semibold">Détails de prix:</h3>
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Prix du robot:</span>
+            <span className="font-bold">{robot.price} €</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Installation:</span>
+            <span className="font-bold">{robot.installationPrice} €</span>
+          </div>
           {formValues['Entretien annuel (79€)'] && (
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography>Entretien annuel:</Typography>
-              <Typography fontWeight="bold">79 €</Typography>
-            </Box>
+            <div className="flex justify-between">
+              <span>Entretien annuel:</span>
+              <span className="font-bold">79 €</span>
+            </div>
           )}
-          <Divider sx={{ my: 1 }} />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography fontWeight="bold">Total:</Typography>
-            <Typography fontWeight="bold" color="primary">
-              {totalPrice} €
-            </Typography>
-          </Box>
+          <hr className="border-gray-200" />
+          <div className="flex justify-between text-lg">
+            <span className="font-bold">Total:</span>
+            <span className="font-bold text-primary-600">{totalPrice} €</span>
+          </div>
+        </div>
 
-          {robot.promotion && (
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 2,
-                color: theme.palette.error.main,
-                fontWeight: 600,
-                p: 1,
-                bgcolor:
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(211, 47, 47, 0.1)'
-                    : 'rgba(211, 47, 47, 0.05)',
-                borderRadius: 1,
-              }}
-            >
+        {robot.promotion && (
+          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3">
+            <p className="font-medium text-red-800">
               Promotion: {robot.promotion}
-            </Typography>
-          )}
-        </Box>
-      )}
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Submission Modal */}
-      <Dialog
-        open={modalOpen}
-        onClose={handleCloseModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {modalType === 'success' ? 'Réservation envoyée' : 'Erreur'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {modalMessage}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary" autoFocus>
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="mx-4 max-w-md rounded-lg bg-white p-6">
+            <h3 className="mb-4 text-lg font-bold">
+              {modalType === 'success' ? 'Réservation envoyée' : 'Erreur'}
+            </h3>
+            <p className="mb-6 text-gray-700">{modalMessage}</p>
+            <button onClick={handleCloseModal} className="btn-primary w-full">
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Terms and Conditions Dialog */}
-      <Dialog
-        open={termsOpen}
-        onClose={handleCloseTerms}
-        aria-labelledby="terms-dialog-title"
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle id="terms-dialog-title">Conditions Générales</DialogTitle>
-        <DialogContent>
-          <Typography variant="h6" gutterBottom>
-            Conditions de vente
-          </Typography>
-          <Typography paragraph>
-            Les robots tondeuses Husqvarna sont vendus avec une garantie de 2
-            ans. L'installation est réalisée par des techniciens certifiés
-            Husqvarna. Le délai de livraison est généralement de 2 à 3 semaines
-            selon disponibilité.
-          </Typography>
+      {termsOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold">Conditions Générales</h3>
+              <button
+                onClick={handleCloseTerms}
+                className="rounded-full p-2 hover:bg-gray-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-          <Typography variant="h6" gutterBottom>
-            Conditions d'installation
-          </Typography>
-          <Typography paragraph>
-            L'installation comprend la pose du câble périphérique (pour les
-            modèles filaires), la configuration du robot, et une démonstration
-            complète du fonctionnement. Pour les modèles sans fil,
-            l'installation comprend la configuration du système EPOS, la
-            définition des zones virtuelles, et la formation à l'utilisation.
-          </Typography>
+            <div className="space-y-4">
+              <div>
+                <h4 className="mb-2 font-semibold">Conditions de vente</h4>
+                <p className="text-gray-700">
+                  Les robots tondeuses Husqvarna sont vendus avec une garantie
+                  de 2 ans. L'installation est réalisée par des techniciens
+                  certifiés Husqvarna. Le délai de livraison est généralement de
+                  2 à 3 semaines selon disponibilité.
+                </p>
+              </div>
 
-          <Typography variant="h6" gutterBottom>
-            Conditions de paiement
-          </Typography>
-          <Typography paragraph>
-            Un acompte de 30% est demandé à la commande, le solde sera à régler
-            à la livraison. Plusieurs modes de paiement sont acceptés : carte
-            bancaire, virement, ou financement.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseTerms} color="primary" autoFocus>
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
+              <div>
+                <h4 className="mb-2 font-semibold">
+                  Conditions d'installation
+                </h4>
+                <p className="text-gray-700">
+                  L'installation comprend la pose du câble périphérique (pour
+                  les modèles filaires), la configuration du robot, et une
+                  démonstration complète du fonctionnement. Pour les modèles
+                  sans fil, l'installation comprend la configuration du système
+                  EPOS, la définition des zones virtuelles, et la formation à
+                  l'utilisation.
+                </p>
+              </div>
 
-      {/* Invisible structured data for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData()),
-        }}
-      />
-    </Box>
+              <div>
+                <h4 className="mb-2 font-semibold">Conditions de paiement</h4>
+                <p className="text-gray-700">
+                  Un acompte de 30% est demandé à la commande, le solde sera à
+                  régler à la livraison. Plusieurs modes de paiement sont
+                  acceptés : carte bancaire, virement, ou financement.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button onClick={handleCloseTerms} className="btn-primary">
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

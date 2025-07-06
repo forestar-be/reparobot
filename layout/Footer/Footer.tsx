@@ -1,11 +1,5 @@
-import { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
-
 import footerData from '../../config/footer.json';
-import { Paper } from '@mui/material';
+import { useState } from 'react';
 
 interface FooterProps {
   copyright: string;
@@ -13,33 +7,30 @@ interface FooterProps {
 }
 
 const Footer = (): JSX.Element => {
-  const theme = useTheme();
-
   const [footer] = useState<FooterProps>(footerData);
 
   return (
-    <Grid container spacing={2} component={Paper}>
-      <Grid item xs={12}>
-        <Box sx={{ marginBottom: '20px', textAlign: 'center' }}>
-          <Typography
-            align="center"
-            color={theme.palette.text.secondary}
-            gutterBottom
-            sx={{ marginTop: '25px', fontSize: '0.95em' }}
-          >
+    <footer className="bg-gray-800 py-8 text-white">
+      <div className="container-custom">
+        <div className="space-y-3 text-center">
+          <p className="text-sm text-gray-300">
             Copyright &copy; {new Date().getFullYear()} {footer.copyright}.
-          </Typography>
-          <Typography
-            align="center"
-            color={theme.palette.text.secondary}
-            gutterBottom
-            sx={{ fontSize: '0.95em' }}
-          >
-            TVA {footer.TVA}
-          </Typography>
-        </Box>
-      </Grid>
-    </Grid>
+          </p>
+          <p className="text-sm text-gray-300">TVA {footer.TVA}</p>
+          <p className="text-xs text-gray-400">
+            Services professionnels fournis par{' '}
+            <a
+              href="https://forestar.be"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-400 transition-colors hover:text-primary-300"
+            >
+              Forestar.be
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 

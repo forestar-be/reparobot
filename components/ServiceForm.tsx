@@ -1,42 +1,19 @@
 // src/components/ServiceForm.tsx
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Box,
-  IconButton,
-  Typography,
-  TextField,
-  MenuItem,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  CircularProgress,
-  FormControl,
-  FormHelperText,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Link,
-  useTheme,
-  useMediaQuery,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { ServicesProps } from './Services';
+
 import conditions from '../config/conditions.json';
-import { trackEvent } from '../utils/analytics'; // Import the tracking utility
+import { trackEvent } from '../utils/analytics';
+import React, { useEffect, useRef, useState } from 'react';
+import dayjs from 'dayjs';
+import { X } from 'lucide-react';
+import { ServicesProps } from './Services';
 
-const API_URL = process.env.API_URL;
-const AUTH_TOKEN = process.env.AUTH_TOKEN;
+// src/components/ServiceForm.tsx
 
-if (!API_URL || !AUTH_TOKEN) {
-  throw new Error('API_URL and AUTH_TOKEN must be defined');
-}
+// src/components/ServiceForm.tsx
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 
 const ServiceForm = ({
   service,
@@ -55,13 +32,21 @@ const ServiceForm = ({
   const [termsOpen, setTermsOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(service.basePrice);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
-  const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [hasTrackedView, setHasTrackedView] = useState(false);
 
-  const formRef = useRef<HTMLDivElement | null>(null); // Reference to the form container
-  const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
+  // Handle screen size changes
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 768); // md breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Initialize form values with default states
   useEffect(() => {
@@ -248,305 +233,305 @@ const ServiceForm = ({
   };
 
   const renderField = (field: any, index: number) => {
+    const inputClass = `w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+      errors[field.label] ? 'border-red-500' : ''
+    }`;
+
     switch (field.type) {
       case 'text':
       case 'email':
       case 'tel':
         return (
-          <TextField
-            key={index}
-            id={`field-${index}`}
-            name={field.label}
-            label={field.label}
-            type={field.type}
-            variant="outlined"
-            fullWidth
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            helperText={errors[field.label]}
-            value={formValues[field.label] || ''} // Ensure value is never undefined
-            onChange={(e) => handleChange(field.label, e.target.value)}
-            aria-describedby={`${field.label}-error`}
-            inputProps={{
-              'aria-required': field.isRequired,
-            }}
-          />
+          <div key={index} className="flex flex-col">
+            <label className="mb-1 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <input
+              type={field.type}
+              className={inputClass}
+              required={field.isRequired}
+              value={formValues[field.label] || ''}
+              onChange={(e) => handleChange(field.label, e.target.value)}
+              aria-describedby={`${field.label}-error`}
+              aria-required={field.isRequired}
+            />
+            {errors[field.label] && (
+              <span
+                className="mt-1 text-sm text-red-500"
+                id={`${field.label}-error`}
+              >
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       case 'textarea':
         return (
-          <TextField
-            key={index}
-            id={`field-${index}`}
-            name={field.label}
-            label={field.label}
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            helperText={errors[field.label]}
-            value={formValues[field.label] || ''} // Ensure value is never undefined
-            onChange={(e) => handleChange(field.label, e.target.value)}
-            aria-describedby={`${field.label}-error`}
-            inputProps={{
-              'aria-required': field.isRequired,
-            }}
-          />
+          <div key={index} className="col-span-2 flex flex-col">
+            <label className="mb-1 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <textarea
+              rows={4}
+              className={inputClass}
+              required={field.isRequired}
+              value={formValues[field.label] || ''}
+              onChange={(e) => handleChange(field.label, e.target.value)}
+              aria-describedby={`${field.label}-error`}
+              aria-required={field.isRequired}
+            />
+            {errors[field.label] && (
+              <span
+                className="mt-1 text-sm text-red-500"
+                id={`${field.label}-error`}
+              >
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       case 'select':
         return (
-          <TextField
-            key={index}
-            id={`field-${index}`}
-            name={field.label}
-            label={field.label}
-            select
-            variant="outlined"
-            fullWidth
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            helperText={errors[field.label]}
-            value={formValues[field.label] || ''} // Added value prop
-            onChange={(e) => handleChange(field.label, e.target.value)}
-            aria-describedby={`${field.label}-error`}
-            inputProps={{
-              'aria-required': field.isRequired,
-            }}
-          >
-            {field.options?.map((option: string, i: number) => (
-              <MenuItem key={i} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
+          <div key={index} className="flex flex-col">
+            <label className="mb-1 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <select
+              className={inputClass}
+              required={field.isRequired}
+              value={formValues[field.label] || ''}
+              onChange={(e) => handleChange(field.label, e.target.value)}
+              aria-describedby={`${field.label}-error`}
+              aria-required={field.isRequired}
+            >
+              <option value="">Sélectionner...</option>
+              {field.options?.map((option: string, i: number) => (
+                <option key={i} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            {errors[field.label] && (
+              <span
+                className="mt-1 text-sm text-red-500"
+                id={`${field.label}-error`}
+              >
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       case 'checkbox':
       case 'checkbox_term':
       case 'checkbox_price':
         return (
-          <FormControl
-            key={index}
-            required={field.isRequired}
-            error={!!errors[field.label]}
-            component="fieldset"
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id={`field-${index}`}
-                  name={field.label}
-                  checked={formValues[field.label] || false}
-                  onChange={(e) => handleChange(field.label, e.target.checked)}
-                  aria-describedby={`${field.label}-error`}
-                  inputProps={{
-                    'aria-required': field.isRequired,
-                  }}
-                />
-              }
-              label={
-                field.type === 'checkbox_term' ? (
+          <div key={index} className="col-span-2 flex flex-col">
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                checked={formValues[field.label] || false}
+                onChange={(e) => handleChange(field.label, e.target.checked)}
+                aria-describedby={`${field.label}-error`}
+                aria-required={field.isRequired}
+              />
+              <label className="ml-2 text-sm text-gray-700">
+                {field.type === 'checkbox_term' ? (
                   <span>
                     {field.label}{' '}
-                    <Link
-                      component="button"
-                      variant="body2"
+                    <button
+                      type="button"
                       onClick={handleOpenTerms}
+                      className="text-primary-600 underline"
                       aria-label="Lire les conditions générales"
                     >
                       (Lire)
-                    </Link>
+                    </button>
                   </span>
                 ) : (
                   `${field.label} ${
                     field.type === 'checkbox_price' ? `+${field.price} €` : ''
                   }`
-                )
-              }
-            />
-            {!!errors[field.label] && (
-              <FormHelperText id={`${field.label}-error`}>
+                )}
+              </label>
+            </div>
+            {errors[field.label] && (
+              <span
+                className="mt-1 text-sm text-red-500"
+                id={`${field.label}-error`}
+              >
                 {errors[field.label]}
-              </FormHelperText>
+              </span>
             )}
-          </FormControl>
+          </div>
         );
+
       case 'date':
         return (
-          <LocalizationProvider key={index} dateAdapter={AdapterDayjs}>
-            <DatePicker
-              disablePast={!!field.minFuturDateRange}
-              minDate={
+          <div key={index} className="flex flex-col">
+            <label className="mb-1 text-sm font-medium text-gray-700">
+              {field.label} {field.isRequired && '*'}
+            </label>
+            <input
+              type="date"
+              className={inputClass}
+              required={field.isRequired}
+              min={
                 field.minFuturDateRange
-                  ? dayjs && dayjs().add(field.minFuturDateRange, 'day')
+                  ? dayjs()
+                      .add(field.minFuturDateRange, 'day')
+                      .format('YYYY-MM-DD')
                   : undefined
               }
-              label={field.label}
-              format={'DD/MM/YYYY'}
-              value={formValues[field.label] || null} // Ensure value is never undefined
-              onChange={(date) => handleChange(field.label, date)}
-              slotProps={{
-                textField: {
-                  id: `field-${index}`,
-                  name: field.label,
-                  required: field.isRequired,
-                  error: !!errors[field.label],
-                  helperText: errors[field.label],
-                  fullWidth: true,
-                  inputProps: {
-                    'aria-describedby': `${field.label}-error`,
-                    'aria-required': field.isRequired,
-                  },
-                },
-              }}
+              value={
+                formValues[field.label]
+                  ? dayjs(formValues[field.label]).format('YYYY-MM-DD')
+                  : ''
+              }
+              onChange={(e) =>
+                handleChange(
+                  field.label,
+                  e.target.value ? dayjs(e.target.value) : null,
+                )
+              }
+              aria-describedby={`${field.label}-error`}
+              aria-required={field.isRequired}
             />
-          </LocalizationProvider>
+            {errors[field.label] && (
+              <span
+                className="mt-1 text-sm text-red-500"
+                id={`${field.label}-error`}
+              >
+                {errors[field.label]}
+              </span>
+            )}
+          </div>
         );
+
       default:
         return null;
     }
   };
 
   return (
-    <>
+    <div className="relative">
       {/* Form Header */}
-      <IconButton
+      <button
         onClick={() => onClose()}
-        sx={{
-          position: 'absolute',
-          top: 23,
-          right: 11,
-          zIndex: 500,
-        }}
+        className="absolute right-3 top-6 z-50 rounded-full p-2 hover:bg-gray-100"
         aria-label="Fermer le formulaire"
       >
-        <CloseIcon />
-      </IconButton>
-      <Box
-        ref={formRef} // Attach ref here for visibility tracking
-        component="form"
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 2,
-          // marginTop: 4,
-          padding: 2,
-          backgroundColor: 'background.paper',
-          borderRadius: '32px 0 0px 32px',
-          position: 'relative',
-          '& > *': {
-            flex: isLargeScreen ? '1 1 calc(50% - 16px)' : '1 1 100%',
-          },
-        }}
+        <X className="h-5 w-5" />
+      </button>
+
+      <form
+        ref={formRef}
+        className="relative rounded-bl-[32px] rounded-tl-[32px] bg-white p-6"
         onSubmit={handleSubmit}
         noValidate
         aria-labelledby="service-form-title"
         itemScope
         itemType="https://schema.org/ContactPage"
       >
-        <Typography
+        <h2
           id="service-form-title"
-          variant="h6" // Maintained existing style with h6
-          sx={{
-            flex: '1 1 100%',
-            marginBottom: 2,
-          }}
+          className="mb-6 text-xl font-semibold text-gray-900"
         >
           Formulaire du service: {service.name}
-        </Typography>
+        </h2>
 
         {/* Form Fields */}
-        {service.formFields.map(renderField)}
+        <div
+          className={`grid gap-4 ${isLargeScreen ? 'grid-cols-2' : 'grid-cols-1'}`}
+        >
+          {service.formFields.map(renderField)}
+        </div>
 
         {/* Total Price */}
         {totalPrice !== undefined && (
-          <Typography
-            variant="h6"
-            sx={{
-              flex: '1 1 100%',
-              marginTop: 2,
-            }}
-            itemProp="price"
-          >
-            Prix total: {totalPrice} €
-          </Typography>
+          <div className="mt-6">
+            <p className="text-xl font-semibold text-gray-900" itemProp="price">
+              Prix total: {totalPrice} €
+            </p>
+          </div>
         )}
 
         {/* Submit Button */}
-        <Button
-          variant="contained"
-          color="primary"
+        <button
           type="submit"
           disabled={isLoading}
           aria-busy={isLoading}
-          sx={{
-            color: 'white',
-            bgcolor: '#43a047',
-            '&:hover': {
-              bgcolor: '#2e7031',
-            },
-            '&:disabled': {
-              bgcolor: '#43a047',
-              opacity: 0.7,
-            },
-          }}
+          className="mt-6 rounded-lg bg-primary-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-primary-700 disabled:bg-primary-600 disabled:opacity-70"
         >
           {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
+            <span className="flex items-center">
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+              Envoi...
+            </span>
           ) : (
             'Envoyer'
           )}
-        </Button>
+        </button>
 
         {/* Submission Modal */}
-        <Dialog
-          open={modalOpen}
-          onClose={handleCloseModal}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Envoi du formulaire</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {modalMessage}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseModal} color="primary" autoFocus>
-              Fermer
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="mx-4 max-w-md rounded-lg bg-white p-6">
+              <h3 className="mb-4 text-lg font-bold">Envoi du formulaire</h3>
+              <p className="mb-6 text-gray-700">{modalMessage}</p>
+              <button
+                onClick={handleCloseModal}
+                className="btn-primary w-full"
+                autoFocus
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Terms and Conditions Dialog */}
-        <Dialog
-          fullScreen={fullScreen}
-          open={termsOpen}
-          onClose={handleCloseTerms}
-          aria-labelledby="terms-dialog-title"
-          aria-describedby="terms-dialog-description"
-        >
-          <DialogTitle id="terms-dialog-title">
-            Conditions Générales
-          </DialogTitle>
-          <DialogContent>
-            {Object.values(conditions.terms_and_conditions).map(
-              (section, index) => (
-                <Box key={index} mb={2}>
-                  <Typography variant="h6">{section.title}</Typography>
-                  <DialogContentText>{section.content}</DialogContentText>
-                </Box>
-              ),
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseTerms} color="primary" autoFocus>
-              Fermer
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-    </>
+        {termsOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-xl font-bold">Conditions Générales</h3>
+                <button
+                  onClick={handleCloseTerms}
+                  className="rounded-full p-2 hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {Object.values(conditions.terms_and_conditions).map(
+                  (section, index) => (
+                    <div key={index} className="mb-4">
+                      <h4 className="mb-2 font-semibold">{section.title}</h4>
+                      <p className="text-gray-700">{section.content}</p>
+                    </div>
+                  ),
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleCloseTerms}
+                  className="btn-primary"
+                  autoFocus
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 

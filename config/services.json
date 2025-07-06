@@ -1,5 +1,15 @@
 [
   {
+    "id": "devis_immediat_achat",
+    "name": "Devis Immédiat d'Achat",
+    "description": "Obtenez un devis personnalisé signable immédiatement par email pour l'achat de votre robot tondeuse avec installation facultative",
+    "image": "/images/hero.webp",
+    "isExternalLink": true,
+    "externalUrl": "/devis",
+    "formFields": []
+  },
+  {
+    "id": "reservation_robot",
     "name": "Réservation de robot",
     "description": "Réservez votre robot pour une intervention ou une présentation",
     "image": "/images/reservation_robot.webp",
@@ -11,7 +21,11 @@
         "options": ["Husqvarna", "Gardena"],
         "isRequired": true
       },
-      { "label": "Modèle", "type": "text", "isRequired": true },
+      {
+        "label": "Modèle",
+        "type": "text",
+        "isRequired": true
+      },
       {
         "label": "Date souhaitée pour la réservation",
         "type": "date",
@@ -34,13 +48,41 @@
         "type": "textarea",
         "isRequired": false
       },
-      { "label": "Code du robot", "type": "text", "isRequired": true },
-      { "label": "Nom de famille", "type": "text", "isRequired": true },
-      { "label": "Prénom", "type": "text", "isRequired": true },
-      { "label": "Adresse", "type": "text", "isRequired": true },
-      { "label": "Adresse e-mail", "type": "email", "isRequired": true },
-      { "label": "Numéro de téléphone", "type": "tel", "isRequired": true },
-      { "label": "Remarques", "type": "textarea", "isRequired": false },
+      {
+        "label": "Code du robot",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Nom de famille",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Prénom",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse e-mail",
+        "type": "email",
+        "isRequired": true
+      },
+      {
+        "label": "Numéro de téléphone",
+        "type": "tel",
+        "isRequired": true
+      },
+      {
+        "label": "Remarques",
+        "type": "textarea",
+        "isRequired": false
+      },
       {
         "label": "Accepter les conditions générales",
         "type": "checkbox_term",
@@ -49,6 +91,7 @@
     ]
   },
   {
+    "id": "entretien_robot",
     "name": "Entretien de robot",
     "description": "Entretien de votre robot Husqvarna ou Gardena",
     "image": "/images/entretien-robot.webp",
@@ -60,7 +103,11 @@
         "options": ["Husqvarna", "Gardena"],
         "isRequired": true
       },
-      { "label": "Modèle", "type": "text", "isRequired": true },
+      {
+        "label": "Modèle",
+        "type": "text",
+        "isRequired": true
+      },
       {
         "label": "Enlèvement dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 40,
@@ -109,13 +156,41 @@
         "isRequired": true,
         "minFuturDateRange": 1
       },
-      { "label": "Code du robot", "type": "text", "isRequired": true },
-      { "label": "Nom de famille", "type": "text", "isRequired": true },
-      { "label": "Prénom", "type": "text", "isRequired": true },
-      { "label": "Adresse", "type": "text", "isRequired": true },
-      { "label": "Adresse e-mail", "type": "email", "isRequired": true },
-      { "label": "Numéro de téléphone", "type": "tel", "isRequired": true },
-      { "label": "Remarques", "type": "textarea", "isRequired": false },
+      {
+        "label": "Code du robot",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Nom de famille",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Prénom",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse e-mail",
+        "type": "email",
+        "isRequired": true
+      },
+      {
+        "label": "Numéro de téléphone",
+        "type": "tel",
+        "isRequired": true
+      },
+      {
+        "label": "Remarques",
+        "type": "textarea",
+        "isRequired": false
+      },
       {
         "label": "Accepter les conditions générales",
         "type": "checkbox_term",
@@ -124,6 +199,7 @@
     ]
   },
   {
+    "id": "reparation_robot",
     "name": "Réparation de robot",
     "description": "Réparation de votre robot Husqvarna ou Gardena",
     "image": "/images/reparation-robot.webp",
@@ -134,8 +210,16 @@
         "options": ["Husqvarna", "Gardena"],
         "isRequired": true
       },
-      { "label": "Modèle", "type": "text", "isRequired": true },
-      { "label": "Problème à décrire", "type": "textarea", "isRequired": true },
+      {
+        "label": "Modèle",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Problème à décrire",
+        "type": "textarea",
+        "isRequired": true
+      },
       {
         "label": "Enlèvement et redémarrage à domicile dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 80,
@@ -148,12 +232,36 @@
         "isRequired": true,
         "minFuturDateRange": 1
       },
-      { "label": "Code du robot", "type": "text", "isRequired": true },
-      { "label": "Nom de famille", "type": "text", "isRequired": true },
-      { "label": "Prénom", "type": "text", "isRequired": true },
-      { "label": "Adresse", "type": "text", "isRequired": true },
-      { "label": "Adresse e-mail", "type": "email", "isRequired": true },
-      { "label": "Numéro de téléphone", "type": "tel", "isRequired": true },
+      {
+        "label": "Code du robot",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Nom de famille",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Prénom",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse e-mail",
+        "type": "email",
+        "isRequired": true
+      },
+      {
+        "label": "Numéro de téléphone",
+        "type": "tel",
+        "isRequired": true
+      },
       {
         "label": "Accepter les conditions générales",
         "type": "checkbox_term",
@@ -162,6 +270,7 @@
     ]
   },
   {
+    "id": "installation_robot",
     "name": "Problème d'installation",
     "description": "Installation de votre robot Husqvarna ou Gardena",
     "image": "/images/installation-robot.webp",
@@ -172,8 +281,16 @@
         "options": ["Husqvarna", "Gardena"],
         "isRequired": true
       },
-      { "label": "Modèle", "type": "text", "isRequired": true },
-      { "label": "Problème à décrire", "type": "textarea", "isRequired": true },
+      {
+        "label": "Modèle",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Problème à décrire",
+        "type": "textarea",
+        "isRequired": true
+      },
       {
         "label": "Déplacement dans un rayon de 30 km de Braine-le-Comte (hors Bruxelles)",
         "price": 60,
@@ -186,12 +303,36 @@
         "isRequired": true,
         "minFuturDateRange": 1
       },
-      { "label": "Code du robot", "type": "text", "isRequired": true },
-      { "label": "Nom de famille", "type": "text", "isRequired": true },
-      { "label": "Prénom", "type": "text", "isRequired": true },
-      { "label": "Adresse", "type": "text", "isRequired": true },
-      { "label": "Adresse e-mail", "type": "email", "isRequired": true },
-      { "label": "Numéro de téléphone", "type": "tel", "isRequired": true },
+      {
+        "label": "Code du robot",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Nom de famille",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Prénom",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse",
+        "type": "text",
+        "isRequired": true
+      },
+      {
+        "label": "Adresse e-mail",
+        "type": "email",
+        "isRequired": true
+      },
+      {
+        "label": "Numéro de téléphone",
+        "type": "tel",
+        "isRequired": true
+      },
       {
         "label": "Accepter les conditions générales",
         "type": "checkbox_term",

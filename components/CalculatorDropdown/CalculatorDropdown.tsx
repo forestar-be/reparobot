@@ -3,10 +3,10 @@ import Link from 'next/link';
 import styles from './CalculatorDropdown.module.css';
 
 interface Props {
-  onClose?: () => void; 
+  onClose?: () => void;
 }
 
-const CalculatorDropdown = ({onClose}: Props): JSX.Element => {
+const CalculatorDropdown = ({ onClose }: Props): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -20,19 +20,31 @@ const CalculatorDropdown = ({onClose}: Props): JSX.Element => {
   return (
     <div className={styles.dropdown}>
       {/* Dropdown Button */}
-      <button className={styles.button} onClick={toggleMenu} aria-expanded={isOpen}>
+      <button
+        className={styles.button}
+        onClick={toggleMenu}
+        aria-expanded={isOpen}
+      >
         Calculateurs ▼
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <div className={styles.menu}>
-          <Link onClick={onClose} href="/calculateur-cout-entretien-robot-tondeuse" passHref>
+          <Link
+            onClick={onClose}
+            href="/calculateur-cout-entretien-robot-tondeuse"
+            passHref
+          >
             <span className={styles.menuItem} onClick={closeMenu}>
               Estimation coûts d'entretien
             </span>
           </Link>
-          <Link onClick={onClose} href="/calculateur-retour-sur-investissement-robot-tondeuse" passHref>
+          <Link
+            onClick={onClose}
+            href="/calculateur-retour-sur-investissement-robot-tondeuse"
+            passHref
+          >
             <span className={styles.menuItem} onClick={closeMenu}>
               Calculateur d'économies
             </span>

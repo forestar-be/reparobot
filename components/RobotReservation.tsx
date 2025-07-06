@@ -1,13 +1,12 @@
 import React from 'react';
-import { Box, Button, Typography, Container } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import Head from 'next/head';
+import { useRouter } from 'next/navigation';
 
 const RobotReservation = (): JSX.Element => {
   const router = useRouter();
 
   const handleReservation = () => {
-    router.push('/robots');
+    router.push('/devis/demande');
   };
 
   const schemaData = {
@@ -59,42 +58,26 @@ const RobotReservation = (): JSX.Element => {
         <link rel="canonical" href="https://reparobot.be/" />
         <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
       </Head>
-      <Box
-        sx={{
-          py: 4,
-          backgroundColor: 'background.paper',
-          borderRadius: 4,
-          textAlign: 'center',
-          boxShadow: 3,
-        }}
-      >
-        <Container maxWidth="md">
-          <Typography variant="h4" component="h2" gutterBottom>
+
+      <div className="rounded-2xl bg-white py-8 text-center shadow-lg">
+        <div className="mx-auto max-w-2xl px-4">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900">
             Réservez votre robot tondeuse Husqvarna
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          </h2>
+          <p className="mb-8 leading-relaxed text-gray-600">
             Découvrez notre gamme complète de robots tondeuses Husqvarna.
-            Choisissez parmi 14 modèles différents, filaires ou sans fil, pour
-            trouver celui qui correspond parfaitement à vos besoins.
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
+            Demandez votre devis personnalisé pour trouver celui qui correspond
+            parfaitement à vos besoins avec installation professionnelle
+            incluse.
+          </p>
+          <button
             onClick={handleReservation}
-            sx={{
-              bgcolor: '#43a047',
-              '&:hover': {
-                bgcolor: '#2e7031',
-              },
-              px: 4,
-              py: 1.5,
-              borderRadius: 2,
-            }}
+            className="rounded-lg bg-primary-600 px-8 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700"
           >
-            Découvrir les robots
-          </Button>
-        </Container>
-      </Box>
+            Demander un devis
+          </button>
+        </div>
+      </div>
     </>
   );
 };
