@@ -1,22 +1,19 @@
-# robots.txt for Robot Lawnmower Maintenance Service
+# robots.txt optimisé pour reparobot.be
+# Spécialiste Robot Tondeuse Husqvarna & Gardena en Belgique
 
 # Allow all crawlers by default
 User-agent: *
 Allow: /
+Allow: /robots
+Allow: /devis
 
 # Allow access to static assets
 Allow: /images/
 Allow: /fonts/
 Allow: /icons/
-
-# Main content pages
-Allow: /services
-Allow: /produits
-Allow: /pieces-detachees
-Allow: /contact
-Allow: /a-propos
-Allow: /blog
-Allow: /faq
+Allow: /favicon.ico
+Allow: /*.css
+Allow: /*.js
 
 # Block access to API routes
 Disallow: /api/
@@ -39,6 +36,11 @@ Disallow: /preview/
 Disallow: /outils-internes/
 Disallow: /debug/
 
+# Block devis process pages (not for indexing)
+Disallow: /devis/demande
+Disallow: /devis/confirmation
+Disallow: /devis/*/
+
 # Block specific file types
 Disallow: /*.json$
 Disallow: /*.xml$
@@ -48,25 +50,35 @@ Disallow: /*.txt$
 Sitemap: https://reparobot.be/sitemap.xml
 
 # Crawl-delay directive for rate limiting
-Crawl-delay: 10
+Crawl-delay: 5
 
 # Additional rules for specific bots
 
 # Googlebot-specific rules
 User-agent: Googlebot
 Allow: /
+Allow: /robots
+Allow: /devis
+Allow: /images/
 Disallow: /api/
 Disallow: /admin/
+Disallow: /devis/demande
+Disallow: /devis/confirmation
 
 # Bingbot-specific rules
 User-agent: Bingbot
 Allow: /
+Allow: /robots
+Allow: /devis
+Allow: /images/
 Disallow: /api/
 Disallow: /admin/
 
 # Rules for Google Mobile
 User-agent: Googlebot-Mobile
 Allow: /
+Allow: /robots
+Allow: /devis
 Disallow: /desktop-only/
 
 # Rules for Google Image

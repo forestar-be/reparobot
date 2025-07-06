@@ -1,11 +1,12 @@
 // components/tool/Calculator/CalculatorClientWrapper.tsx
 'use client';
 
-import { useTheme } from '@mui/material/styles';
 import Calculator from './Calculator';
 
-export default function CalculatorClientWrapper() {
-  const theme = useTheme();
+// components/tool/Calculator/CalculatorClientWrapper.tsx
 
-  return <Calculator theme={theme} />;
+// components/tool/Calculator/CalculatorClientWrapper.tsx
+
+export default function CalculatorClientWrapper() {
+  return <Calculator />;
 }

@@ -1,10 +1,9 @@
 // src/components/CustomButton.tsx
-
-import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
-import Link from 'next/link'; // Import Next.js Link for client-side navigation
-import { trackEvent } from '../utils/analytics'; // Import the tracking utility
+// Import Next.js Link for client-side navigation
+import { trackEvent } from '../utils/analytics';
+// Import the tracking utility
 import React from 'react';
+import Link from 'next/link';
 
 interface Props {
   href: string;
@@ -29,8 +28,6 @@ const CustomButton = ({
   eventLabel, // Optional: If not provided, default to button text
   eventValue,
 }: Props): JSX.Element => {
-  const theme = useTheme();
-
   // Determine if the link is external
   const isExternal = external || href.startsWith('http');
 
@@ -42,81 +39,40 @@ const CustomButton = ({
     trackEvent(eventAction, eventCategory, finalEventLabel, eventValue);
   };
 
-  // If the link is external, render an <a> tag inside the button
+  // Common button classes
+  const buttonClasses = `
+    text-gray-700 hover:text-primary-600 active:text-primary-700 
+    uppercase mx-3 ml-4 px-3 py-2 rounded-md transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+  `;
+
+  // If the link is external, render an <a> tag
   if (isExternal) {
     return (
-      <Button
-        component="a"
-        color="primary"
+      <a
         href={href}
-        variant="text"
         target="_blank"
         rel="noopener noreferrer"
         aria-label={ariaLabel || text}
         title={title || text}
-        onClick={handleClick} // Add onClick handler for tracking
-        sx={{
-          color: theme.palette.text.primary,
-          textTransform: 'uppercase',
-          marginX: 1.5,
-          marginLeft: '15px',
-          '&:active': {
-            color:
-              theme.palette.mode === 'dark'
-                ? theme.palette.primary.main
-                : theme.palette.success.dark,
-          },
-          '&:hover': {
-            color:
-              theme.palette.mode === 'dark'
-                ? theme.palette.primary.main
-                : theme.palette.success.dark,
-          },
-          '&:focus': {
-            outline: `2px solid ${theme.palette.primary.main}`,
-            outlineOffset: '2px',
-          },
-        }}
+        onClick={handleClick}
+        className={buttonClasses}
       >
         {text}
-      </Button>
+      </a>
     );
   }
 
-  // For internal links, use Next.js' Link with a styled button
+  // For internal links, use Next.js' Link
   return (
-    <Link href={href} passHref>
-      <Button
-        color="primary"
-        variant="text"
-        aria-label={ariaLabel || text}
-        title={title || text}
-        onClick={handleClick} // Add onClick handler for tracking
-        sx={{
-          color: theme.palette.text.primary,
-          textTransform: 'uppercase',
-          marginX: 1.5,
-          marginLeft: '15px',
-          '&:active': {
-            color:
-              theme.palette.mode === 'dark'
-                ? theme.palette.primary.main
-                : theme.palette.success.dark,
-          },
-          '&:hover': {
-            color:
-              theme.palette.mode === 'dark'
-                ? theme.palette.primary.main
-                : theme.palette.success.dark,
-          },
-          '&:focus': {
-            outline: `2px solid ${theme.palette.primary.main}`,
-            outlineOffset: '2px',
-          },
-        }}
-      >
-        {text}
-      </Button>
+    <Link
+      href={href}
+      aria-label={ariaLabel || text}
+      title={title || text}
+      onClick={handleClick}
+      className={buttonClasses}
+    >
+      {text}
     </Link>
   );
 };

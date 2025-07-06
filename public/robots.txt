@@ -1,9 +1,26 @@
 # *
 User-agent: *
 Allow: /
+Allow: /robots
+Allow: /devis
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /devis/demande
+Disallow: /devis/confirmation
+Disallow: /devis/
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+Allow: /robots
+Allow: /devis
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /devis/demande
+Disallow: /devis/confirmation
+Disallow: /devis/
 
 # Host
 Host: https://reparobot.be
-
-# Sitemaps
-Sitemap: https://reparobot.be/sitemap.xml

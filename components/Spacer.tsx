@@ -1,35 +1,47 @@
 import React from 'react';
-import Box, { BoxProps } from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
 
-interface SpacerProps extends BoxProps {
-  size?: number | string;
+interface SpacerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | number;
+  className?: string;
   role?: string;
   'aria-hidden'?: boolean;
 }
 
 const Spacer: React.FC<SpacerProps> = ({
-  sx = [],
-  size,
+  size = 'md',
+  className = '',
   role = 'separator',
   'aria-hidden': ariaHidden = true,
   ...props
 }) => {
-  const theme = useTheme();
+  const getSizeClass = () => {
+    if (typeof size === 'number') {
+      return { height: `${size}px` };
+    }
+
+    switch (size) {
+      case 'sm':
+        return 'h-4';
+      case 'md':
+        return 'h-8';
+      case 'lg':
+        return 'h-16';
+      case 'xl':
+        return 'h-24';
+      default:
+        return 'h-8';
+    }
+  };
+
+  const sizeStyle = typeof size === 'number' ? getSizeClass() : {};
+  const sizeClass = typeof size === 'string' ? getSizeClass() : '';
 
   return (
-    <Box
-      component="div"
+    <div
       role={role}
       aria-hidden={ariaHidden}
-      sx={[
-        {
-          backgroundColor: theme.palette.background.default,
-          height: size || 'auto',
-          width: size || '100%',
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      className={`w-full ${sizeClass} ${className}`}
+      style={sizeStyle}
       {...props}
     />
   );

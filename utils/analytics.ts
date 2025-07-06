@@ -7,7 +7,7 @@ declare global {
       action: string,
       params: {
         [key: string]: any;
-      }
+      },
     ) => void;
   }
 }
@@ -16,7 +16,7 @@ export const trackEvent = (
   action: string,
   category: string,
   label: string,
-  value?: number
+  value?: number,
 ) => {
   if (window.gtag) {
     window.gtag('event', action, {
@@ -27,7 +27,7 @@ export const trackEvent = (
       value: value,
       // You can add custom parameters as needed
       interaction_type: category,
-      item_label: label
+      item_label: label,
     });
   }
 };

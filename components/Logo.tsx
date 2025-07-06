@@ -1,23 +1,20 @@
-import { Box } from '@mui/material';
+import Image from 'next/image';
 
 export const Logo = ({ isDark }: { isDark: boolean }): JSX.Element => {
   const logoSrc = isDark
     ? '/images/logo/logo-dark-70x70.png'
     : '/images/logo/logo-70x70.png';
   const logoAlt =
-    'Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena';
+    'Forestar.be - Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena';
 
   return (
-    <Box
-      component="img"
+    <Image
       src={logoSrc}
       alt={logoAlt}
-      sx={{
-        height: 40,
-        width: 40,
-        objectFit: 'contain',
-      }}
-      loading="eager"
+      width={40}
+      height={40}
+      className="object-contain"
+      priority
     />
   );
 };

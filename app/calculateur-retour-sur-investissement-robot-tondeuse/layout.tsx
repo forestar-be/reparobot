@@ -1,9 +1,12 @@
+;
 // app/calculateur-economie-robot-tondeuse/layout.tsx
-import { Metadata } from "next";
+import { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
   title: 'Calculateur Retour sur Investissement Robot Tondeuse | Reparobot',
-  description: 'Calculez vos économies en comparant les coûts d\'entretien traditionnel de pelouse avec un robot tondeuse. Estimez votre ROI sur plusieurs années, incluant essence, maintenance et services.',
+  description:
+    "Calculez vos économies en comparant les coûts d'entretien traditionnel de pelouse avec un robot tondeuse. Estimez votre ROI sur plusieurs années, incluant essence, maintenance et services.",
   keywords: [
     'calculateur ROI robot tondeuse',
     'comparaison coûts tonte',
@@ -14,32 +17,37 @@ export const metadata: Metadata = {
     'service jardinage',
     'retour sur investissement jardinage',
     'comparatif tonte automatique',
-    'calcul économies jardinage'
+    'calcul économies jardinage',
   ],
   openGraph: {
     title: 'Calculateur Retour sur Investissement Robot Tondeuse | Reparobot',
-    description: 'Comparez les coûts d\'entretien traditionnel (essence, maintenance, service) avec un robot tondeuse. Calculez vos économies potentielles sur plusieurs années.',
+    description:
+      "Comparez les coûts d'entretien traditionnel (essence, maintenance, service) avec un robot tondeuse. Calculez vos économies potentielles sur plusieurs années.",
     type: 'website',
     locale: 'fr_BE',
     url: 'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
-    siteName: 'Reparobot',
+    siteName: 'Entretien & Vente Robot Husqvarna & Gardena Belgique | Forestar',
     images: [
       {
         url: 'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',
         width: 1200,
         height: 630,
-        alt: 'Calculateur Retour sur Investissement Robot Tondeuse'
-      }
-    ]
+        alt: 'Calculateur Retour sur Investissement Robot Tondeuse',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Calculateur Retour sur Investissement Robot Tondeuse | Reparobot',
-    description: 'Comparez les coûts d\'entretien traditionnel avec un robot tondeuse. Calculez vos économies sur plusieurs années incluant essence, maintenance et services.',
-    images: ['https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp'],
+    description:
+      "Comparez les coûts d'entretien traditionnel avec un robot tondeuse. Calculez vos économies sur plusieurs années incluant essence, maintenance et services.",
+    images: [
+      'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',
+    ],
   },
   alternates: {
-    canonical: 'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse'
+    canonical:
+      'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
   },
 };
 
@@ -52,22 +60,23 @@ const structuredData = {
   offers: {
     '@type': 'Offer',
     price: '0',
-    priceCurrency: 'EUR'
+    priceCurrency: 'EUR',
   },
-  description: 'Calculez votre retour sur investissement en comparant les coûts d\'entretien traditionnel de pelouse (essence, maintenance, service) avec un robot tondeuse',
+  description:
+    "Calculez votre retour sur investissement en comparant les coûts d'entretien traditionnel de pelouse (essence, maintenance, service) avec un robot tondeuse",
   operatingSystem: 'Web',
   featureList: [
-    'Calcul des coûts d\'essence',
+    "Calcul des coûts d'essence",
     'Estimation maintenance tondeuse',
     'Comparaison services jardinage',
     'Analyse sur plusieurs années',
-    'Calcul économies potentielles'
+    'Calcul économies potentielles',
   ],
   creator: {
     '@type': 'Organization',
     name: 'Reparobot',
-    url: 'https://reparobot.be'
-  }
+    url: 'https://reparobot.be',
+  },
 };
 
 export default function ROICalculatorLayout({
