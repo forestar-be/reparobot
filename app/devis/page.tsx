@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-
 const DevisPage: React.FC = () => {
   const structuredData = {
     '@context': 'https://schema.org',

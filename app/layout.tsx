@@ -3,7 +3,6 @@ import React from 'react';
 import { Metadata } from 'next';
 import './globals.css';
 
-
 // Define your metadata using Next.js Metadata API
 export const metadata: Metadata = {
   metadataBase: new URL('https://reparobot.be'),

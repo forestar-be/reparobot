@@ -1,5 +1,6 @@
 import RobotSelection from '../../components/RobotSelection';
 import React from 'react';
+
 export { metadata } from './metadata';
 
 // Données structurées pour la page robots
@@ -8,7 +9,8 @@ const structuredData = {
   '@type': 'WebPage',
   '@id': 'https://reparobot.be/robots',
   name: 'Réservation Robot Tondeuse Husqvarna & Gardena',
-  description: 'Découvrez et réservez votre robot tondeuse Husqvarna ou Gardena avec installation professionnelle en Belgique',
+  description:
+    'Découvrez et réservez votre robot tondeuse Husqvarna ou Gardena avec installation professionnelle en Belgique',
   url: 'https://reparobot.be/robots',
   mainEntity: {
     '@type': 'ItemList',
