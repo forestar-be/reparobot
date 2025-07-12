@@ -34,3 +34,5 @@ frontend/supervisor-site/build/
 /backend/secrets/
 
 .next/
+
+tsconfig.tsbuildinfo

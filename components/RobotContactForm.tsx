@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
+const API_URL = process.env.API_URL;
+const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
 interface Robot {
   id: string;

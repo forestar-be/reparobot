@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 
-
 export const metadata: Metadata = {
   title: 'Devis Immédiat Robot Tondeuse - Achat & Installation | Reparobot',
   description:

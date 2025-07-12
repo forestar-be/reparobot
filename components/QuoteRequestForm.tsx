@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Modal from './Modal';
 
-
 interface Robot {
   id: number;
   name: string;

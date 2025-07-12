@@ -1,8 +1,6 @@
-;
 // app/calculateur-cout-entretien-robot-tondeuse/layout.tsx
 import { Metadata } from 'next';
 import Script from 'next/script';
-
 
 export const metadata: Metadata = {
   title: 'Calculateur Coût Entretien Robot Tondeuse | Diagnostic & Estimation',

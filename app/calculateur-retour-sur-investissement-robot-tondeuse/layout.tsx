@@ -1,7 +1,5 @@
-;
 // app/calculateur-economie-robot-tondeuse/layout.tsx
 import { Metadata } from 'next';
-
 
 export const metadata: Metadata = {
   title: 'Calculateur Retour sur Investissement Robot Tondeuse | Reparobot',
