@@ -8,10 +8,12 @@
     "prepare": "husky install",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "lint:staged": "eslint --fix",
     "format:check": "prettier \"**/*.+(json|ts|tsx)\" --check",
     "format:fix": "prettier \"**/*.+(json|ts|tsx)\" --write",
+    "format:staged": "prettier --write",
     "types:check": "tsc --noEmit --pretty",
-    "check": "npm run lint && npm run types:check && npm run format:check",
+    "check": "npm run lint && npm run types:check",
     "fix": "npm run lint:fix && npm run types:check && npm run format:fix",
     "predev": "npm run check",
     "dev": "next dev --turbopack --port 3005",
@@ -23,9 +25,11 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npm run lint:fix",
-      "npm run types:check",
-      "npm run format:fix"
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md}": [
+      "prettier --write"
     ]
   },
   "dependencies": {
