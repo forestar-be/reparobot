@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import { X } from 'lucide-react';
 import { ServicesProps } from './Services';
 
-
 const API_URL = process.env.API_URL;
 const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
