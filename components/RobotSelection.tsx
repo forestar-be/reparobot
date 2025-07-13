@@ -75,8 +75,8 @@ const RobotSelection = (): JSX.Element => {
     <>
       <Head>
         <title>
-          Robots Tondeuses Husqvarna | Réservation et Installation | RepaRobot |
-          Forestar
+          Robots Tondeuses Husqvarna | Réservation et Installation | Forestar -
+          Reparobot
         </title>
         <meta
           name="description"

@@ -30,8 +30,8 @@ const RobotReservation = (): JSX.Element => {
     <>
       <Head>
         <title>
-          ReparObot | Robots Tondeuses Husqvarna | Vente et Installation en
-          Belgique
+          Robots Tondeuses Husqvarna | Vente et Installation en Belgique |
+          Forestar - Reparobot
         </title>
         <meta
           name="description"

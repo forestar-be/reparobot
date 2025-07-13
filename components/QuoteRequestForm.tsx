@@ -12,6 +12,20 @@ interface Robot {
   sellingPrice?: number;
 }
 
+interface Accessory {
+  id: number;
+  name: string;
+  reference?: string;
+  category: 'PLUGIN' | 'ANTENNA' | 'SHELTER';
+  sellingPrice?: number;
+}
+
+interface AccessoriesData {
+  plugins: Accessory[];
+  antennas: Accessory[];
+  shelters: Accessory[];
+}
+
 interface QuoteRequestData {
   clientFirstName: string;
   clientLastName: string;
@@ -20,6 +34,9 @@ interface QuoteRequestData {
   clientAddress: string;
   clientCity: string;
   robotInventoryId: number | '';
+  pluginInventoryId: number | '';
+  antennaInventoryId: number | '';
+  shelterInventoryId: number | '';
   hasWire: boolean;
   wireLength: number;
   hasAntennaSupport: boolean;
@@ -30,7 +47,13 @@ interface QuoteRequestData {
 
 const QuoteRequestForm = (): JSX.Element => {
   const [robots, setRobots] = useState<Robot[]>([]);
+  const [accessories, setAccessories] = useState<AccessoriesData>({
+    plugins: [],
+    antennas: [],
+    shelters: [],
+  });
   const [robotsLoading, setRobotsLoading] = useState(true);
+  const [accessoriesLoading, setAccessoriesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [requestId, setRequestId] = useState<number | null>(null);
@@ -43,6 +66,9 @@ const QuoteRequestForm = (): JSX.Element => {
     clientAddress: '',
     clientCity: '',
     robotInventoryId: '',
+    pluginInventoryId: '',
+    antennaInventoryId: '',
+    shelterInventoryId: '',
     hasWire: false,
     wireLength: 0,
     hasAntennaSupport: false,
@@ -76,6 +102,35 @@ const QuoteRequestForm = (): JSX.Element => {
     };
 
     fetchRobots();
+  }, []);
+
+  // Fetch available accessories
+  useEffect(() => {
+    const fetchAccessories = async () => {
+      setAccessoriesLoading(true);
+      try {
+        const response = await fetch(`${process.env.API_URL}/accessories`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
+          },
+        });
+        const data = await response.json();
+        setAccessories(
+          data.data || { plugins: [], antennas: [], shelters: [] },
+        );
+      } catch (error) {
+        console.error('Error fetching accessories:', error);
+        setError(
+          'Une erreur est survenue lors du chargement des accessoires disponibles. Veuillez réessayer ou contacter directement notre équipe.',
+        );
+      } finally {
+        setAccessoriesLoading(false);
+      }
+    };
+
+    fetchAccessories();
   }, []);
 
   const handleChange = (
@@ -123,6 +178,9 @@ const QuoteRequestForm = (): JSX.Element => {
         clientAddress: '',
         clientCity: '',
         robotInventoryId: '',
+        pluginInventoryId: '',
+        antennaInventoryId: '',
+        shelterInventoryId: '',
         hasWire: false,
         wireLength: 0,
         hasAntennaSupport: false,
@@ -144,12 +202,21 @@ const QuoteRequestForm = (): JSX.Element => {
   const selectedRobot = robots.find(
     (robot) => robot.id === formData.robotInventoryId,
   );
+  const selectedPlugin = accessories.plugins.find(
+    (plugin) => plugin.id === formData.pluginInventoryId,
+  );
+  const selectedAntenna = accessories.antennas.find(
+    (antenna) => antenna.id === formData.antennaInventoryId,
+  );
+  const selectedShelter = accessories.shelters.find(
+    (shelter) => shelter.id === formData.shelterInventoryId,
+  );
 
   if (submitSuccess) {
     return (
       <>
         <Head>
-          <title>Devis d'achat envoyé | ReparObot</title>
+          <title>Devis d'achat envoyé | Forestar - Reparobot</title>
         </Head>
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900">
           <div className="container-custom pb-8 pt-32 sm:pb-16">
@@ -240,6 +307,24 @@ const QuoteRequestForm = (): JSX.Element => {
                   onClick={() => {
                     setSubmitSuccess(false);
                     setRequestId(null);
+                    setFormData({
+                      clientFirstName: '',
+                      clientLastName: '',
+                      clientEmail: '',
+                      clientPhone: '',
+                      clientAddress: '',
+                      clientCity: '',
+                      robotInventoryId: '',
+                      pluginInventoryId: '',
+                      antennaInventoryId: '',
+                      shelterInventoryId: '',
+                      hasWire: false,
+                      wireLength: 0,
+                      hasAntennaSupport: false,
+                      hasPlacement: false,
+                      installationNotes: '',
+                      needsInstaller: true,
+                    });
                   }}
                   className="btn-primary w-full px-4 py-3 text-sm sm:w-auto sm:text-base"
                 >
@@ -268,7 +353,7 @@ const QuoteRequestForm = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Devis d'achat personnalisé | Reparobot</title>
+        <title>Devis d'achat personnalisé | Forestar - Reparobot</title>
         <meta
           name="description"
           content="Demandez votre devis d'achat personnalisé pour un robot tondeuse Husqvarna avec installation professionnelle en Belgique."
@@ -440,6 +525,191 @@ const QuoteRequestForm = (): JSX.Element => {
                 </div>
               </div>
 
+              {/* Accessoires optionnels */}
+              <div className="rounded-2xl border border-orange-200/50 bg-gradient-to-br from-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
+                <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold sm:mb-6 sm:gap-3 sm:text-2xl">
+                  <span className="text-xl sm:text-2xl">🔧</span>
+                  Accessoires optionnels
+                </h2>
+                <p className="mb-6 text-sm text-gray-600 sm:text-base">
+                  Personnalisez votre installation avec nos accessoires
+                  recommandés
+                </p>
+
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
+                  {/* Plugin */}
+                  <div className="rounded-xl border border-gray-200/50 bg-white/80 p-4 backdrop-blur-sm">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-lg">⚡</span>
+                      <h3 className="font-semibold text-gray-900">Plugin</h3>
+                    </div>
+                    <select
+                      disabled={accessoriesLoading}
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={formData.pluginInventoryId}
+                      onChange={(e) =>
+                        handleChange(
+                          'pluginInventoryId',
+                          e.target.value ? parseInt(e.target.value) : '',
+                        )
+                      }
+                    >
+                      <option value="">
+                        {accessoriesLoading ? 'Chargement...' : 'Aucun plugin'}
+                      </option>
+                      {!accessoriesLoading &&
+                        accessories.plugins.map((plugin) => (
+                          <option key={plugin.id} value={plugin.id}>
+                            {plugin.name}{' '}
+                            {plugin.reference && `(${plugin.reference})`}
+                            {plugin.sellingPrice &&
+                              ` - ${plugin.sellingPrice}€`}
+                          </option>
+                        ))}
+                    </select>
+                    {selectedPlugin && (
+                      <div className="mt-2 rounded-lg bg-green-50 p-2 text-xs text-green-700">
+                        ✅ {selectedPlugin.name} sélectionné
+                        {selectedPlugin.sellingPrice && (
+                          <span className="font-semibold">
+                            {' '}
+                            - {selectedPlugin.sellingPrice}€
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Antenne */}
+                  <div className="rounded-xl border border-gray-200/50 bg-white/80 p-4 backdrop-blur-sm">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-lg">📡</span>
+                      <h3 className="font-semibold text-gray-900">Antenne</h3>
+                    </div>
+                    <select
+                      disabled={accessoriesLoading}
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={formData.antennaInventoryId}
+                      onChange={(e) =>
+                        handleChange(
+                          'antennaInventoryId',
+                          e.target.value ? parseInt(e.target.value) : '',
+                        )
+                      }
+                    >
+                      <option value="">
+                        {accessoriesLoading
+                          ? 'Chargement...'
+                          : 'Aucune antenne'}
+                      </option>
+                      {!accessoriesLoading &&
+                        accessories.antennas.map((antenna) => (
+                          <option key={antenna.id} value={antenna.id}>
+                            {antenna.name}{' '}
+                            {antenna.reference && `(${antenna.reference})`}
+                            {antenna.sellingPrice &&
+                              ` - ${antenna.sellingPrice}€`}
+                          </option>
+                        ))}
+                    </select>
+                    {selectedAntenna && (
+                      <div className="mt-2 rounded-lg bg-green-50 p-2 text-xs text-green-700">
+                        ✅ {selectedAntenna.name} sélectionné
+                        {selectedAntenna.sellingPrice && (
+                          <span className="font-semibold">
+                            {' '}
+                            - {selectedAntenna.sellingPrice}€
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Abri */}
+                  <div className="rounded-xl border border-gray-200/50 bg-white/80 p-4 backdrop-blur-sm">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-lg">🏠</span>
+                      <h3 className="font-semibold text-gray-900">Abri</h3>
+                    </div>
+                    <select
+                      disabled={accessoriesLoading}
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={formData.shelterInventoryId}
+                      onChange={(e) =>
+                        handleChange(
+                          'shelterInventoryId',
+                          e.target.value ? parseInt(e.target.value) : '',
+                        )
+                      }
+                    >
+                      <option value="">
+                        {accessoriesLoading ? 'Chargement...' : 'Aucun abri'}
+                      </option>
+                      {!accessoriesLoading &&
+                        accessories.shelters.map((shelter) => (
+                          <option key={shelter.id} value={shelter.id}>
+                            {shelter.name}{' '}
+                            {shelter.reference && `(${shelter.reference})`}
+                            {shelter.sellingPrice &&
+                              ` - ${shelter.sellingPrice}€`}
+                          </option>
+                        ))}
+                    </select>
+                    {selectedShelter && (
+                      <div className="mt-2 rounded-lg bg-green-50 p-2 text-xs text-green-700">
+                        ✅ {selectedShelter.name} sélectionné
+                        {selectedShelter.sellingPrice && (
+                          <span className="font-semibold">
+                            {' '}
+                            - {selectedShelter.sellingPrice}€
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {(selectedPlugin || selectedAntenna || selectedShelter) && (
+                  <div className="mt-6 rounded-xl bg-white/90 p-4 shadow-sm">
+                    <h4 className="mb-3 font-semibold text-gray-900">
+                      Accessoires sélectionnés :
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedPlugin && (
+                        <div className="flex justify-between text-sm">
+                          <span>{selectedPlugin.name}</span>
+                          <span className="font-semibold">
+                            {selectedPlugin.sellingPrice
+                              ? `${selectedPlugin.sellingPrice}€`
+                              : 'Prix sur devis'}
+                          </span>
+                        </div>
+                      )}
+                      {selectedAntenna && (
+                        <div className="flex justify-between text-sm">
+                          <span>{selectedAntenna.name}</span>
+                          <span className="font-semibold">
+                            {selectedAntenna.sellingPrice
+                              ? `${selectedAntenna.sellingPrice}€`
+                              : 'Prix sur devis'}
+                          </span>
+                        </div>
+                      )}
+                      {selectedShelter && (
+                        <div className="flex justify-between text-sm">
+                          <span>{selectedShelter.name}</span>
+                          <span className="font-semibold">
+                            {selectedShelter.sellingPrice
+                              ? `${selectedShelter.sellingPrice}€`
+                              : 'Prix sur devis'}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Informations personnelles */}
               <div className="rounded-2xl border border-gray-200/50 bg-white/60 p-4 backdrop-blur-sm sm:p-6 lg:p-8">
                 <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold sm:mb-6 sm:gap-3 sm:text-2xl">
@@ -577,7 +847,7 @@ const QuoteRequestForm = (): JSX.Element => {
                         htmlFor="hasWire"
                         className="ml-2 text-sm leading-relaxed text-gray-700"
                       >
-                        Câble périphérique
+                        Câble périphérique (1,3€/m)
                       </label>
                     </div>
 
@@ -616,7 +886,7 @@ const QuoteRequestForm = (): JSX.Element => {
                         htmlFor="hasAntennaSupport"
                         className="ml-2 text-sm leading-relaxed text-gray-700"
                       >
-                        Support d'antenne
+                        Support d'antenne (50€)
                       </label>
                     </div>
 
@@ -634,7 +904,7 @@ const QuoteRequestForm = (): JSX.Element => {
                         htmlFor="hasPlacement"
                         className="ml-2 text-sm leading-relaxed text-gray-700"
                       >
-                        Placement du robot
+                        Placement du robot (200€)
                       </label>
                     </div>
                   </div>
@@ -663,7 +933,7 @@ const QuoteRequestForm = (): JSX.Element => {
                     <span className="text-xl sm:text-2xl">📋</span>
                     Récapitulatif de votre commande
                   </h2>
-                  <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
                     <div className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm sm:p-6">
                       <h3 className="mb-2 flex items-center gap-2 text-base font-semibold sm:mb-3 sm:text-lg">
                         🤖 Robot sélectionné
@@ -679,6 +949,47 @@ const QuoteRequestForm = (): JSX.Element => {
                         </p>
                       )}
                     </div>
+
+                    {(selectedPlugin || selectedAntenna || selectedShelter) && (
+                      <div className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm sm:p-6">
+                        <h3 className="mb-2 flex items-center gap-2 text-base font-semibold sm:mb-3 sm:text-lg">
+                          🔧 Accessoires
+                        </h3>
+                        <div className="space-y-1 text-sm text-gray-200 sm:space-y-2 sm:text-base">
+                          {selectedPlugin && (
+                            <p>
+                              <strong>Plugin:</strong> ✅ {selectedPlugin.name}
+                              {selectedPlugin.sellingPrice && (
+                                <span className="ml-1 font-semibold text-green-400">
+                                  ({selectedPlugin.sellingPrice}€)
+                                </span>
+                              )}
+                            </p>
+                          )}
+                          {selectedAntenna && (
+                            <p>
+                              <strong>Antenne:</strong> ✅{' '}
+                              {selectedAntenna.name}
+                              {selectedAntenna.sellingPrice && (
+                                <span className="ml-1 font-semibold text-green-400">
+                                  ({selectedAntenna.sellingPrice}€)
+                                </span>
+                              )}
+                            </p>
+                          )}
+                          {selectedShelter && (
+                            <p>
+                              <strong>Abri:</strong> ✅ {selectedShelter.name}
+                              {selectedShelter.sellingPrice && (
+                                <span className="ml-1 font-semibold text-green-400">
+                                  ({selectedShelter.sellingPrice}€)
+                                </span>
+                              )}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm sm:p-6">
                       <h3 className="mb-2 flex items-center gap-2 text-base font-semibold sm:mb-3 sm:text-lg">
@@ -709,6 +1020,28 @@ const QuoteRequestForm = (): JSX.Element => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Total price calculation */}
+                  {(selectedRobot.sellingPrice ||
+                    selectedPlugin?.sellingPrice ||
+                    selectedAntenna?.sellingPrice ||
+                    selectedShelter?.sellingPrice) && (
+                    <div className="mt-6 rounded-xl border-2 border-green-400/50 bg-green-900/30 p-4 text-center sm:p-6">
+                      <h3 className="mb-2 text-lg font-semibold text-green-400 sm:text-xl">
+                        Prix total estimé
+                      </h3>
+                      <p className="text-2xl font-bold text-white sm:text-3xl">
+                        {(selectedRobot.sellingPrice || 0) +
+                          (selectedPlugin?.sellingPrice || 0) +
+                          (selectedAntenna?.sellingPrice || 0) +
+                          (selectedShelter?.sellingPrice || 0)}
+                        €
+                      </p>
+                      <p className="mt-1 text-xs text-green-200 sm:text-sm">
+                        Prix hors installation - Devis final détaillé par email
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

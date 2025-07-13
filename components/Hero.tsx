@@ -136,7 +136,7 @@ const Hero = ({
                         <span className="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           {yearsOfExperience} ans
                         </span>
-                        <span className="ml-0.5 text-sm font-medium text-white/80 sm:ml-1 sm:text-xs">
+                        <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
                           d'expérience
                         </span>
                       </div>
@@ -169,7 +169,7 @@ const Hero = ({
                         <span className="bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           4.6★
                         </span>
-                        <span className="ml-0.5 text-sm font-medium text-white/80 sm:ml-1 sm:text-xs">
+                        <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
                           avis Google
                         </span>
                       </div>
@@ -199,7 +199,7 @@ const Hero = ({
                         <span className="bg-gradient-to-r from-white to-purple-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           Expert
                         </span>
-                        <span className="ml-0.5 text-sm font-medium text-white/80 sm:ml-1 sm:text-xs">
+                        <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
                           certifié
                         </span>
                       </div>
@@ -229,7 +229,7 @@ const Hero = ({
                         <span className="bg-gradient-to-r from-white to-green-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           &lt;24h
                         </span>
-                        <span className="ml-0.5 text-sm font-medium text-white/80 sm:ml-1 sm:text-xs">
+                        <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
                           délai de réponse
                         </span>
                       </div>
