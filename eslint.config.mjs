@@ -1,8 +1,9 @@
 import js from '@eslint/js';
+import pluginNext from '@next/eslint-plugin-next';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
-import pluginNext from '@next/eslint-plugin-next';
 
 export default defineConfig([
   {
@@ -20,6 +21,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   tseslint.configs.recommended,
+  eslintPluginPrettierRecommended,
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
