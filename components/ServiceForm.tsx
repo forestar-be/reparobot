@@ -28,21 +28,9 @@ const ServiceForm = ({
   const [termsOpen, setTermsOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(service.basePrice);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   const formRef = useRef<HTMLFormElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
-
-  // Handle screen size changes
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 768); // md breakpoint
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
 
   // Initialize form values with default states
   useEffect(() => {
@@ -229,7 +217,7 @@ const ServiceForm = ({
   };
 
   const renderField = (field: any, index: number) => {
-    const inputClass = `w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+    const inputClass = `w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-base sm:text-sm ${
       errors[field.label] ? 'border-red-500' : ''
     }`;
 
@@ -239,7 +227,7 @@ const ServiceForm = ({
       case 'tel':
         return (
           <div key={index} className="flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">
+            <label className="mb-1 text-base font-medium text-gray-700 sm:text-sm">
               {field.label} {field.isRequired && '*'}
             </label>
             <input
@@ -264,8 +252,8 @@ const ServiceForm = ({
 
       case 'textarea':
         return (
-          <div key={index} className="col-span-2 flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">
+          <div key={index} className="flex flex-col md:col-span-2">
+            <label className="mb-1 text-base font-medium text-gray-700 sm:text-sm">
               {field.label} {field.isRequired && '*'}
             </label>
             <textarea
@@ -291,7 +279,7 @@ const ServiceForm = ({
       case 'select':
         return (
           <div key={index} className="flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">
+            <label className="mb-1 text-base font-medium text-gray-700 sm:text-sm">
               {field.label} {field.isRequired && '*'}
             </label>
             <select
@@ -324,17 +312,17 @@ const ServiceForm = ({
       case 'checkbox_term':
       case 'checkbox_price':
         return (
-          <div key={index} className="col-span-2 flex flex-col">
+          <div key={index} className="flex flex-col md:col-span-2">
             <div className="flex items-start">
               <input
                 type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="mt-1 h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:h-4 sm:w-4"
                 checked={formValues[field.label] || false}
                 onChange={(e) => handleChange(field.label, e.target.checked)}
                 aria-describedby={`${field.label}-error`}
                 aria-required={field.isRequired}
               />
-              <label className="ml-2 text-sm text-gray-700">
+              <label className="ml-3 text-base text-gray-700 sm:ml-2 sm:text-sm">
                 {field.type === 'checkbox_term' ? (
                   <span>
                     {field.label}{' '}
@@ -368,7 +356,7 @@ const ServiceForm = ({
       case 'date':
         return (
           <div key={index} className="flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">
+            <label className="mb-1 text-base font-medium text-gray-700 sm:text-sm">
               {field.label} {field.isRequired && '*'}
             </label>
             <input
@@ -425,7 +413,7 @@ const ServiceForm = ({
 
       <form
         ref={formRef}
-        className="relative rounded-bl-[32px] rounded-tl-[32px] bg-white p-6"
+        className="relative rounded-bl-[32px] rounded-tl-[32px] bg-white p-4 sm:p-6"
         onSubmit={handleSubmit}
         noValidate
         aria-labelledby="service-form-title"
@@ -434,15 +422,13 @@ const ServiceForm = ({
       >
         <h2
           id="service-form-title"
-          className="mb-6 text-xl font-semibold text-gray-900"
+          className="mb-4 text-lg font-semibold text-gray-900 sm:mb-6 sm:text-xl"
         >
           Formulaire du service: {service.name}
         </h2>
 
         {/* Form Fields */}
-        <div
-          className={`grid gap-4 ${isLargeScreen ? 'grid-cols-2' : 'grid-cols-1'}`}
-        >
+        <div className="grid grid-cols-1 gap-4 sm:gap-4 md:grid-cols-2">
           {service.formFields.map(renderField)}
         </div>
 
@@ -460,7 +446,7 @@ const ServiceForm = ({
           type="submit"
           disabled={isLoading}
           aria-busy={isLoading}
-          className="mt-6 rounded-lg bg-primary-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-primary-700 disabled:bg-primary-600 disabled:opacity-70"
+          className="mt-6 w-full rounded-lg bg-primary-600 px-6 py-3 font-medium text-white transition-colors duration-200 hover:bg-primary-700 disabled:bg-primary-600 disabled:opacity-70 sm:w-auto sm:py-2"
         >
           {isLoading ? (
             <span className="flex items-center">

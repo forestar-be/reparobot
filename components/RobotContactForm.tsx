@@ -326,7 +326,7 @@ const RobotContactForm = ({
 
       case 'textarea':
         return (
-          <div key={index} className="col-span-2 flex flex-col">
+          <div key={index} className="flex flex-col lg:col-span-2">
             <label className="mb-2 text-sm font-medium text-gray-700">
               {field.label} {field.isRequired && '*'}
             </label>
@@ -349,7 +349,7 @@ const RobotContactForm = ({
       case 'checkbox_term':
       case 'checkbox_price':
         return (
-          <div key={index} className="col-span-2 flex flex-col">
+          <div key={index} className="flex flex-col lg:col-span-2">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -504,7 +504,7 @@ const RobotContactForm = ({
         <h2 className="mb-6 text-2xl font-bold">Formulaire de réservation</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {formFields.map(renderField)}
           </div>
 
