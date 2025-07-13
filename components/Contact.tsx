@@ -192,7 +192,7 @@ const Contact = (): JSX.Element => {
                             Adresse
                           </div>
                           <a
-                            href="https://www.google.com/maps/place/?q=place_id:ChIJJ8L3wqtKwkcRGnGl3tIF-go"
+                            href="https://maps.app.goo.gl/eqBWhMaT8fHnsjg4A"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xl font-bold text-gray-900 transition-colors hover:text-primary-500"

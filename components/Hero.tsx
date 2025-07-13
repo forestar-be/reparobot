@@ -148,7 +148,7 @@ const Hero = ({
                   <button
                     onClick={() => {
                       window.open(
-                        'https://www.google.com/maps/place/?q=place_id:ChIJJ8L3wqtKwkcRGnGl3tIF-go',
+                        'https://maps.app.goo.gl/eqBWhMaT8fHnsjg4A',
                         '_blank',
                       );
                     }}

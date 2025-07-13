@@ -173,6 +173,13 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
+        {/* Preload critical images */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/hero.webp"
+          type="image/webp"
+        />
         {/* Structured Data */}
         <script
           type="application/ld+json"

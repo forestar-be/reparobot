@@ -7,6 +7,9 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   {
+    ignores: ['next.config.js'],
+  },
+  {
     plugins: {
       '@next/next': pluginNext,
     },
