@@ -1,26 +1,12 @@
 'use client';
 
+import { submitRobotReservation } from '../lib/actions';
+import type { Robot } from '../lib/robots';
 import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
-
-const API_URL = process.env.API_URL;
-const AUTH_TOKEN = process.env.AUTH_TOKEN;
-
-interface Robot {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  image: string;
-  maxSurface: number;
-  maxSlope: number;
-  price: number;
-  priceExVAT?: number;
-  installationPrice: number;
-  promotion?: string;
-}
 
 // Standard form fields for robot reservation
 const formFields = [
@@ -86,11 +72,11 @@ const formFields = [
 const RobotContactForm = ({
   robot,
   onClose,
-  onFormEdit,
+  onFormEdit = () => {},
 }: {
   robot: Robot;
   onClose: (force?: boolean) => void;
-  onFormEdit: (edited: boolean) => void;
+  onFormEdit?: (edited: boolean) => void;
 }) => {
   const [formValues, setFormValues] = useState<{ [key: string]: any }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -239,17 +225,10 @@ const RobotContactForm = ({
     }
 
     try {
-      const response = await fetch(`${API_URL}/submit-form`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-        body: JSON.stringify(formattedValues),
-      });
+      const result = await submitRobotReservation(formattedValues);
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (!result.success) {
+        throw new Error(result.error || 'Erreur lors de la soumission');
       }
 
       setFormValues({});
@@ -438,11 +417,13 @@ const RobotContactForm = ({
 
         <h2 className="mb-4 text-2xl font-bold">{robot.name}</h2>
 
-        <div className="mb-6 hidden lg:block">
-          <img
+        <div className="relative mb-6 hidden h-60 w-full lg:block">
+          <Image
             src={robot.image}
             alt={robot.name}
-            className="h-60 w-full rounded-lg object-contain"
+            fill
+            className="rounded-lg object-contain"
+            sizes="(max-width: 1024px) 100vw, 40vw"
           />
         </div>
 
