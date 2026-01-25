@@ -1,11 +1,23 @@
 /** @type {import('next').NextConfig} */
 require('dotenv').config();
 
+// Parse API_URL to extract hostname for image remote patterns
+const apiUrl = process.env.API_URL || '';
+let apiHostname = '';
+let apiProtocol = 'https';
+let apiPort = '';
+try {
+  if (apiUrl) {
+    const url = new URL(apiUrl);
+    apiHostname = url.hostname;
+    apiProtocol = url.protocol.replace(':', '');
+    apiPort = url.port || '';
+  }
+} catch (e) {
+  console.warn('Invalid API_URL format, images from API may not load');
+}
+
 const nextConfig = {
-  env: {
-    API_URL: process.env.API_URL,
-    AUTH_TOKEN: process.env.AUTH_TOKEN,
-  },
   // productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
@@ -15,6 +27,17 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Allow images from API server (dynamically from API_URL env var)
+      ...(apiHostname
+        ? [
+            {
+              protocol: apiProtocol,
+              hostname: apiHostname,
+              port: apiPort,
+              pathname: '/images/**',
+            },
+          ]
+        : []),
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

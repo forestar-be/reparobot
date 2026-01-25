@@ -1,7 +1,11 @@
 'use client';
 
+import {
+  fetchAccessories,
+  fetchRobots,
+  submitQuoteRequest,
+} from '../lib/actions';
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Modal from './Modal';
 
@@ -79,18 +83,18 @@ const QuoteRequestForm = (): JSX.Element => {
 
   // Fetch available robots
   useEffect(() => {
-    const fetchRobots = async () => {
+    const loadRobots = async () => {
       setRobotsLoading(true);
       try {
-        const response = await fetch(`${process.env.API_URL}/robots`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-          },
-        });
-        const data = await response.json();
-        setRobots(data.data || []);
+        const result = await fetchRobots();
+        if (result.success && result.data) {
+          setRobots(result.data);
+        } else {
+          setError(
+            result.error ||
+              'Une erreur est survenue lors du chargement des robots disponibles. Veuillez réessayer ou contacter directement notre équipe.',
+          );
+        }
       } catch (error) {
         console.error('Error fetching robots:', error);
         setError(
@@ -101,25 +105,23 @@ const QuoteRequestForm = (): JSX.Element => {
       }
     };
 
-    fetchRobots();
+    loadRobots();
   }, []);
 
   // Fetch available accessories
   useEffect(() => {
-    const fetchAccessories = async () => {
+    const loadAccessories = async () => {
       setAccessoriesLoading(true);
       try {
-        const response = await fetch(`${process.env.API_URL}/accessories`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-          },
-        });
-        const data = await response.json();
-        setAccessories(
-          data.data || { plugins: [], antennas: [], shelters: [] },
-        );
+        const result = await fetchAccessories();
+        if (result.success && result.data) {
+          setAccessories(result.data);
+        } else {
+          setError(
+            result.error ||
+              'Une erreur est survenue lors du chargement des accessoires disponibles. Veuillez réessayer ou contacter directement notre équipe.',
+          );
+        }
       } catch (error) {
         console.error('Error fetching accessories:', error);
         setError(
@@ -130,7 +132,7 @@ const QuoteRequestForm = (): JSX.Element => {
       }
     };
 
-    fetchAccessories();
+    loadAccessories();
   }, []);
 
   const handleChange = (
@@ -151,22 +153,15 @@ const QuoteRequestForm = (): JSX.Element => {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     try {
-      const response = await fetch(`${process.env.API_URL}/quote-request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const result = await submitQuoteRequest(formData);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur lors de la soumission');
+      if (!result.success) {
+        throw new Error(result.error || 'Erreur lors de la soumission');
       }
 
-      const responseData = await response.json();
-      setRequestId(responseData.requestId);
+      if (result.data) {
+        setRequestId(result.data.requestId);
+      }
       setSubmitSuccess(true);
 
       // Reset form
@@ -214,152 +209,130 @@ const QuoteRequestForm = (): JSX.Element => {
 
   if (submitSuccess) {
     return (
-      <>
-        <Head>
-          <title>Devis d'achat envoyé | Forestar - Reparobot</title>
-        </Head>
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900">
-          <div className="container-custom pb-8 pt-32 sm:pb-16">
-            <div className="card mx-auto max-w-2xl border border-primary-200/30 bg-white/95 text-center shadow-2xl backdrop-blur-lg">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 sm:mb-6 sm:h-20 sm:w-20">
-                <svg
-                  className="h-8 w-8 text-green-600 sm:h-10 sm:w-10"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900">
+        <div className="container-custom pb-8 pt-32 sm:pb-16">
+          <div className="card mx-auto max-w-2xl border border-primary-200/30 bg-white/95 text-center shadow-2xl backdrop-blur-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 sm:mb-6 sm:h-20 sm:w-20">
+              <svg
+                className="h-8 w-8 text-green-600 sm:h-10 sm:w-10"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h1 className="mb-3 px-4 text-2xl font-bold text-green-600 sm:mb-4 sm:px-0 sm:text-3xl lg:text-4xl">
+              Demande envoyée avec succès !
+            </h1>
+            <p className="mb-4 px-4 text-sm text-gray-600 sm:mb-6 sm:px-0 sm:text-base">
+              Merci pour votre demande d'achat. Vous recevrez votre devis
+              personnalisé par email dans les plus brefs délais avec un bon de
+              commande signable électroniquement pour finaliser votre achat
+              immédiatement.
+            </p>
+
+            {/* Request ID Display */}
+            {requestId && (
+              <div className="mx-4 mb-4 rounded-lg bg-gray-100 p-3 sm:mx-0 sm:mb-6 sm:p-4">
+                <p className="text-sm text-gray-700 sm:text-base">
+                  <strong>Numéro de demande :</strong> #{requestId}
+                </p>
+                <p className="mt-1 text-xs text-gray-600 sm:text-sm">
+                  Conservez ce numéro pour toute communication avec notre équipe
+                </p>
               </div>
-              <h1 className="mb-3 px-4 text-2xl font-bold text-green-600 sm:mb-4 sm:px-0 sm:text-3xl lg:text-4xl">
-                Demande envoyée avec succès !
-              </h1>
-              <p className="mb-4 px-4 text-sm text-gray-600 sm:mb-6 sm:px-0 sm:text-base">
-                Merci pour votre demande d'achat. Vous recevrez votre devis
-                personnalisé par email dans les plus brefs délais avec un bon de
-                commande signable électroniquement pour finaliser votre achat
-                immédiatement.
-              </p>
+            )}
 
-              {/* Request ID Display */}
-              {requestId && (
-                <div className="mx-4 mb-4 rounded-lg bg-gray-100 p-3 sm:mx-0 sm:mb-6 sm:p-4">
-                  <p className="text-sm text-gray-700 sm:text-base">
-                    <strong>Numéro de demande :</strong> #{requestId}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-600 sm:text-sm">
-                    Conservez ce numéro pour toute communication avec notre
-                    équipe
-                  </p>
+            {/* Next Steps */}
+            <div className="mx-4 mb-6 rounded-xl bg-blue-50 p-4 sm:mx-0 sm:mb-8 sm:p-6">
+              <h3 className="mb-2 text-base font-semibold text-gray-900 sm:mb-3 sm:text-lg">
+                Prochaines étapes :
+              </h3>
+              <div className="space-y-2 text-left text-xs text-gray-700 sm:text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📧</span>
+                  <span>
+                    Vous recevrez un email avec votre devis d'achat détaillé
+                  </span>
                 </div>
-              )}
-
-              {/* Next Steps */}
-              <div className="mx-4 mb-6 rounded-xl bg-blue-50 p-4 sm:mx-0 sm:mb-8 sm:p-6">
-                <h3 className="mb-2 text-base font-semibold text-gray-900 sm:mb-3 sm:text-lg">
-                  Prochaines étapes :
-                </h3>
-                <div className="space-y-2 text-left text-xs text-gray-700 sm:text-sm">
-                  <div className="flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0 text-blue-600">
-                      📧
-                    </span>
-                    <span>
-                      Vous recevrez un email avec votre devis d'achat détaillé
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0 text-blue-600">
-                      ✍️
-                    </span>
-                    <span>
-                      Cliquez sur le lien pour signer votre bon de commande
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0 text-blue-600">
-                      📬
-                    </span>
-                    <span>
-                      Si vous ne recevez pas l'email, vérifiez vos spams ou
-                      contactez-nous
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0 text-blue-600">
-                      📞
-                    </span>
-                    <span>
-                      Notre équipe vous contactera pour programmer la
-                      livraison/installation
-                    </span>
-                  </div>
+                <div className="flex items-start gap-2">
+                  <span className="mt-0.5 flex-shrink-0 text-blue-600">✍️</span>
+                  <span>
+                    Cliquez sur le lien pour signer votre bon de commande
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📬</span>
+                  <span>
+                    Si vous ne recevez pas l'email, vérifiez vos spams ou
+                    contactez-nous
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📞</span>
+                  <span>
+                    Notre équipe vous contactera pour programmer la
+                    livraison/installation
+                  </span>
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-col justify-center gap-3 px-4 sm:gap-4 sm:px-0">
-                <button
-                  onClick={() => {
-                    setSubmitSuccess(false);
-                    setRequestId(null);
-                    setFormData({
-                      clientFirstName: '',
-                      clientLastName: '',
-                      clientEmail: '',
-                      clientPhone: '',
-                      clientAddress: '',
-                      clientCity: '',
-                      robotInventoryId: '',
-                      pluginInventoryId: '',
-                      antennaInventoryId: '',
-                      shelterInventoryId: '',
-                      hasWire: false,
-                      wireLength: 0,
-                      hasAntennaSupport: false,
-                      hasPlacement: false,
-                      installationNotes: '',
-                      needsInstaller: true,
-                    });
-                  }}
-                  className="btn-primary w-full px-4 py-3 text-sm sm:w-auto sm:text-base"
-                >
-                  Faire une nouvelle demande
-                </button>
-                <Link
-                  href="/#contact"
-                  className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
-                >
-                  Contacter notre équipe
-                </Link>
-                <Link
-                  href="/"
-                  className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
-                >
-                  Retour à l'accueil
-                </Link>
-              </div>
+            <div className="flex flex-col justify-center gap-3 px-4 sm:gap-4 sm:px-0">
+              <button
+                onClick={() => {
+                  setSubmitSuccess(false);
+                  setRequestId(null);
+                  setFormData({
+                    clientFirstName: '',
+                    clientLastName: '',
+                    clientEmail: '',
+                    clientPhone: '',
+                    clientAddress: '',
+                    clientCity: '',
+                    robotInventoryId: '',
+                    pluginInventoryId: '',
+                    antennaInventoryId: '',
+                    shelterInventoryId: '',
+                    hasWire: false,
+                    wireLength: 0,
+                    hasAntennaSupport: false,
+                    hasPlacement: false,
+                    installationNotes: '',
+                    needsInstaller: true,
+                  });
+                }}
+                className="btn-primary w-full px-4 py-3 text-sm sm:w-auto sm:text-base"
+              >
+                Faire une nouvelle demande
+              </button>
+              <Link
+                href="/#contact"
+                className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
+              >
+                Contacter notre équipe
+              </Link>
+              <Link
+                href="/"
+                className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
+              >
+                Retour à l'accueil
+              </Link>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
     <>
-      <Head>
-        <title>Devis d'achat personnalisé | Forestar - Reparobot</title>
-        <meta
-          name="description"
-          content="Demandez votre devis d'achat personnalisé pour un robot tondeuse Husqvarna avec installation professionnelle en Belgique."
-        />
-      </Head>
-
       {/* Modals - rendues au niveau racine */}
       {/* Modal de chargement */}
       {loading && (
