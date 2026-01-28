@@ -36,3 +36,5 @@ frontend/supervisor-site/build/
 .next/
 
 tsconfig.tsbuildinfo
+
+next-env.d.ts

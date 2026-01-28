@@ -404,17 +404,18 @@ const RobotContactForm = ({
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:flex-row">
-      {/* Robot Info Section */}
-      <div className="relative bg-primary-50 p-6 lg:w-2/5">
-        <button
-          onClick={() => onClose()}
-          className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-100"
-          aria-label="Fermer le formulaire"
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <div className="relative flex flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:flex-row">
+      {/* Close Button */}
+      <button
+        onClick={() => onClose()}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 lg:bg-transparent lg:shadow-none"
+        aria-label="Fermer le formulaire"
+      >
+        <X className="h-5 w-5" />
+      </button>
 
+      {/* Robot Info Section */}
+      <div className="bg-primary-50 p-6 lg:w-2/5">
         <h2 className="mb-4 text-2xl font-bold">{robot.name}</h2>
 
         <div className="relative mb-6 hidden h-60 w-full lg:block">
@@ -427,7 +428,9 @@ const RobotContactForm = ({
           />
         </div>
 
-        <p className="mb-4 text-gray-700">{robot.description}</p>
+        <div className="mb-4 max-h-32 overflow-y-auto">
+          <p className="text-gray-700">{robot.description}</p>
+        </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
           <span className="rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-800">
