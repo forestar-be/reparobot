@@ -274,7 +274,11 @@ const RobotSelection = ({
               isSmallScreen ? 'h-full max-h-full' : ''
             }`}
           >
-            <RobotContactForm robot={selectedRobot} onClose={handleCloseForm} />
+            <RobotContactForm
+              robot={selectedRobot}
+              onClose={handleCloseForm}
+              maintenance={maintenance}
+            />
           </div>
         </div>
       )}
