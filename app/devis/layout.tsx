@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: 'Devis Immédiat Robot Tondeuse - Achat & Installation | Forestar',
     description:
       "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse avec installation. Signature électronique immédiate.",
-    siteName: 'Entretien & Vente Robot Husqvarna & Gardena Belgique | Forestar',
+    siteName: 'Entretien & Vente Robot Husqvarna Belgique | Forestar',
     images: [
       {
         url: '/images/devis-robot-tondeuse-og.jpg',

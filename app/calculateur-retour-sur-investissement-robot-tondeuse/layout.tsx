@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_BE',
     url: 'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
-    siteName: 'Entretien & Vente Robot Husqvarna & Gardena Belgique | Forestar',
+    siteName: 'Entretien & Vente Robot Husqvarna Belgique | Forestar',
     images: [
       {
         url: 'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',

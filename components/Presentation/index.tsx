@@ -5,9 +5,9 @@ import React, { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const Presentation = () => {
-  const defaultText = `Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena est
+  const defaultText = `Entretien, Réservation et Réparation Robot Tondeuse Husqvarna est
   votre expert en robotique pour l'entretien, la réparation et la
-  maintenance des robots tondeuses des marques Husqvarna et Gardena.
+  maintenance des robots tondeuses de la marque Husqvarna.
   Forte de plusieurs années d'expérience, notre entreprise propose
   une large gamme de services spécialisés, incluant l'entretien
   saisonnier, la réparation de composants défectueux, ainsi que des

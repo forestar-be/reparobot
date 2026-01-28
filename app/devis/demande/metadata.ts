@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Devis d'achat Robot Tondeuse | Forestar",
     description:
       "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse Husqvarna avec installation professionnelle.",
-    siteName: 'Robot Husqvarna & Gardena Belgique | Forestar',
+    siteName: 'Robot Husqvarna Belgique | Forestar',
   },
   alternates: {
     canonical: 'https://reparobot.be/devis/demande',

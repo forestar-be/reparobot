@@ -7,12 +7,12 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL('https://reparobot.be'),
   title: {
-    template: '%s | Robot Husqvarna & Gardena Belgique | Forestar',
+    template: '%s | Robot Husqvarna Belgique | Forestar',
     default:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna & Gardena en Belgique | Forestar',
+      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique | Forestar',
   },
   description:
-    'Spécialiste robot tondeuse Husqvarna & Gardena en Belgique. Entretien, achat, réparation et installation par des experts certifiés. Service professionnel garanti.',
+    'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés. Service professionnel garanti.',
   icons: {
     icon: '/images/logo/favicon.ico',
     shortcut: '/images/logo/favicon.ico',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   keywords: [
     'robot tondeuse Belgique',
     'Husqvarna Belgique',
-    'Gardena Belgique',
+
     'entretien robot tondeuse',
     'réparation robot tondeuse',
     'achat robot tondeuse',
@@ -38,25 +38,25 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   openGraph: {
     title:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna & Gardena en Belgique',
+      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
     description:
-      'Spécialiste robot tondeuse Husqvarna & Gardena en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
+      'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
     url: 'https://reparobot.be',
-    siteName: 'Robot Husqvarna & Gardena Belgique | Forestar',
+    siteName: 'Robot Husqvarna Belgique | Forestar',
     locale: 'fr_BE',
     type: 'website',
     images: [
       {
-        url: '/images/robot-tondeuse-husqvarna-gardena-belgique.jpg',
+        url: '/images/robot-tondeuse-husqvarna-belgique.jpg',
         width: 1200,
         height: 630,
-        alt: 'Robot tondeuse Husqvarna et Gardena - Entretien et réparation en Belgique',
+        alt: 'Robot tondeuse Husqvarna - Entretien et réparation en Belgique',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Robot Tondeuse Husqvarna & Gardena Belgique',
+    title: 'Robot Tondeuse Husqvarna Belgique',
     description:
       'Entretien, achat et réparation de robots tondeuses par des experts certifiés en Belgique.',
     images: ['/images/robot-tondeuse-twitter.jpg'],
@@ -86,10 +86,10 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   '@id': 'https://reparobot.be',
-  name: 'Forestar - Entretien Robot Husqvarna & Gardena',
+  name: 'Forestar - Entretien Robot Husqvarna',
   alternateName: 'Reparobot',
   description:
-    'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna et Gardena en Belgique',
+    'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
   image: 'https://reparobot.be/images/logo/logo-70x70.png',
   logo: 'https://reparobot.be/images/logo/logo-70x70.png',
   url: 'https://reparobot.be',
@@ -129,7 +129,7 @@ const structuredData = {
           '@type': 'Service',
           name: 'Entretien Robot Tondeuse',
           description:
-            "Service professionnel d'entretien de robots tondeuses Husqvarna et Gardena",
+            "Service professionnel d'entretien de robots tondeuses Husqvarna",
         },
       },
       {
@@ -146,9 +146,8 @@ const structuredData = {
         itemOffered: {
           '@type': 'Product',
           name: 'Achat Robot Tondeuse',
-          description:
-            'Vente de robots tondeuses Husqvarna et Gardena avec installation',
-          brand: ['Husqvarna', 'Gardena'],
+          description: 'Vente de robots tondeuses Husqvarna avec installation',
+          brand: ['Husqvarna'],
         },
       },
     ],
@@ -157,7 +156,6 @@ const structuredData = {
   knowsAbout: [
     'Robot Tondeuse',
     'Husqvarna',
-    'Gardena',
     'Entretien',
     'Réparation',
     'Installation',

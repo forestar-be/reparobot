@@ -5,7 +5,7 @@ export const Logo = ({ isDark }: { isDark: boolean }): JSX.Element => {
     ? '/images/logo/logo-dark-70x70.png'
     : '/images/logo/logo-70x70.png';
   const logoAlt =
-    'Forestar.be - Entretien, Réservation et Réparation Robot Tondeuse Husqvarna & Gardena';
+    'Forestar.be - Entretien, Réservation et Réparation Robot Tondeuse Husqvarna';
 
   return (
     <Image

@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title:
-    'Devis Immédiat Robot Tondeuse Husqvarna & Gardena - Achat & Installation Belgique',
+    'Devis Immédiat Robot Tondeuse Husqvarna - Achat & Installation Belgique',
   description:
-    "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse Husqvarna ou Gardena avec installation professionnelle en Belgique. Signature électronique immédiate.",
+    "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse Husqvarna avec installation professionnelle en Belgique. Signature électronique immédiate.",
   keywords: [
     'devis robot tondeuse Belgique',
     'achat robot tondeuse Husqvarna',
-    'achat robot tondeuse Gardena',
+
     'installation robot tondeuse Belgique',
     'devis immédiat robot tondeuse',
     'signature électronique',
@@ -37,10 +37,10 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_BE',
     url: 'https://reparobot.be/devis',
-    title: 'Devis Immédiat Robot Tondeuse Husqvarna & Gardena - Belgique',
+    title: 'Devis Immédiat Robot Tondeuse Husqvarna - Belgique',
     description:
       "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse avec installation professionnelle en Belgique.",
-    siteName: 'Robot Husqvarna & Gardena Belgique | Forestar',
+    siteName: 'Robot Husqvarna Belgique | Forestar',
     images: [
       {
         url: '/images/devis-robot-tondeuse-belgique.jpg',

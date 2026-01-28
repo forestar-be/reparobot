@@ -15,14 +15,14 @@ async function generateStructuredData() {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': 'https://reparobot.be/robots',
-    name: 'Réservation Robot Tondeuse Husqvarna & Gardena',
+    name: 'Réservation Robot Tondeuse Husqvarna',
     description:
-      'Découvrez et réservez votre robot tondeuse Husqvarna ou Gardena avec installation professionnelle en Belgique',
+      'Découvrez et réservez votre robot tondeuse Husqvarna avec installation professionnelle en Belgique',
     url: 'https://reparobot.be/robots',
     mainEntity: {
       '@type': 'ItemList',
       name: 'Robots Tondeuses Disponibles',
-      description: 'Gamme complète de robots tondeuses Husqvarna et Gardena',
+      description: 'Gamme complète de robots tondeuses Husqvarna',
       numberOfItems: robotsCount,
       itemListElement: [
         {
@@ -31,22 +31,6 @@ async function generateStructuredData() {
           brand: 'Husqvarna',
           category: 'Robot Tondeuse',
           description: 'Robot tondeuse automatique pour entretien de pelouse',
-          offers: {
-            '@type': 'Offer',
-            availability: 'https://schema.org/InStock',
-            priceCurrency: 'EUR',
-            seller: {
-              '@type': 'Organization',
-              name: 'Forestar',
-            },
-          },
-        },
-        {
-          '@type': 'Product',
-          name: 'Robot Tondeuse Gardena',
-          brand: 'Gardena',
-          category: 'Robot Tondeuse',
-          description: 'Robot tondeuse automatique intelligent',
           offers: {
             '@type': 'Offer',
             availability: 'https://schema.org/InStock',

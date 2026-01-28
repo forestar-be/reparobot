@@ -85,12 +85,12 @@ const AboutExpertise: React.FC = () => {
   const expertiseContent = useMemo(
     () => ({
       title: 'Pourquoi choisir notre expertise ?',
-      description: `Plus de ${statisticsData.yearsOfExperience} ans d'expérience dédiés aux robots tondeuses Husqvarna et Gardena`,
+      description: `Plus de ${statisticsData.yearsOfExperience} ans d'expérience dédiés aux robots tondeuses Husqvarna`,
       features: [
         {
           title: 'Expertise Technique Reconnue',
           description:
-            'Notre équipe Forestar certifiée maîtrise parfaitement les technologies Husqvarna et Gardena. Diagnostics précis, réparations durables et conseils personnalisés pour optimiser les performances de votre robot tondeuse.',
+            'Notre équipe Forestar certifiée maîtrise parfaitement les technologies Husqvarna. Diagnostics précis, réparations durables et conseils personnalisés pour optimiser les performances de votre robot tondeuse.',
           icon: '🎯',
         },
         {
