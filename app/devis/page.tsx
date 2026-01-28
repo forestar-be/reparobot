@@ -10,7 +10,7 @@ const DevisPage: React.FC = () => {
     '@id': 'https://reparobot.be/devis',
     name: 'Devis Immédiat Robot Tondeuse',
     description:
-      "Service de devis immédiat pour l'achat et l'installation de robots tondeuses Husqvarna et Gardena en Belgique",
+      "Service de devis immédiat pour l'achat et l'installation de robots tondeuses Husqvarna en Belgique",
     provider: {
       '@type': 'Organization',
       '@id': 'https://reparobot.be',
@@ -32,7 +32,7 @@ const DevisPage: React.FC = () => {
     },
     serviceType: 'Vente et installation robot tondeuse',
     category: 'Jardinage et Entretien',
-    brand: ['Husqvarna', 'Gardena'],
+    brand: ['Husqvarna'],
     offers: {
       '@type': 'Offer',
       description:
@@ -46,7 +46,7 @@ const DevisPage: React.FC = () => {
     additionalType: 'https://schema.org/QuoteAction',
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Robots Tondeuses Husqvarna & Gardena',
+      name: 'Robots Tondeuses Husqvarna',
       itemListElement: [
         {
           '@type': 'Offer',
@@ -54,15 +54,6 @@ const DevisPage: React.FC = () => {
             '@type': 'Product',
             name: 'Robot Tondeuse Husqvarna',
             brand: 'Husqvarna',
-            category: 'Robot Tondeuse',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Robot Tondeuse Gardena',
-            brand: 'Gardena',
             category: 'Robot Tondeuse',
           },
         },

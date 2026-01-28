@@ -18,7 +18,7 @@
       {
         "label": "Marque du robot",
         "type": "select",
-        "options": ["Husqvarna", "Gardena"],
+        "options": ["Husqvarna"],
         "isRequired": true
       },
       {
@@ -93,14 +93,14 @@
   {
     "id": "entretien_robot",
     "name": "Entretien de robot",
-    "description": "Entretien de votre robot Husqvarna ou Gardena",
+    "description": "Entretien de votre robot Husqvarna",
     "image": "/images/entretien-robot.webp",
     "basePrice": 99,
     "formFields": [
       {
         "label": "Marque du robot",
         "type": "select",
-        "options": ["Husqvarna", "Gardena"],
+        "options": ["Husqvarna"],
         "isRequired": true
       },
       {
@@ -201,13 +201,13 @@
   {
     "id": "reparation_robot",
     "name": "Réparation de robot",
-    "description": "Réparation de votre robot Husqvarna ou Gardena",
+    "description": "Réparation de votre robot Husqvarna",
     "image": "/images/reparation-robot.webp",
     "formFields": [
       {
         "label": "Marque du robot",
         "type": "select",
-        "options": ["Husqvarna", "Gardena"],
+        "options": ["Husqvarna"],
         "isRequired": true
       },
       {
@@ -272,13 +272,13 @@
   {
     "id": "installation_robot",
     "name": "Problème d'installation",
-    "description": "Installation de votre robot Husqvarna ou Gardena",
+    "description": "Installation de votre robot Husqvarna",
     "image": "/images/installation-robot.webp",
     "formFields": [
       {
         "label": "Marque du robot",
         "type": "select",
-        "options": ["Husqvarna", "Gardena"],
+        "options": ["Husqvarna"],
         "isRequired": true
       },
       {

@@ -1,5 +1,5 @@
 # robots.txt optimisé pour reparobot.be
-# Spécialiste Robot Tondeuse Husqvarna & Gardena en Belgique
+# Spécialiste Robot Tondeuse Husqvarna en Belgique
 
 # Allow all crawlers by default
 User-agent: *

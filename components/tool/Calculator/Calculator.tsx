@@ -181,7 +181,6 @@ const CostCalculator = (): JSX.Element => {
             >
               <option value="">Sélectionnez une marque</option>
               <option value="Husqvarna">Husqvarna</option>
-              <option value="Gardena">Gardena</option>
               <option value="Autre">Autre</option>
             </select>
             <div className="navigation-buttons">

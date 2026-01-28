@@ -342,7 +342,7 @@ const About: React.FC = () => {
                   </h4>
                   <p className="text-sm text-gray-600">
                     Plus de 12 années d'expertise dédiées aux robots tondeuses
-                    Husqvarna et Gardena, avec une constante mise à jour de nos
+                    Husqvarna, avec une constante mise à jour de nos
                     compétences.
                   </p>
                 </div>

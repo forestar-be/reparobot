@@ -11,9 +11,9 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   '@id': 'https://reparobot.be',
-  name: 'Entretien, Achat et Réparation Robot Tondeuse Husqvarna & Gardena en Belgique',
+  name: 'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
   description:
-    'Spécialiste robot tondeuse Husqvarna & Gardena en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
+    'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
   url: 'https://reparobot.be',
   mainEntity: {
     '@type': 'Organization',
@@ -21,11 +21,10 @@ const structuredData = {
     name: 'Forestar - Reparobot',
     alternateName: 'Reparobot',
     description:
-      'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna et Gardena en Belgique',
+      'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
     url: 'https://reparobot.be',
     logo: 'https://reparobot.be/images/logo/logo-70x70.png',
-    image:
-      'https://reparobot.be/images/robot-tondeuse-husqvarna-gardena-belgique.jpg',
+    image: 'https://reparobot.be/images/robot-tondeuse-husqvarna-belgique.jpg',
     telephone: '+3267830706',
     email: 'info@forestar.be',
     address: {
@@ -61,7 +60,7 @@ const structuredData = {
       '@id': 'https://reparobot.be/#services',
       name: 'Services Robot Tondeuse',
       description:
-        'Entretien, réparation et installation de robots tondeuses Husqvarna et Gardena',
+        'Entretien, réparation et installation de robots tondeuses Husqvarna',
       url: 'https://reparobot.be/#services',
     },
     {
