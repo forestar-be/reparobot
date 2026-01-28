@@ -34,7 +34,7 @@ const nextConfig = {
               protocol: apiProtocol,
               hostname: apiHostname,
               port: apiPort,
-              pathname: '/images/**',
+              pathname: '/**/images/**',
             },
           ]
         : []),
