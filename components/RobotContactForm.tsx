@@ -1,15 +1,15 @@
 'use client';
 
 import { submitRobotReservation } from '../lib/actions';
-import type { Robot } from '../lib/robots';
+import type { MaintenanceInfo, Robot } from '../lib/robots';
 import { trackEvent } from '../utils/analytics';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
 
-// Standard form fields for robot reservation
-const formFields = [
+// Standard form fields for robot reservation (base fields without maintenance)
+const baseFormFields = [
   {
     label: 'Nom',
     type: 'text',
@@ -56,11 +56,17 @@ const formFields = [
     type: 'textarea',
     isRequired: false,
   },
+];
+
+const MAINTENANCE_FIELD_KEY = 'Entretien annuel';
+
+const getFormFields = (maintenancePrice: number) => [
+  ...baseFormFields,
   {
-    label: 'Entretien annuel (79€)',
+    label: `${MAINTENANCE_FIELD_KEY} (${maintenancePrice}€)`,
     type: 'checkbox_price',
     isRequired: false,
-    price: 79,
+    price: maintenancePrice,
   },
   {
     label: "J'accepte les conditions générales",
@@ -73,11 +79,20 @@ const RobotContactForm = ({
   robot,
   onClose,
   onFormEdit = () => {},
+  maintenance,
 }: {
   robot: Robot;
   onClose: (force?: boolean) => void;
   onFormEdit?: (edited: boolean) => void;
+  maintenance: MaintenanceInfo;
 }) => {
+  // Generate form fields with dynamic maintenance price
+  const formFields = useMemo(
+    () => getFormFields(maintenance.price),
+    [maintenance.price],
+  );
+  const maintenanceFieldLabel = `${MAINTENANCE_FIELD_KEY} (${maintenance.price}€)`;
+
   const [formValues, setFormValues] = useState<{ [key: string]: any }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -147,13 +162,14 @@ const RobotContactForm = ({
       if (
         field.type === 'checkbox_price' &&
         formValues[field.label] &&
+        'price' in field &&
         field.price
       ) {
         price += field.price;
       }
     });
     setTotalPrice(price);
-  }, [formValues, robot.price, robot.installationPrice]);
+  }, [formValues, robot.price, robot.installationPrice, formFields]);
 
   const handleChange = (label: string, value: any) => {
     setFormValues({ ...formValues, [label]: value });
@@ -457,10 +473,10 @@ const RobotContactForm = ({
                 <span>Installation:</span>
                 <span className="font-bold">{robot.installationPrice} €</span>
               </div>
-              {formValues['Entretien annuel (79€)'] && (
+              {formValues[maintenanceFieldLabel] && (
                 <div className="flex justify-between">
                   <span>Entretien annuel:</span>
-                  <span className="font-bold">79 €</span>
+                  <span className="font-bold">{maintenance.price} €</span>
                 </div>
               )}
               <hr className="border-gray-200" />
@@ -521,10 +537,10 @@ const RobotContactForm = ({
             <span>Installation:</span>
             <span className="font-bold">{robot.installationPrice} €</span>
           </div>
-          {formValues['Entretien annuel (79€)'] && (
+          {formValues[maintenanceFieldLabel] && (
             <div className="flex justify-between">
               <span>Entretien annuel:</span>
-              <span className="font-bold">79 €</span>
+              <span className="font-bold">{maintenance.price} €</span>
             </div>
           )}
           <hr className="border-gray-200" />
