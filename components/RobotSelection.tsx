@@ -215,7 +215,7 @@ const RobotSelection = ({
                             {robot.name}
                           </h3>
 
-                          <p className="mb-6 flex-1 leading-relaxed text-gray-600">
+                          <p className="mb-6 line-clamp-3 flex-1 leading-relaxed text-gray-600">
                             {robot.description}
                           </p>
 
