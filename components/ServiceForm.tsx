@@ -2,14 +2,14 @@
 'use client';
 
 import conditions from '../config/conditions.json';
+import { submitServiceForm } from '../lib/actions';
+import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
 import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
 import { ServicesProps } from './Services';
-
-const API_URL = process.env.API_URL;
-const AUTH_TOKEN = process.env.AUTH_TOKEN;
+import TurnstileWidget from './TurnstileWidget';
 
 const ServiceForm = ({
   service,
@@ -28,6 +28,11 @@ const ServiceForm = ({
   const [termsOpen, setTermsOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(service.basePrice);
   const [isLoading, setIsLoading] = useState(false);
+  // R006 (phase 9.18) — le jeton du widget, relayé tel quel à la server
+  // action. `resetSignal` réarme le widget après un refus : un jeton refusé
+  // est un jeton consommé (AC-06).
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
 
   const formRef = useRef<HTMLFormElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
@@ -152,17 +157,26 @@ const ServiceForm = ({
     }
 
     try {
-      const response = await fetch(`${API_URL}/submit-form`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-        body: JSON.stringify(formattedValues),
-      });
+      // Server action, et non `fetch` depuis le navigateur : `API_URL` et
+      // `AUTH_TOKEN` ne sont pas remplacés côté client par Next, et cette
+      // requête partait donc vers `undefined/submit-form` (D-13). Le jeton
+      // Turnstile part avec, sans jamais être vérifié ici (D-04).
+      const result = await submitServiceForm(formattedValues, turnstileToken);
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (!result.success) {
+        const refus = turnstileMessage(result.code);
+        if (refus) {
+          setTurnstileResetSignal((precedent) => precedent + 1);
+          setModalType('error');
+          setModalMessage(refus);
+          trackEvent(
+            'form_submit_error',
+            'form_interaction',
+            'turnstile_refus',
+          );
+          return;
+        }
+        throw new Error(result.error || 'Erreur lors de la soumission');
       }
 
       setFormValues({});
@@ -441,10 +455,18 @@ const ServiceForm = ({
           </div>
         )}
 
+        {/* Vérification anti-robot (R006) — rien du tout sans sitekey. */}
+        <TurnstileWidget
+          action="reparobot-service"
+          className="mt-6"
+          onToken={setTurnstileToken}
+          resetSignal={turnstileResetSignal}
+        />
+
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || (turnstileEnabled() && !turnstileToken)}
           aria-busy={isLoading}
           className="mt-6 w-full rounded-lg bg-primary-600 px-6 py-3 font-medium text-white transition-colors duration-200 hover:bg-primary-700 disabled:bg-primary-600 disabled:opacity-70 sm:w-auto sm:py-2"
         >
@@ -453,6 +475,8 @@ const ServiceForm = ({
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
               Envoi...
             </span>
+          ) : turnstileEnabled() && !turnstileToken ? (
+            'Vérification…'
           ) : (
             'Envoyer'
           )}

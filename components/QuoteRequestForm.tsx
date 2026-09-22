@@ -5,9 +5,11 @@ import {
   fetchRobots,
   submitQuoteRequest,
 } from '../lib/actions';
+import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Modal from './Modal';
+import TurnstileWidget from './TurnstileWidget';
 
 interface Robot {
   id: number;
@@ -59,6 +61,9 @@ const QuoteRequestForm = (): JSX.Element => {
   const [robotsLoading, setRobotsLoading] = useState(true);
   const [accessoriesLoading, setAccessoriesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  // R006 (phase 9.18) — jeton relayé à la server action, jamais vérifié ici.
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [requestId, setRequestId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -153,9 +158,17 @@ const QuoteRequestForm = (): JSX.Element => {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     try {
-      const result = await submitQuoteRequest(formData);
+      const result = await submitQuoteRequest(formData, turnstileToken);
 
       if (!result.success) {
+        const refus = turnstileMessage(result.code);
+        if (refus) {
+          // Un jeton refusé est un jeton consommé : réarmer le widget, garder
+          // la saisie du client, et dire ce qui s'est passé (AC-05/AC-06).
+          setTurnstileResetSignal((precedent) => precedent + 1);
+          setError(refus);
+          return;
+        }
         throw new Error(result.error || 'Erreur lors de la soumission');
       }
 
@@ -1018,10 +1031,22 @@ const QuoteRequestForm = (): JSX.Element => {
                 </div>
               )}
 
+              {/* Vérification anti-robot (R006) — rien sans sitekey. */}
+              <TurnstileWidget
+                action="reparobot-devis"
+                className="flex justify-center pt-4"
+                onToken={setTurnstileToken}
+                resetSignal={turnstileResetSignal}
+              />
+
               <div className="flex flex-col justify-center gap-3 pt-4 sm:gap-4 sm:pt-6">
                 <button
                   type="submit"
-                  disabled={loading || !formData.robotInventoryId}
+                  disabled={
+                    loading ||
+                    !formData.robotInventoryId ||
+                    (turnstileEnabled() && !turnstileToken)
+                  }
                   className="btn-primary w-full px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[200px] sm:text-base"
                 >
                   {loading ? (
@@ -1029,6 +1054,8 @@ const QuoteRequestForm = (): JSX.Element => {
                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                       Envoi en cours...
                     </span>
+                  ) : turnstileEnabled() && !turnstileToken ? (
+                    'Vérification…'
                   ) : (
                     'Demander un devis'
                   )}

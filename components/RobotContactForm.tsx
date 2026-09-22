@@ -2,11 +2,13 @@
 
 import { submitRobotReservation } from '../lib/actions';
 import type { MaintenanceInfo, Robot } from '../lib/robots';
+import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
 import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
+import TurnstileWidget from './TurnstileWidget';
 
 // Standard form fields for robot reservation (base fields without maintenance)
 const baseFormFields = [
@@ -103,6 +105,9 @@ const RobotContactForm = ({
     robot.price + robot.installationPrice,
   );
   const [isLoading, setIsLoading] = useState(false);
+  // R006 (phase 9.18) — jeton relayé à la server action, jamais vérifié ici.
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
 
   const formRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
@@ -241,9 +246,24 @@ const RobotContactForm = ({
     }
 
     try {
-      const result = await submitRobotReservation(formattedValues);
+      const result = await submitRobotReservation(
+        formattedValues,
+        turnstileToken,
+      );
 
       if (!result.success) {
+        const refus = turnstileMessage(result.code);
+        if (refus) {
+          setTurnstileResetSignal((precedent) => precedent + 1);
+          setModalType('error');
+          setModalMessage(refus);
+          trackEvent(
+            'form_submit_error',
+            'form_interaction',
+            'turnstile_refus',
+          );
+          return;
+        }
         throw new Error(result.error || 'Erreur lors de la soumission');
       }
 
@@ -508,9 +528,17 @@ const RobotContactForm = ({
             {formFields.map(renderField)}
           </div>
 
+          {/* Vérification anti-robot (R006) — rien du tout sans sitekey. */}
+          <TurnstileWidget
+            action="reparobot-reservation"
+            className="mt-4"
+            onToken={setTurnstileToken}
+            resetSignal={turnstileResetSignal}
+          />
+
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || (turnstileEnabled() && !turnstileToken)}
             className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
@@ -518,6 +546,8 @@ const RobotContactForm = ({
                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                 Envoi en cours...
               </span>
+            ) : turnstileEnabled() && !turnstileToken ? (
+              'Vérification…'
             ) : (
               'Réserver ce robot'
             )}
