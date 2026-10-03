@@ -55,12 +55,15 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('submitServiceForm', () => {
+describe('submitServiceRequest', () => {
   it("poste sur /submit-form et relaie le jeton dans l'en-tête (D-04)", async () => {
     const mock = fetchMock(new Response('{}', { status: 200 }));
-    const { submitServiceForm } = await loadActions();
+    const { submitServiceRequest } = await loadActions();
 
-    const result = await submitServiceForm({ name: 'Jean' }, 'jeton-turnstile');
+    const result = await submitServiceRequest(
+      { name: 'Jean' },
+      'jeton-turnstile',
+    );
 
     expect(result).toEqual({ success: true });
     expect(urlOf(mock)).toBe(`${API_URL}/submit-form`);
@@ -71,9 +74,9 @@ describe('submitServiceForm', () => {
 
   it("ne pose pas d'en-tête vide quand il n'y a pas de jeton", async () => {
     const mock = fetchMock(new Response('{}', { status: 200 }));
-    const { submitServiceForm } = await loadActions();
+    const { submitServiceRequest } = await loadActions();
 
-    await submitServiceForm({ name: 'Jean' });
+    await submitServiceRequest({ name: 'Jean' });
 
     // Un en-tête vide et un en-tête absent ne disent pas la même chose au
     // garde : « widget muet » n'est pas « pas de widget ».
@@ -91,9 +94,9 @@ describe('submitServiceForm', () => {
         { status: 403 },
       ),
     );
-    const { submitServiceForm } = await loadActions();
+    const { submitServiceRequest } = await loadActions();
 
-    const result = await submitServiceForm({ name: 'Jean' }, 'jeton-usé');
+    const result = await submitServiceRequest({ name: 'Jean' }, 'jeton-usé');
 
     expect(result.success).toBe(false);
     expect(result.code).toBe('turnstile_failed');
@@ -105,18 +108,18 @@ describe('submitServiceForm', () => {
         status: 503,
       }),
     );
-    const { submitServiceForm } = await loadActions();
+    const { submitServiceRequest } = await loadActions();
 
-    expect((await submitServiceForm({}, 'jeton')).code).toBe(
+    expect((await submitServiceRequest({}, 'jeton')).code).toBe(
       'turnstile_unavailable',
     );
   });
 
   it("ne fabrique pas de code quand le corps de l'erreur est illisible", async () => {
     fetchMock(new Response('<html>502</html>', { status: 502 }));
-    const { submitServiceForm } = await loadActions();
+    const { submitServiceRequest } = await loadActions();
 
-    const result = await submitServiceForm({}, 'jeton');
+    const result = await submitServiceRequest({}, 'jeton');
 
     expect(result.success).toBe(false);
     expect(result.code).toBeUndefined();
@@ -176,9 +179,9 @@ describe('configuration absente', () => {
     vi.stubEnv('API_URL', '');
     vi.stubEnv('AUTH_TOKEN', '');
     const mock = fetchMock(new Response('{}', { status: 200 }));
-    const { submitServiceForm } = await import('./actions');
+    const { submitServiceRequest } = await import('./actions');
 
-    expect(await submitServiceForm({})).toEqual({
+    expect(await submitServiceRequest({})).toEqual({
       success: false,
       error: 'Configuration manquante',
     });

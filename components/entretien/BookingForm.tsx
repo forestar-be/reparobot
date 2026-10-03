@@ -1,6 +1,6 @@
 'use client';
 
-import { submitServiceForm } from '../../lib/actions';
+import { submitServiceRequest } from '../../lib/actions';
 import {
   BRAND_SUGGESTIONS,
   buildServiceRequestBody,
@@ -104,7 +104,7 @@ export default function BookingForm({ offers }: { offers: ServiceOffer[] }) {
       date,
       contact,
     });
-    await submission.submit((token) => submitServiceForm(body, token));
+    await submission.submit((token) => submitServiceRequest(body, token));
   }
 
   const panel =

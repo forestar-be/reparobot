@@ -119,7 +119,7 @@ export async function submitCallbackRequest(
  * `AUTH_TOKEN` ne sont pas remplacés côté client par Next, et l'ancien formulaire
  * partait ainsi vers `undefined/submit-form` (D-13, du 25 janv. au 22 sept. 2026).
  */
-export async function submitServiceForm(
+export async function submitServiceRequest(
   formData: FormSubmitData,
   turnstileToken?: string,
 ): Promise<ApiResponse<void>> {
