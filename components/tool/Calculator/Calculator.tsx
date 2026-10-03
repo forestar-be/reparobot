@@ -169,7 +169,7 @@ const CostCalculator = (): JSX.Element => {
 
   return (
     <div className="diagnostic-quiz">
-      <h2>Quiz de Diagnostic pour Coût d'Entretien</h2>
+      <h1>Quiz de Diagnostic pour Coût d'Entretien</h1>
       <div className="quiz-step">
         {step === 1 && (
           <>

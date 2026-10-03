@@ -7,6 +7,10 @@ export interface RobotCategory {
 
 export interface Robot {
   id: string;
+  /** Adresse de la fiche : `/robots/<slug>` (R003). */
+  slug: string;
+  /** Robot à la une de l'accueil, réglé dans forestar-robot. */
+  isFeatured: boolean;
   name: string;
   category: string;
   description: string;
@@ -22,7 +26,8 @@ export interface Robot {
 
 export interface MaintenanceInfo {
   description: string;
-  price: number;
+  /** `null` si le forfait n'est pas chiffré : préférer `/service-offers`. */
+  price: number | null;
 }
 
 export interface RobotsCatalog {
@@ -52,7 +57,7 @@ const FALLBACK_CATALOG: RobotsCatalog = {
   maintenance: {
     description:
       "Entretien de fin d'année (remise à l'abri, nettoyage complet, mise à jour)",
-    price: 79,
+    price: null,
   },
   generatedAt: '2026-01-01T00:00:00.000Z',
 };
@@ -110,26 +115,21 @@ export async function getRobotsCatalog(): Promise<RobotsCatalog> {
   }
 }
 
-/**
- * Get robots for a specific category
- */
-export async function getRobotsByCategory(
-  categoryId: string,
-): Promise<Robot[]> {
+/** Un robot par son slug (`/robots/<slug>`, `?robot=<slug>` des formulaires). */
+export async function getRobotBySlug(slug: string): Promise<Robot | undefined> {
   const catalog = await getRobotsCatalog();
-  return catalog.robots.filter((robot) => robot.category === categoryId);
+  return catalog.robots.find((robot) => robot.slug === slug);
+}
+
+/** Robots à la une, dans l'ordre renvoyé par le serveur (`publicOrder`). */
+export async function getFeaturedRobots(): Promise<Robot[]> {
+  const catalog = await getRobotsCatalog();
+  return catalog.robots.filter((robot) => robot.isFeatured);
 }
 
 /**
- * Get a specific robot by ID
- */
-export async function getRobotById(id: string): Promise<Robot | undefined> {
-  const catalog = await getRobotsCatalog();
-  return catalog.robots.find((robot) => robot.id === id);
-}
-
-/**
- * Get the total count of robots for SEO structured data
+ * Nombre de robots du catalogue.
+ * (Réservé à l'ancienne page /robots ; retiré avec elle en R005-S03.)
  */
 export async function getRobotsCount(): Promise<number> {
   const catalog = await getRobotsCatalog();

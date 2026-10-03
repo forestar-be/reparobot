@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 
 export default function CookiesPage() {
   return (
-    <div className="section-padding-large pt-32">
-      <div className="container-custom max-w-3xl">
-        <h1 className="mb-6 font-display text-3xl font-bold text-gray-900">
+    <div className="py-12 mobile:py-8">
+      <div className="wrap max-w-3xl">
+        <h1 className="mb-6 text-[41px] text-ink mobile:text-[33px]">
           Cookies et mesure d&apos;audience
         </h1>
 
-        <div className="space-y-6 text-gray-700">
+        <div className="space-y-6 text-muted">
           <p>
             Ce site ne dépose aucun traceur de mesure avant votre accord. Vous
             choisissez dans le bandeau affiché à votre première visite ; refuser
@@ -27,10 +27,7 @@ export default function CookiesPage() {
           </p>
 
           <section aria-labelledby="necessaires">
-            <h2
-              id="necessaires"
-              className="mb-2 font-display text-xl font-semibold text-gray-900"
-            >
+            <h2 id="necessaires" className="mb-2 text-[22px] text-ink">
               Ce qui est enregistré sans votre accord
             </h2>
             <ul className="list-disc space-y-1 pl-6">
@@ -48,10 +45,7 @@ export default function CookiesPage() {
           </section>
 
           <section aria-labelledby="mesure">
-            <h2
-              id="mesure"
-              className="mb-2 font-display text-xl font-semibold text-gray-900"
-            >
+            <h2 id="mesure" className="mb-2 text-[22px] text-ink">
               Mesure d&apos;audience (Google Analytics 4), avec votre accord
             </h2>
             <ul className="list-disc space-y-1 pl-6">
@@ -80,10 +74,7 @@ export default function CookiesPage() {
           </section>
 
           <section aria-labelledby="retrait">
-            <h2
-              id="retrait"
-              className="mb-2 font-display text-xl font-semibold text-gray-900"
-            >
+            <h2 id="retrait" className="mb-2 text-[22px] text-ink">
               Changer ou retirer votre choix
             </h2>
             <p className="mb-3">
@@ -92,16 +83,13 @@ export default function CookiesPage() {
               retrait arrête la mesure immédiatement. Vous pouvez aussi
               supprimer les cookies depuis les réglages de votre navigateur.
             </p>
-            <CookieSettingsButton className="min-h-11 rounded-lg border border-primary-600 px-5 text-sm font-medium text-primary-700 hover:bg-primary-50" />
+            <CookieSettingsButton className="min-h-11 rounded-action border border-forest px-5 text-[13px] font-bold text-forest hover:bg-sage" />
           </section>
 
           <p>
             Responsable du site : Forestar, 160 Chaussée d&apos;Ecaussinnes,
             7090 Braine-le-Comte,{' '}
-            <a
-              href="mailto:info@forestar.be"
-              className="text-primary-700 underline"
-            >
+            <a href="mailto:info@forestar.be" className="text-forest underline">
               info@forestar.be
             </a>
             .

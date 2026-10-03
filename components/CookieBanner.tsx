@@ -18,8 +18,8 @@ import Link from 'next/link';
  * demande des boutons de refus et d'acceptation affichés de la même façon ; passer
  * à un style identique revient à changer les classes du bouton « Refuser ».
  *
- * Sans identifiant GA4 valide, rien n'est rendu. Style volontairement sobre : la
- * maquette le reprendra (R008).
+ * Sans identifiant GA4 valide, rien n'est rendu. Restylé au gabarit (R008-S04) :
+ * ivoire, vert forêt, Manrope, focus visibles.
  */
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
@@ -65,11 +65,11 @@ export default function CookieBanner() {
       role="dialog"
       aria-labelledby="cookie-banner-title"
       aria-describedby="cookie-banner-text"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-gray-200 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.12)]"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-line bg-ivory shadow-[0_-3px_16px_#183e3214]"
     >
-      <div className="container-custom flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-        <div className="text-sm text-gray-700">
-          <p id="cookie-banner-title" className="font-semibold text-gray-900">
+      <div className="wrap flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="text-[13px] text-muted mobile:text-xs">
+          <p id="cookie-banner-title" className="font-bold text-ink">
             Mesure d&apos;audience
           </p>
           <p id="cookie-banner-text">
@@ -78,7 +78,7 @@ export default function CookieBanner() {
             choix.{' '}
             <Link
               href="/cookies"
-              className="font-medium text-primary-700 underline hover:text-primary-800"
+              className="font-bold text-forest underline hover:text-forest-hover"
             >
               En savoir plus
             </Link>
@@ -88,7 +88,7 @@ export default function CookieBanner() {
           <button
             type="button"
             onClick={() => choose(false)}
-            className="min-h-11 rounded-lg px-4 text-sm font-medium text-gray-700 underline hover:text-gray-900"
+            className="min-h-11 rounded-action px-4 text-[13px] font-semibold text-forest underline hover:text-forest-hover"
           >
             Refuser
           </button>
@@ -96,7 +96,7 @@ export default function CookieBanner() {
             ref={acceptRef}
             type="button"
             onClick={() => choose(true)}
-            className="min-h-11 rounded-lg bg-primary-600 px-5 text-sm font-medium text-white hover:bg-primary-700"
+            className="min-h-11 rounded-action border border-forest bg-forest px-5 text-[13px] font-bold text-white hover:bg-forest-hover"
           >
             Accepter
           </button>

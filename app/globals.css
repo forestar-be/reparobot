@@ -1,9 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap')
-layer(base);
-
 @import 'tailwindcss';
 
 @theme {
+  /* Jetons du gabarit (maquette `final/`, R005-S02). Le bleu Husqvarna reste dans le logo. */
+  --color-forest: #183e32;
+  --color-forest-hover: #295340;
+  --color-ink: #202b25;
+  --color-muted: #606b61;
+  --color-ivory: #f7f7f0;
+  --color-sage: #e7ecdf;
+  --color-sage-soft: #f0f1e9;
+  --color-footer: #e9ede3;
+  --color-line: #d9dfd4;
+  --color-field: #c9d2c5;
+  --color-leaf: #6b8753;
+  --color-on-dark: #ecf0e5;
+  --color-on-dark-muted: #c5d3c1;
+  --color-on-dark-eyebrow: #bbd0a9;
+  --color-on-dark-line: #527060;
+
+  --radius-card: 10px;
+  --radius-panel: 12px;
+  --radius-action: 6px;
+
+  /* Couleurs historiques : encore lues par les formulaires et calculateurs. */
   --color-primary-50: #f0f9f4;
   --color-primary-100: #dcf2e7;
   --color-primary-200: #bce5d1;
@@ -28,8 +47,9 @@ layer(base);
   --color-gray-900: #111827;
   --color-gray-950: #030712;
 
-  --font-sans: Inter, sans-serif;
-  --font-display: Poppins, sans-serif;
+  /* Manrope : next/font/local dans app/layout.tsx (R005-S02), licence OFL dans app/fonts. */
+  --font-sans: var(--font-manrope), Arial, sans-serif;
+  --font-display: var(--font-manrope), Arial, sans-serif;
 
   --animate-fade-in: fadeIn 0.6s ease-out forwards;
   --animate-slide-up: slideUp 0.6s ease-out forwards;
@@ -268,14 +288,17 @@ layer(base);
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 68px;
+    scroll-padding-top: 30px;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    @apply text-gray-900 bg-white;
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   h1,
@@ -284,7 +307,56 @@ layer(base);
   h4,
   h5,
   h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@custom-variant tablet (@media (max-width: 1100px));
+@custom-variant mobile (@media (max-width: 760px));
+@custom-variant wide (@media (min-width: 1600px));
+
+/* Largeur du contenu : 1 240 px à 1 440 px (marges de 100 px), 18 px à 390 px. */
+@utility wrap {
+  width: min(1240px, calc(100% - 80px));
+  margin-inline: auto;
+  @media (min-width: 1600px) {
+    width: min(1320px, calc(100% - 100px));
+  }
+  @media (max-width: 1100px) {
+    width: calc(100% - 48px);
+  }
+  @media (max-width: 760px) {
+    width: calc(100% - 36px);
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 14px;
+    padding-bottom: 74px;
+  }
+}
+
+/* Lien d'évitement : visible au clavier seulement. */
+@utility skip-link {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  z-index: 70;
+  background: #fff;
+  padding: 12px;
+  &:focus {
+    top: 10px;
   }
 }
 
@@ -334,6 +406,7 @@ layer(base);
   }
 }
 
+@layer base {
 /* Global reset for links */
 a {
   color: inherit;
@@ -356,6 +429,7 @@ a:active {
   text-decoration: none;
   -webkit-text-decoration: none;
 }
+}
 
 /* Smooth focus states */
 *:focus {
@@ -363,9 +437,8 @@ a:active {
 }
 
 *:focus-visible {
-  outline: 2px solid #43a047;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 3px solid var(--color-leaf);
+  outline-offset: 4px;
 }
 
 /* Improved accessibility */

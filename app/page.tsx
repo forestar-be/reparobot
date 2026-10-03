@@ -103,7 +103,7 @@ const Home = (): JSX.Element => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <main id="home" className="overflow-hidden">
+      <div id="home" className="overflow-hidden">
         {/* Hero Section */}
         <Suspense
           fallback={
@@ -138,7 +138,7 @@ const Home = (): JSX.Element => {
 
         {/* Contact Section */}
         <Contact />
-      </main>
+      </div>
     </>
   );
 };

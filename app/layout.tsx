@@ -1,10 +1,29 @@
 import Analytics from '../components/Analytics';
 import CookieBanner from '../components/CookieBanner';
-import PageLayout from '../layout/PageLayout';
+import MobileBar from '../components/site/MobileBar';
+import SiteFooter from '../components/site/SiteFooter';
+import SiteHeader from '../components/site/SiteHeader';
 import { SITE_URL } from '../lib/site';
+import { getSiteInfo, telHref } from '../lib/site-info';
 import React from 'react';
 import { Metadata } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
+
+// Manrope (SIL OFL, licence dans ./fonts/OFL.txt) : fichiers de la maquette, conteneur
+// woff2. Le texte courant est en 400, les titres en 600, les prix et actions en 700,
+// la signature en 800.
+const manrope = localFont({
+  src: [
+    { path: './fonts/manrope-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/manrope-600.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/manrope-700.woff2', weight: '700', style: 'normal' },
+    { path: './fonts/manrope-800.woff2', weight: '800', style: 'normal' },
+  ],
+  variable: '--font-manrope',
+  display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
+});
 
 // Define your metadata using Next.js Metadata API
 export const metadata: Metadata = {
@@ -166,21 +185,15 @@ const structuredData = {
   slogan: 'Votre spécialiste robot tondeuse en Belgique',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const info = await getSiteInfo();
   return (
-    <html lang="fr">
+    <html lang="fr" className={manrope.variable}>
       <head>
-        {/* Preload critical images */}
-        <link
-          rel="preload"
-          as="image"
-          href="/images/hero.webp"
-          type="image/webp"
-        />
         {/* Structured Data */}
         <script
           type="application/ld+json"
@@ -188,7 +201,13 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <PageLayout>{children}</PageLayout>
+        <a href="#contenu" className="skip-link">
+          Aller au contenu
+        </a>
+        <SiteHeader />
+        <main id="contenu">{children}</main>
+        <SiteFooter />
+        <MobileBar phoneHref={telHref(info)} />
         <Analytics />
         <CookieBanner />
       </body>

@@ -90,7 +90,7 @@ const RobotContactForm = ({
 }) => {
   // Generate form fields with dynamic maintenance price
   const formFields = useMemo(
-    () => getFormFields(maintenance.price),
+    () => getFormFields(maintenance.price ?? 0),
     [maintenance.price],
   );
   const maintenanceFieldLabel = `${MAINTENANCE_FIELD_KEY} (${maintenance.price}€)`;

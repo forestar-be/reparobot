@@ -12,7 +12,7 @@ export default function CalculatorPage(): JSX.Element {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center">
+        <div className="flex min-h-[60vh] items-center justify-center">
           Loading calculator...
         </div>
       }
