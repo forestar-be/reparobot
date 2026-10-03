@@ -93,8 +93,8 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
     await monter(ID);
     const bandeau = await screen.findByRole('dialog');
     expect(bandeau).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Accepter' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Refuser' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Tout accepter' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Tout refuser' })).toBeTruthy();
     expect(
       screen.getByRole('link', { name: /En savoir plus/ }).getAttribute('href'),
     ).toBe('/cookies');
@@ -105,7 +105,9 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
 
   it('Refuser : le bandeau disparaît, toujours aucun script ni événement', async () => {
     await monter(ID);
-    fireEvent.click(await screen.findByRole('button', { name: 'Refuser' }));
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Tout refuser' }),
+    );
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(scriptsGoogle()).toHaveLength(0);
     fireEvent.click(screen.getByText('Appeler'));
@@ -115,7 +117,9 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
   it('Accepter : le script GA4 se charge avec le bon identifiant, GA4 émet la page vue (une seule)', async () => {
     await monter(ID);
     await act(async () => {
-      fireEvent.click(await screen.findByRole('button', { name: 'Accepter' }));
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Tout accepter' }),
+      );
     });
     await vi.waitFor(() => expect(scriptsGoogle()).toHaveLength(1));
     expect(scriptsGoogle()[0].getAttribute('src')).toContain(`id=${ID}`);
@@ -130,7 +134,9 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
   it('un lien tel: envoie phone_click après accord, un autre lien rien', async () => {
     await monter(ID);
     await act(async () => {
-      fireEvent.click(await screen.findByRole('button', { name: 'Accepter' }));
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Tout accepter' }),
+      );
     });
     fireEvent.click(screen.getByText('Écrire'));
     expect(appels().filter((a) => a[1] === 'phone_click')).toHaveLength(0);
@@ -158,15 +164,46 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
   it('« Gérer les cookies » rouvre le bandeau, et Refuser retire la mesure', async () => {
     const { consent } = await monter(ID);
     await act(async () => {
-      fireEvent.click(await screen.findByRole('button', { name: 'Accepter' }));
+      fireEvent.click(
+        await screen.findByRole('button', { name: 'Tout accepter' }),
+      );
     });
     expect(screen.queryByRole('dialog')).toBeNull();
     await act(async () => consent.openConsentSettings());
-    fireEvent.click(await screen.findByRole('button', { name: 'Refuser' }));
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Tout refuser' }),
+    );
     expect(screen.queryByRole('dialog')).toBeNull();
     const avant = appels().length;
     fireEvent.click(screen.getByText('Appeler'));
     expect(appels().length).toBe(avant);
     expect(consent.hasAnalyticsConsent()).toBe(false);
+  });
+
+  it('modale obligatoire : ni Échap ni clic sur le fond ne la ferment, et elle passe au-dessus de la carte', async () => {
+    await monter(ID);
+    const modale = await screen.findByRole('dialog');
+    expect(modale.getAttribute('aria-modal')).toBe('true');
+    expect(modale.parentElement?.className).toContain('z-[2000]');
+    fireEvent.keyDown(document, { key: 'Escape' });
+    fireEvent.mouseDown(modale.parentElement as HTMLElement);
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(document.activeElement?.textContent).toBe('Tout accepter');
+  });
+
+  it('Personnaliser : la mesure est décochée par défaut, « Enregistrer mes choix » vaut un refus', async () => {
+    await monter(ID);
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Personnaliser' }),
+    );
+    const caseMesure = screen.getByRole('checkbox', {
+      name: /Mesure d’audience/,
+    }) as HTMLInputElement;
+    expect(caseMesure.checked).toBe(false);
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Enregistrer mes choix' }),
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(scriptsGoogle()).toHaveLength(0);
   });
 });
