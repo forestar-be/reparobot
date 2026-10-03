@@ -25,63 +25,52 @@ const manrope = localFont({
   fallback: ['Arial', 'sans-serif'],
 });
 
-// Define your metadata using Next.js Metadata API
+// Métadonnées communes. Chaque page déclare son propre titre, sa description et son
+// canonical (`alternates.canonical`, via `siteUrl`) : aucun canonical global ici, il
+// ferait pointer toutes les pages vers l'accueil.
+const SITE_NAME = 'reparobot par Forestar';
+const DEFAULT_TITLE =
+  'Robots tondeuses Husqvarna, entretien et réparation toutes marques';
+const DEFAULT_DESCRIPTION =
+  'Revendeur agréé Husqvarna à Braine-le-Comte : robots tondeuses Automower®, installation, entretien et réparation de robots de toutes marques.';
+const OG_IMAGE = {
+  url: '/images/og-reparobot.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'Husqvarna Automower 430V NERA dans un jardin, mise en scène',
+};
+// Code de vérification Search Console (balise) : lu dans l'environnement, jamais en dur.
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    template: '%s | Robot Husqvarna Belgique | Forestar',
-    default:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique | Forestar',
+    template: '%s | reparobot',
+    default: `${DEFAULT_TITLE} | reparobot`,
   },
-  description:
-    'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés. Service professionnel garanti.',
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
   icons: {
     icon: '/images/logo/favicon.ico',
     shortcut: '/images/logo/favicon.ico',
     apple: '/images/logo/logo-70x70.png',
   },
-  keywords: [
-    'robot tondeuse Belgique',
-    'Husqvarna Belgique',
-
-    'entretien robot tondeuse',
-    'réparation robot tondeuse',
-    'achat robot tondeuse',
-    'installation robot tondeuse',
-    'maintenance robot tondeuse',
-    'service robot tondeuse Belgique',
-    'robot tondeuse automatique',
-    'tondeuse robotisée',
-    'expert robot tondeuse',
-  ],
-  authors: [{ name: 'Forestar - Reparobot' }],
+  authors: [{ name: 'Forestar' }],
   creator: 'Forestar',
   publisher: 'Forestar',
-  generator: 'Next.js',
   openGraph: {
-    title:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
-    description:
-      'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
-    url: SITE_URL,
-    siteName: 'Robot Husqvarna Belgique | Forestar',
+    siteName: SITE_NAME,
     locale: 'fr_BE',
     type: 'website',
-    images: [
-      {
-        url: '/images/robot-tondeuse-husqvarna-belgique.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Robot tondeuse Husqvarna - Entretien et réparation en Belgique',
-      },
-    ],
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Robot Tondeuse Husqvarna Belgique',
-    description:
-      'Entretien, achat et réparation de robots tondeuses par des experts certifiés en Belgique.',
-    images: ['/images/robot-tondeuse-twitter.jpg'],
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,
@@ -94,12 +83,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
+  ...(googleVerification
+    ? { verification: { google: googleVerification } }
+    : {}),
   category: 'jardinage',
 };
 

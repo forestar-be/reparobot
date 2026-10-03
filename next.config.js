@@ -86,6 +86,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Anciennes adresses (R009) : 301 vers l'accueil, au bloc contact pour `/contact`.
+  // `statusCode: 301` et non `permanent: true`, qui répondrait 308.
+  async redirects() {
+    return [
+      { source: '/about', destination: '/', statusCode: 301 },
+      { source: '/contact', destination: '/#contact', statusCode: 301 },
+    ];
+  },
   async headers() {
     return [
       {

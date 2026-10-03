@@ -61,8 +61,5 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${SITE_URL}/devis`,
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
   category: 'service',
 };
