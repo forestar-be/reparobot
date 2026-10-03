@@ -44,10 +44,17 @@ type TextKey =
 export default function ContactForm({
   robot,
   maintenancePrice,
+  title = 'Être recontacté',
+  submitLabel = 'Être recontacté',
+  hint = 'un conseil, une question ? nous vous recontactons',
 }: {
   robot: { name: string; ficheUrl: string; slug: string } | null;
   /** Prix du forfait BASE de l'entretien annuel ; `null` : la case n'est pas proposée. */
   maintenancePrice: number | null;
+  /** Titre du formulaire et libellé du bouton : la page `/contact` a les siens. */
+  title?: string;
+  submitLabel?: string;
+  hint?: string;
 }) {
   const [values, setValues] = useState(EMPTY_CONTACT);
   const [errors, setErrors] = useState<ContactErrors>({});
@@ -142,7 +149,7 @@ export default function ContactForm({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className={panel}>
-      <h2 className="mb-6 text-2xl">Être recontacté</h2>
+      <h2 className="mb-6 text-2xl">{title}</h2>
 
       <fieldset className="m-0 mb-[21px] min-w-0 border-0 p-0">
         <legend className="mb-2.5 p-0 text-sm font-semibold text-ink">
@@ -290,8 +297,8 @@ export default function ContactForm({
           error={errors.consent}
         />
         <SubmitBlock
-          label="Être recontacté"
-          hint="un conseil, une question ? nous vous recontactons"
+          label={submitLabel}
+          hint={hint}
           action="reparobot-contact"
           pending={submission.pending}
           waitingForTurnstile={submission.waitingForTurnstile}

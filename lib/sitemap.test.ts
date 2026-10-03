@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 describe('sitemap (R009-S01)', () => {
-  it('liste accueil, catalogue, chaque fiche, entretien, calculateurs et cookies', async () => {
+  it('liste accueil, catalogue, chaque fiche, entretien, contact et cookies', async () => {
     const { default: sitemap } = await import('../app/sitemap');
     const urls = (await sitemap()).map((e) => e.url);
     expect(urls).toEqual([
@@ -28,6 +28,7 @@ describe('sitemap (R009-S01)', () => {
       'https://www.reparobot.be/robots/husqvarna-automower-305',
       'https://www.reparobot.be/robots/husqvarna-automower-308v',
       'https://www.reparobot.be/entretien-reparation',
+      'https://www.reparobot.be/contact',
       'https://www.reparobot.be/cookies',
     ]);
   });
@@ -40,7 +41,6 @@ describe('sitemap (R009-S01)', () => {
       '/etre-recontacte',
       '/rappel',
       '/about',
-      '/contact',
       '#',
     ]) {
       expect(urls).not.toContain(absent);

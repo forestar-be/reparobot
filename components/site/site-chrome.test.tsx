@@ -57,7 +57,7 @@ describe('menu', () => {
     expect(NAV_ITEMS.map((i) => [i.label, i.href])).toEqual([
       ['Robots Husqvarna', '/robots'],
       ['Entretien & réparation', '/entretien-reparation'],
-      ['Contact', '/#contact'],
+      ['Contact', '/contact'],
     ]);
   });
 

@@ -36,6 +36,8 @@ describe('redirections', () => {
     expect(list.find((r) => r.source === '/devis/demande')?.destination).toBe(
       '/devis',
     );
-    expect(list.find((r) => r.source === '/contact')?.statusCode).toBe(301);
+    expect(list.find((r) => r.source === '/about')?.statusCode).toBe(301);
+    // `/contact` est une vraie page depuis le 4 oct. 2026 : plus de redirection.
+    expect(list.find((r) => r.source === '/contact')).toBeUndefined();
   });
 });
