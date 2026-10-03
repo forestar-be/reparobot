@@ -10,7 +10,7 @@
  * 3. **La mesure ne bloque jamais un formulaire** : chaque émission est protégée
  *    par `try` et ne renvoie rien. Une erreur de mesure est avalée.
  *
- * Quatre événements seulement : `page_view`, `generate_lead` (devis, rappel,
+ * Quatre événements seulement : `page_view` (émis par GA4), `generate_lead` (devis, rappel,
  * entretien) et `phone_click`. Aucun contenu de formulaire n'est transmis.
  */
 import { hasAnalyticsConsent } from './consent';
@@ -97,9 +97,9 @@ export function ensureAnalyticsBootstrap(): void {
     gtag('consent', 'update', { analytics_storage: 'granted' });
     gtag('js', new Date());
     gtag('config', GA4_MEASUREMENT_ID, {
-      // Les pages vues sont émises par `components/Analytics` : une seule par
-      // adresse, sans la chaîne de requête.
-      send_page_view: false,
+      // Première page vue à l'accord ; les suivantes viennent de la mesure
+      // améliorée (changements d'historique). Le site n'en émet aucune.
+      send_page_view: true,
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
       cookie_expires: GA4_COOKIE_EXPIRES_SECONDS,
@@ -137,14 +137,6 @@ function send(name: string, params: Record<string, string>): void {
   } catch {
     // La mesure ne bloque jamais un formulaire ni un lien.
   }
-}
-
-export function trackPageView(path: string): void {
-  send('page_view', {
-    page_path: path,
-    page_location: `${window.location.origin}${path}`,
-    page_title: document.title,
-  });
 }
 
 export type LeadType = 'devis' | 'rappel' | 'entretien';

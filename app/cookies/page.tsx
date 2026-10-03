@@ -3,7 +3,7 @@ import { SITE_URL } from '../../lib/site';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Cookies et mesure d'audience | Reparobot",
+  title: "Cookies et mesure d'audience",
   description:
     "Les traceurs de reparobot.be : mesure d'audience Google Analytics seulement avec votre accord, durée des cookies et retrait du consentement.",
   alternates: { canonical: `${SITE_URL}/cookies` },

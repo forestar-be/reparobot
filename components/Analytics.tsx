@@ -4,12 +4,10 @@ import {
   ensureAnalyticsBootstrap,
   GA4_MEASUREMENT_ID,
   syncAnalyticsConsent,
-  trackPageView,
   trackPhoneClick,
 } from '../lib/analytics';
 import { CONSENT_UPDATED_EVENT, hasAnalyticsConsent } from '../lib/consent';
-import { useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 
 /**
@@ -19,14 +17,13 @@ import Script from 'next/script';
  * vers googletagmanager.com ni vers google-analytics.com. Sans identifiant de mesure
  * valide, le composant ne rend rien du tout.
  *
- * Il émet aussi les pages vues (une par adresse, sans chaîne de requête) et le
- * clic sur le téléphone : un seul écouteur sur le document couvre tous les liens
- * `tel:` du site, présents et à venir.
+ * Les pages vues sont celles de GA4 (première page à l'accord, puis changements
+ * d'historique par la mesure améliorée) : le site n'en émet pas, sinon chaque page
+ * compte double. Il émet le clic sur le téléphone : un seul écouteur sur le
+ * document couvre tous les liens `tel:` du site, présents et à venir.
  */
 export default function Analytics() {
   const [allowed, setAllowed] = useState(false);
-  const pathname = usePathname();
-  const lastSentPath = useRef<string | null>(null);
 
   useEffect(() => {
     if (!GA4_MEASUREMENT_ID) return;
@@ -45,15 +42,7 @@ export default function Analytics() {
     if (!GA4_MEASUREMENT_ID) return;
     if (allowed) ensureAnalyticsBootstrap();
     syncAnalyticsConsent(allowed);
-    if (!allowed) lastSentPath.current = null;
   }, [allowed]);
-
-  useEffect(() => {
-    if (!GA4_MEASUREMENT_ID || !allowed) return;
-    if (lastSentPath.current === pathname) return;
-    lastSentPath.current = pathname;
-    trackPageView(pathname);
-  }, [allowed, pathname]);
 
   useEffect(() => {
     if (!GA4_MEASUREMENT_ID) return;

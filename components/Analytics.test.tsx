@@ -112,17 +112,19 @@ describe('avec un identifiant (AC-01 et AC-02)', () => {
     expect(appels().filter((a) => a[0] === 'event')).toEqual([]);
   });
 
-  it('Accepter : le script GA4 se charge avec le bon identifiant et la page vue part', async () => {
+  it('Accepter : le script GA4 se charge avec le bon identifiant, GA4 émet la page vue (une seule)', async () => {
     await monter(ID);
     await act(async () => {
       fireEvent.click(await screen.findByRole('button', { name: 'Accepter' }));
     });
     await vi.waitFor(() => expect(scriptsGoogle()).toHaveLength(1));
     expect(scriptsGoogle()[0].getAttribute('src')).toContain(`id=${ID}`);
-    const pageVue = appels().find(
-      (a) => a[0] === 'event' && a[1] === 'page_view',
-    );
-    expect(pageVue?.[2]).toMatchObject({ page_path: '/robots' });
+    const config = appels().find((a) => a[0] === 'config');
+    expect(config?.[2]).toMatchObject({ send_page_view: true });
+    // Le site n'émet pas de page_view lui-même : GA4 s'en charge (sinon doublon).
+    expect(
+      appels().filter((a) => a[0] === 'event' && a[1] === 'page_view'),
+    ).toHaveLength(0);
   });
 
   it('un lien tel: envoie phone_click après accord, un autre lien rien', async () => {
