@@ -43,7 +43,7 @@ const Contact = (): JSX.Element => {
   return (
     <section
       id="contact"
-      className="section-padding-small relative overflow-hidden bg-gradient-to-b from-primary-50 to-gray-50"
+      className="section-padding-small relative overflow-hidden bg-linear-to-b from-primary-50 to-gray-50"
       aria-labelledby="contact-title"
     >
       {/* Top Divider */}
@@ -76,7 +76,7 @@ const Contact = (): JSX.Element => {
             Notre équipe d'experts est à votre disposition pour répondre à
             toutes vos questions
           </p>
-          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-primary-400 to-primary-600"></div>
+          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-linear-to-r from-primary-400 to-primary-600"></div>
         </div>
 
         {/* Contact Information */}
@@ -100,7 +100,7 @@ const Contact = (): JSX.Element => {
                     {/* Phone */}
                     <div className="group">
                       <div className="flex items-center">
-                        <div className="mr-5 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mr-5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <Phone className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -142,7 +142,7 @@ const Contact = (): JSX.Element => {
                     {/* Email */}
                     <div className="group">
                       <div className="flex items-center">
-                        <div className="mr-5 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mr-5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <Mail className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -184,7 +184,7 @@ const Contact = (): JSX.Element => {
                     {/* Address */}
                     <div className="group">
                       <div className="flex items-start">
-                        <div className="mr-5 mt-1 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mr-5 mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <MapPin className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -251,8 +251,8 @@ const Contact = (): JSX.Element => {
                 </div>
 
                 {/* Decorative elements */}
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary-300/30 to-transparent"></div>
-                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-gradient-to-tr from-primary-200/40 to-transparent"></div>
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-linear-to-br from-primary-300/30 to-transparent"></div>
+                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-linear-to-tr from-primary-200/40 to-transparent"></div>
               </div>
             </div>
 
@@ -294,7 +294,7 @@ const Contact = (): JSX.Element => {
 
         {/* Additional Info */}
         <div className="mt-12">
-          <div className="rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 p-8 text-center text-white">
+          <div className="rounded-2xl bg-linear-to-r from-primary-500 to-primary-600 p-8 text-center text-white">
             <h3 className="mb-4 font-display text-2xl font-bold">
               Horaires d'ouverture
             </h3>

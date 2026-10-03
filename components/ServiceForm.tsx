@@ -330,7 +330,7 @@ const ServiceForm = ({
             <div className="flex items-start">
               <input
                 type="checkbox"
-                className="mt-1 h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:h-4 sm:w-4"
+                className="mt-1 h-5 w-5 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:h-4 sm:w-4"
                 checked={formValues[field.label] || false}
                 onChange={(e) => handleChange(field.label, e.target.checked)}
                 aria-describedby={`${field.label}-error`}
@@ -484,7 +484,7 @@ const ServiceForm = ({
 
         {/* Submission Modal */}
         {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="mx-4 max-w-md rounded-lg bg-white p-6">
               <h3 className="mb-4 text-lg font-bold">Envoi du formulaire</h3>
               <p className="mb-6 text-gray-700">{modalMessage}</p>
@@ -501,7 +501,7 @@ const ServiceForm = ({
 
         {/* Terms and Conditions Dialog */}
         {termsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-xl font-bold">Conditions Générales</h3>
