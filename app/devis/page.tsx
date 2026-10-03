@@ -1,5 +1,6 @@
 'use client';
 
+import { SITE_URL } from '../../lib/site';
 import React from 'react';
 import Link from 'next/link';
 
@@ -7,16 +8,16 @@ const DevisPage: React.FC = () => {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    '@id': 'https://reparobot.be/devis',
+    '@id': `${SITE_URL}/devis`,
     name: 'Devis Immédiat Robot Tondeuse',
     description:
       "Service de devis immédiat pour l'achat et l'installation de robots tondeuses Husqvarna en Belgique",
     provider: {
       '@type': 'Organization',
-      '@id': 'https://reparobot.be',
+      '@id': SITE_URL,
       name: 'Forestar | Reparobot',
-      url: 'https://reparobot.be',
-      logo: 'https://reparobot.be/images/logo/logo-70x70.png',
+      url: SITE_URL,
+      logo: `${SITE_URL}/images/logo/logo-70x70.png`,
       telephone: '+3267830706',
       address: {
         '@type': 'PostalAddress',

@@ -1,3 +1,4 @@
+import { SITE_URL } from '../../lib/site';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_BE',
-    url: 'https://reparobot.be/devis',
+    url: `${SITE_URL}/devis`,
     title: 'Devis Immédiat Robot Tondeuse Husqvarna - Belgique',
     description:
       "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse avec installation professionnelle en Belgique.",
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     images: ['/images/devis-robot-tondeuse-twitter.jpg'],
   },
   alternates: {
-    canonical: 'https://reparobot.be/devis',
+    canonical: `${SITE_URL}/devis`,
   },
   verification: {
     google: 'your-google-verification-code',

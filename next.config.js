@@ -17,13 +17,29 @@ try {
   console.warn('Invalid API_URL format, images from API may not load');
 }
 
+// Hôte du site lui-même (images servies par le site) : suit SITE_URL (lib/site.ts,
+// que ce fichier CommonJS ne peut pas importer ; même valeur par défaut).
+let siteHostname = 'www.reparobot.be';
+try {
+  if (process.env.SITE_URL)
+    siteHostname = new URL(process.env.SITE_URL).hostname;
+} catch (e) {
+  console.warn('Invalid SITE_URL format, default host used for site images');
+}
+
 const nextConfig = {
+  // SITE_URL doit aussi exister dans les composants client (pages en 'use client') :
+  // sans cela, le navigateur retomberait sur la valeur par défaut de lib/site.ts et
+  // la page hydraterait une autre URL que celle rendue par le serveur.
+  env: {
+    SITE_URL: process.env.SITE_URL ?? '',
+  },
   // productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'reparobot.be',
+        hostname: siteHostname,
         port: '',
         pathname: '/**',
       },

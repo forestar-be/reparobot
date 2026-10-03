@@ -1,11 +1,12 @@
 import PageLayout from '../layout/PageLayout';
+import { SITE_URL } from '../lib/site';
 import React from 'react';
 import { Metadata } from 'next';
 import './globals.css';
 
 // Define your metadata using Next.js Metadata API
 export const metadata: Metadata = {
-  metadataBase: new URL('https://reparobot.be'),
+  metadataBase: new URL(SITE_URL),
   title: {
     template: '%s | Robot Husqvarna Belgique | Forestar',
     default:
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
       'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
     description:
       'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
-    url: 'https://reparobot.be',
+    url: SITE_URL,
     siteName: 'Robot Husqvarna Belgique | Forestar',
     locale: 'fr_BE',
     type: 'website',
@@ -76,7 +77,7 @@ export const metadata: Metadata = {
     google: 'your-google-verification-code',
   },
   alternates: {
-    canonical: 'https://reparobot.be',
+    canonical: SITE_URL,
   },
   category: 'jardinage',
 };
@@ -85,14 +86,14 @@ export const metadata: Metadata = {
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  '@id': 'https://reparobot.be',
+  '@id': SITE_URL,
   name: 'Forestar - Entretien Robot Husqvarna',
   alternateName: 'Reparobot',
   description:
     'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
-  image: 'https://reparobot.be/images/logo/logo-70x70.png',
-  logo: 'https://reparobot.be/images/logo/logo-70x70.png',
-  url: 'https://reparobot.be',
+  image: `${SITE_URL}/images/logo/logo-70x70.png`,
+  logo: `${SITE_URL}/images/logo/logo-70x70.png`,
+  url: SITE_URL,
   telephone: '+3267830706',
   email: 'info@forestar.be',
   priceRange: '€€',

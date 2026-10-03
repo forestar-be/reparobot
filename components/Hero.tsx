@@ -3,7 +3,6 @@
 import heroData from '../config/hero.json';
 import { trackEvent } from '../utils/analytics';
 import { useEffect, useRef, useState, type JSX } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import HeroButtons from './HeroButtons/HeroButtons';
 
@@ -24,8 +23,6 @@ const Hero = ({
   const [hero] = useState<HeroProps[]>(heroData);
   const heroRef = useRef<HTMLDivElement | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
-
-  const searchParams = useSearchParams();
 
   // Calculate years of experience automatically
   const currentYear = new Date().getFullYear();
@@ -89,9 +86,7 @@ const Hero = ({
               <div className="mb-6 sm:mb-8">
                 <h1 className="mt-4 mb-4 animate-slide-up font-display text-2xl leading-tight font-bold text-white drop-shadow-2xl sm:mt-6 sm:mb-6 sm:text-3xl/9 md:text-4xl/10 lg:text-5xl/none">
                   <span className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                    {searchParams.get('x')
-                      ? searchParams.get('x')
-                      : item.description}
+                    {item.description}
                   </span>
                 </h1>
                 <div className="mx-auto h-1 w-16 rounded-full bg-linear-to-r from-blue-400 to-purple-400 sm:w-24"></div>

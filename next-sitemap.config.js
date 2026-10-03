@@ -1,6 +1,9 @@
 // next-sitemap.config.js
 module.exports = {
-  siteUrl: 'https://reparobot.be', // Your site's base URL
+  siteUrl: (process.env.SITE_URL || 'https://www.reparobot.be').replace(
+    /\/+$/,
+    '',
+  ), // URL du site (lib/site.ts)
   generateRobotsTxt: true, // Automatically generate a robots.txt
   changefreq: 'weekly', // Default change frequency for all pages
   priority: 0.7, // Default priority for all pages
@@ -71,4 +74,3 @@ module.exports = {
     };
   },
 };
-  

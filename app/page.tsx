@@ -4,27 +4,28 @@ import AboutExpertise from '../components/AboutExpertise';
 import Contact from '../components/Contact';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
+import { SITE_URL } from '../lib/site';
 import React, { Suspense, useRef, type JSX } from 'react';
 
 // Données structurées pour la page d'accueil
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  '@id': 'https://reparobot.be',
+  '@id': SITE_URL,
   name: 'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
   description:
     'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
-  url: 'https://reparobot.be',
+  url: SITE_URL,
   mainEntity: {
     '@type': 'Organization',
-    '@id': 'https://reparobot.be',
+    '@id': SITE_URL,
     name: 'Forestar - Reparobot',
     alternateName: 'Reparobot',
     description:
       'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
-    url: 'https://reparobot.be',
-    logo: 'https://reparobot.be/images/logo/logo-70x70.png',
-    image: 'https://reparobot.be/images/robot-tondeuse-husqvarna-belgique.jpg',
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/logo/logo-70x70.png`,
+    image: `${SITE_URL}/images/robot-tondeuse-husqvarna-belgique.jpg`,
     telephone: '+3267830706',
     email: 'info@forestar.be',
     address: {
@@ -57,26 +58,26 @@ const structuredData = {
   hasPart: [
     {
       '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#services',
+      '@id': `${SITE_URL}/#services`,
       name: 'Services Robot Tondeuse',
       description:
         'Entretien, réparation et installation de robots tondeuses Husqvarna',
-      url: 'https://reparobot.be/#services',
+      url: `${SITE_URL}/#services`,
     },
     {
       '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#about',
+      '@id': `${SITE_URL}/#about`,
       name: 'À propos',
       description:
         'Notre expertise en robots tondeuses et notre engagement qualité',
-      url: 'https://reparobot.be/#about',
+      url: `${SITE_URL}/#about`,
     },
     {
       '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#contact',
+      '@id': `${SITE_URL}/#contact`,
       name: 'Contact',
       description: 'Contactez nos experts robot tondeuse en Belgique',
-      url: 'https://reparobot.be/#contact',
+      url: `${SITE_URL}/#contact`,
     },
   ],
   breadcrumb: {
@@ -86,7 +87,7 @@ const structuredData = {
         '@type': 'ListItem',
         position: 1,
         name: 'Accueil',
-        item: 'https://reparobot.be',
+        item: SITE_URL,
       },
     ],
   },

@@ -1,4 +1,5 @@
 // app/calculateur-cout-entretien-robot-tondeuse/layout.tsx
+import { SITE_URL } from '../../lib/site';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
@@ -25,11 +26,11 @@ export const metadata: Metadata = {
       "Estimation précise des coûts d'entretien de votre robot tondeuse basée sur la taille de votre terrain, fréquence d'utilisation et historique de maintenance.",
     type: 'website',
     locale: 'fr_BE',
-    url: 'https://reparobot.be/calculateur-cout-entretien-robot-tondeuse',
+    url: `${SITE_URL}/calculateur-cout-entretien-robot-tondeuse`,
     siteName: 'Entretien & Vente Robot Husqvarna Belgique | Forestar',
     images: [
       {
-        url: 'https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.webp',
+        url: `${SITE_URL}/images/calculateur-cout-entretien-robot-tondeuse-preview.webp`,
         width: 1200,
         height: 630,
         alt: 'Calculateur de Coût Entretien Robot Tondeuse',
@@ -43,11 +44,11 @@ export const metadata: Metadata = {
     description:
       "Estimation précise des coûts d'entretien robot tondeuse basée sur vos besoins spécifiques.",
     images: [
-      'https://reparobot.be/images/calculateur-cout-entretien-robot-tondeuse-preview.webp',
+      `${SITE_URL}/images/calculateur-cout-entretien-robot-tondeuse-preview.webp`,
     ],
   },
   alternates: {
-    canonical: 'https://reparobot.be/calculateur-cout-entretien-robot-tondeuse',
+    canonical: `${SITE_URL}/calculateur-cout-entretien-robot-tondeuse`,
   },
   robots: {
     index: true,

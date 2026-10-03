@@ -1,5 +1,6 @@
 import RobotSelection from '../../components/RobotSelection';
 import { getRobotsCatalog, getRobotsCount } from '../../lib/robots';
+import { SITE_URL } from '../../lib/site';
 import React from 'react';
 
 export { metadata } from './metadata';
@@ -14,11 +15,11 @@ async function generateStructuredData() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    '@id': 'https://reparobot.be/robots',
+    '@id': `${SITE_URL}/robots`,
     name: 'Réservation Robot Tondeuse Husqvarna',
     description:
       'Découvrez et réservez votre robot tondeuse Husqvarna avec installation professionnelle en Belgique',
-    url: 'https://reparobot.be/robots',
+    url: `${SITE_URL}/robots`,
     mainEntity: {
       '@type': 'ItemList',
       name: 'Robots Tondeuses Disponibles',
@@ -45,10 +46,10 @@ async function generateStructuredData() {
     },
     provider: {
       '@type': 'Organization',
-      '@id': 'https://reparobot.be',
+      '@id': SITE_URL,
       name: 'Forestar',
-      url: 'https://reparobot.be',
-      logo: 'https://reparobot.be/images/logo/logo-70x70.png',
+      url: SITE_URL,
+      logo: `${SITE_URL}/images/logo/logo-70x70.png`,
       address: {
         '@type': 'PostalAddress',
         streetAddress: "160 Chaussée d'ecaussinnes",
@@ -64,13 +65,13 @@ async function generateStructuredData() {
           '@type': 'ListItem',
           position: 1,
           name: 'Accueil',
-          item: 'https://reparobot.be',
+          item: SITE_URL,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Robots Tondeuses',
-          item: 'https://reparobot.be/robots',
+          item: `${SITE_URL}/robots`,
         },
       ],
     },

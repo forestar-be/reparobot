@@ -1,3 +1,4 @@
+import { SITE_URL } from '../../lib/site';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_BE',
-    url: 'https://reparobot.be/robots',
+    url: `${SITE_URL}/robots`,
     title: 'Réservation Robot Tondeuse Husqvarna en Belgique',
     description:
       'Large gamme de robots tondeuses Husqvarna disponibles. Réservez votre robot avec installation professionnelle.',
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
     images: ['/images/robots-tondeuse-twitter.jpg'],
   },
   alternates: {
-    canonical: 'https://reparobot.be/robots',
+    canonical: `${SITE_URL}/robots`,
   },
   category: 'commerce',
 };

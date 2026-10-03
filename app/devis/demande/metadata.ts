@@ -1,3 +1,4 @@
+import { SITE_URL } from '../../../lib/site';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,13 +22,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_BE',
-    url: 'https://reparobot.be/devis/demande',
+    url: `${SITE_URL}/devis/demande`,
     title: "Devis d'achat Robot Tondeuse | Forestar",
     description:
       "Obtenez votre devis personnalisé pour l'achat d'un robot tondeuse Husqvarna avec installation professionnelle.",
     siteName: 'Robot Husqvarna Belgique | Forestar',
   },
   alternates: {
-    canonical: 'https://reparobot.be/devis/demande',
+    canonical: `${SITE_URL}/devis/demande`,
   },
 };
