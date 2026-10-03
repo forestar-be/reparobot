@@ -9,7 +9,7 @@
  * parti dans le bundle.
  *
  * Le contrôle est textuel parce que le défaut est textuel. Il porte sur **tous** les composants
- * client des formulaires (dossiers `forms`, `devis`, `rappel`, `entretien`) : un composant ajouté
+ * client des formulaires (dossiers `forms`, `devis`, `contact`, `entretien`) : un composant ajouté
  * plus tard est couvert sans qu'on pense à l'inscrire ici. Le comportement (route, corps,
  * en-tête, jeton, refus) est prouvé par les tests de contrat de chaque formulaire.
  */
@@ -18,7 +18,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const RACINE = join(__dirname, '..');
-const DOSSIERS = ['forms', 'devis', 'rappel', 'entretien'];
+const DOSSIERS = ['forms', 'devis', 'contact', 'entretien'];
 
 function source(fichier: string): string {
   return readFileSync(join(RACINE, fichier), 'utf8');

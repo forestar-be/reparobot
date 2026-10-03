@@ -68,7 +68,7 @@ export default function CookieBanner() {
       className="fixed inset-x-0 bottom-0 z-[60] border-t border-line bg-ivory shadow-[0_-3px_16px_#183e3214]"
     >
       <div className="wrap flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-        <div className="text-[13px] text-muted mobile:text-xs">
+        <div className="text-sm text-muted">
           <p id="cookie-banner-title" className="font-bold text-ink">
             Mesure d&apos;audience
           </p>
@@ -88,7 +88,7 @@ export default function CookieBanner() {
           <button
             type="button"
             onClick={() => choose(false)}
-            className="min-h-11 rounded-action px-4 text-[13px] font-semibold text-forest underline hover:text-forest-hover"
+            className="min-h-11 rounded-action px-4 text-sm font-semibold text-forest underline hover:text-forest-hover"
           >
             Refuser
           </button>
@@ -96,7 +96,7 @@ export default function CookieBanner() {
             ref={acceptRef}
             type="button"
             onClick={() => choose(true)}
-            className="min-h-11 rounded-action border border-forest bg-forest px-5 text-[13px] font-bold text-white hover:bg-forest-hover"
+            className="min-h-11 rounded-action border border-forest bg-forest px-5 text-sm font-bold text-white hover:bg-forest-hover"
           >
             Accepter
           </button>

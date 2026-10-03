@@ -10,7 +10,7 @@
  * 3. **La mesure ne bloque jamais un formulaire** : chaque émission est protégée
  *    par `try` et ne renvoie rien. Une erreur de mesure est avalée.
  *
- * Quatre événements seulement : `page_view` (émis par GA4), `generate_lead` (devis, rappel,
+ * Quatre événements seulement : `page_view` (émis par GA4), `generate_lead` (devis, contact,
  * entretien) et `phone_click`. Aucun contenu de formulaire n'est transmis.
  */
 import { hasAnalyticsConsent } from './consent';
@@ -139,7 +139,7 @@ function send(name: string, params: Record<string, string>): void {
   }
 }
 
-export type LeadType = 'devis' | 'rappel' | 'entretien';
+export type LeadType = 'devis' | 'contact' | 'entretien';
 
 /**
  * Une demande a atteint le serveur. À appeler APRÈS la réponse de succès, jamais

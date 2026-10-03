@@ -12,7 +12,7 @@ export default function DealerBadge({
 }) {
   return (
     <div
-      className={`flex items-center gap-[15px] text-[11px] leading-normal text-forest mobile:gap-2.5 mobile:text-[10px] ${className}`}
+      className={`flex items-center gap-[15px] text-sm leading-normal text-forest mobile:gap-2.5 ${className}`}
     >
       <Image
         src="/images/husqvarna-officiel.svg"
@@ -23,7 +23,7 @@ export default function DealerBadge({
         className="h-11 w-[123px] object-contain p-2 mobile:h-[35px] mobile:w-[107px] mobile:p-[7px]"
       />
       <div>
-        <strong className="block text-[11px] font-bold mobile:text-[10px]">
+        <strong className="block text-sm font-bold">
           Revendeur agréé Husqvarna
         </strong>
         Robots tondeuses · Belgique

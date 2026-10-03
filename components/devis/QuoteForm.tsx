@@ -104,7 +104,7 @@ export default function QuoteForm({
               </p>
             )}
           </div>
-          <ol className="my-5 list-decimal space-y-2 pl-5 text-xs">
+          <ol className="my-5 list-decimal space-y-2 pl-5 text-sm">
             <li>Vous recevez un email avec le détail de votre devis.</li>
             <li>Cliquez sur le lien pour signer votre bon de commande.</li>
             <li>
@@ -132,13 +132,13 @@ export default function QuoteForm({
         <h1 className="mb-0 text-[54px] tablet:text-5xl mobile:text-[40px] mobile:leading-[1.07]">
           Votre devis, en quelques minutes.
         </h1>
-        <p className="mt-4 mb-0 max-w-[680px] text-sm text-muted mobile:mt-[15px] mobile:text-xs">
+        <p className="mt-4 mb-0 max-w-[680px] text-[15px] text-muted mobile:mt-[15px]">
           Le robot est choisi. Personnalisez l’installation, puis indiquez où
           envoyer votre devis.
         </p>
         <ol
           aria-label="Les étapes"
-          className="m-0 mt-6 flex list-none flex-wrap items-center gap-[22px] p-0 text-[11px] text-muted mobile:mt-[19px] mobile:gap-3 mobile:text-[10px]"
+          className="m-0 mt-6 flex list-none flex-wrap items-center gap-[22px] p-0 text-sm text-muted mobile:mt-[19px] mobile:gap-3"
         >
           {STEPS.map((step, index) => (
             <li

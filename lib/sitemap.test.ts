@@ -28,16 +28,21 @@ describe('sitemap (R009-S01)', () => {
       'https://www.reparobot.be/robots/husqvarna-automower-305',
       'https://www.reparobot.be/robots/husqvarna-automower-308v',
       'https://www.reparobot.be/entretien-reparation',
-      'https://www.reparobot.be/calculateur-cout-entretien-robot-tondeuse',
-      'https://www.reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
       'https://www.reparobot.be/cookies',
     ]);
   });
 
-  it('ne contient ni /devis (il redirige sans robot) ni /rappel ni anciennes adresses', async () => {
+  it('ne contient ni /devis (il redirige sans robot) ni /etre-recontacte ni anciennes adresses', async () => {
     const { default: sitemap } = await import('../app/sitemap');
     const urls = (await sitemap()).map((e) => e.url).join(' ');
-    for (const absent of ['/devis', '/rappel', '/about', '/contact', '#']) {
+    for (const absent of [
+      '/devis',
+      '/etre-recontacte',
+      '/rappel',
+      '/about',
+      '/contact',
+      '#',
+    ]) {
       expect(urls).not.toContain(absent);
     }
   });

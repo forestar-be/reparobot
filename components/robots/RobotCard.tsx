@@ -42,7 +42,7 @@ export default function RobotCard({
           <Badge
             className={`absolute top-[13px] left-3.5 z-10 ${
               featured
-                ? 'mobile:top-[9px] mobile:left-[9px] mobile:px-1.5 mobile:py-[3px] mobile:text-[10px]'
+                ? 'mobile:top-[9px] mobile:left-[9px] mobile:px-1.5 mobile:py-[3px]'
                 : ''
             }`}
           >
@@ -69,8 +69,8 @@ export default function RobotCard({
           }`}
         >
           <span
-            className={`mb-[5px] text-[10px] tracking-[0.07em] text-muted uppercase ${
-              featured ? 'mobile:text-[10px] mobile:tracking-[0.02em]' : ''
+            className={`mb-[5px] text-xs tracking-[0.07em] text-muted uppercase ${
+              featured ? 'mobile:tracking-[0.02em]' : ''
             }`}
           >
             Husqvarna Automower®
@@ -78,7 +78,7 @@ export default function RobotCard({
           <h3
             className={`mb-[9px] leading-[1.3] tracking-[-0.03em] text-ink ${
               featured
-                ? 'min-h-10 text-[15px] mobile:mb-1.5 mobile:min-h-8 mobile:text-xs'
+                ? 'min-h-10 text-[15px] mobile:mb-1.5 mobile:min-h-8'
                 : 'min-h-[49px] text-[19px] mobile:min-h-0 mobile:text-[22px]'
             }`}
           >
@@ -87,8 +87,8 @@ export default function RobotCard({
           <p
             className={`m-0 flex items-center gap-[7px] text-muted ${
               featured
-                ? 'mb-2.5 text-[11px] mobile:mb-[9px] mobile:gap-1 mobile:text-[10px]'
-                : 'mb-[17px] text-xs mobile:mb-[15px]'
+                ? 'mb-2.5 text-sm mobile:mb-[9px] mobile:gap-1'
+                : 'mb-[17px] text-sm mobile:mb-[15px]'
             }`}
           >
             <Glyph
@@ -98,7 +98,7 @@ export default function RobotCard({
             Jusqu’à {formatSurface(robot.maxSurface)}
           </p>
           {robot.promotion ? (
-            <p className="mb-2.5 line-clamp-2 rounded-[3px] bg-sage px-2 py-1 text-[10px] leading-snug font-semibold text-forest mobile:text-[10px]">
+            <p className="mb-2.5 line-clamp-2 rounded-[3px] bg-sage px-2 py-1 text-sm leading-snug font-semibold text-forest mobile:line-clamp-3">
               {robot.promotion}
             </p>
           ) : null}
@@ -121,11 +121,7 @@ export default function RobotCard({
           </div>
           <InstallationPrice
             amount={robot.installationPrice}
-            className={`m-0 mt-[7px] text-muted ${
-              featured
-                ? 'text-[10px] mobile:text-[10px]'
-                : 'text-[10px] mobile:text-[10px]'
-            }`}
+            className="m-0 mt-[7px] text-sm text-muted"
           />
         </div>
       </Link>

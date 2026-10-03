@@ -17,7 +17,7 @@ export default function MobileBar({ phoneHref }: { phoneHref: string }) {
   const pathname = usePathname();
   const [robots, entretien] = NAV_ITEMS;
   const tab = (active: boolean) =>
-    `flex min-h-10 flex-col items-center justify-center gap-1 text-[10px] font-semibold ${
+    `flex min-h-10 flex-col items-center justify-center gap-1 text-xs font-semibold ${
       active ? 'text-forest' : 'text-muted'
     }`;
   return (

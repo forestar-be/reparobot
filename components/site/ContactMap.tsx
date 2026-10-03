@@ -1,5 +1,7 @@
 'use client';
 
+import { OFFICIAL_SITE_URL, STORE_NAME } from '../../lib/site-info';
+import type { MapPopup } from '../Map';
 import {
   useEffect,
   useMemo,
@@ -12,7 +14,7 @@ interface MapProps {
   center: [number, number];
   zoom?: number;
   markerPosition?: [number, number];
-  popupContent?: string;
+  popup?: MapPopup;
   'aria-label'?: string;
 }
 
@@ -36,6 +38,16 @@ export default function ContactMap({
   const position = useMemo<[number, number]>(
     () => [latitude, longitude],
     [latitude, longitude],
+  );
+  // Bulle du repère : nom du magasin, adresse (site-info) et lien vers le site officiel.
+  const popup = useMemo<MapPopup>(
+    () => ({
+      title: STORE_NAME,
+      address,
+      linkLabel: 'Site officiel Forestar.be',
+      linkHref: OFFICIAL_SITE_URL,
+    }),
+    [address],
   );
 
   useEffect(() => {
@@ -71,14 +83,14 @@ export default function ContactMap({
   return (
     <div
       ref={holder}
-      className="h-80 overflow-hidden rounded-card border border-line bg-sage-soft mobile:h-64"
+      className="h-full min-h-[300px] overflow-hidden rounded-card border border-line bg-sage-soft mobile:h-60 mobile:min-h-0"
     >
       {Map ? (
         <Map
           center={position}
           zoom={15}
           markerPosition={position}
-          popupContent={address}
+          popup={popup}
           aria-label={`Carte : ${address}`}
         />
       ) : null}

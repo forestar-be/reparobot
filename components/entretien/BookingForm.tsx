@@ -217,7 +217,7 @@ export default function BookingForm({ offers }: { offers: ServiceOffer[] }) {
           {free.map((option) => (
             <label
               key={option.id}
-              className="my-[11px] flex items-start gap-[9px] text-xs"
+              className="my-[11px] flex items-start gap-[9px] text-sm"
             >
               <input
                 type="checkbox"
@@ -318,7 +318,7 @@ export default function BookingForm({ offers }: { offers: ServiceOffer[] }) {
       <div
         aria-live="polite"
         aria-atomic="true"
-        className="my-[18px] flex items-baseline justify-between gap-4 border-t border-line py-[15px] text-xs"
+        className="my-[18px] flex items-baseline justify-between gap-4 border-t border-line py-[15px] text-sm"
       >
         <span>{total.label}</span>
         <strong className="text-[21px] tracking-[-0.04em] text-forest">

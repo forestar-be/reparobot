@@ -4,6 +4,7 @@
  * Pont entre les cartes de forfaits (rendues côté serveur) et le formulaire : « Réserver un
  * passage » sur une carte présélectionne le type d'intervention et l'option du forfait.
  */
+import AnchorLink from '../ui/AnchorLink';
 import Glyph from '../ui/Glyph';
 import {
   createContext,
@@ -12,7 +13,6 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import Link from 'next/link';
 
 export type PresetKind = 'maintenance' | 'winter' | 'repair';
 
@@ -51,7 +51,10 @@ export function useBookingPreset(): Preset | null {
   return useContext(BookingContext).preset;
 }
 
-/** Lien d'une carte : ancre vers le formulaire, plus la présélection. */
+/**
+ * Lien d'une carte : présélection, puis défilement explicite jusqu'au formulaire (premier champ
+ * focalisé), même si `#passage` est déjà dans l'adresse.
+ */
 export function PresetLink({
   kind,
   children,
@@ -61,13 +64,13 @@ export function PresetLink({
 }) {
   const { apply } = useContext(BookingContext);
   return (
-    <Link
+    <AnchorLink
       href="#passage"
       onClick={() => apply(kind)}
-      className="inline-flex items-center gap-3 border-b border-current pb-[3px] text-xs font-bold text-forest"
+      className="inline-flex items-center gap-3 border-b border-current pb-[3px] text-sm font-bold text-forest"
     >
       {children}
       <Glyph name="arrow" className="h-[17px] w-[17px]" />
-    </Link>
+    </AnchorLink>
   );
 }

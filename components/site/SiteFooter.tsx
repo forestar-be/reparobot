@@ -1,5 +1,6 @@
 import { getSiteInfo, hoursLines, telHref } from '../../lib/site-info';
 import CookieSettingsButton from '../CookieSettingsButton';
+import AnchorLink from '../ui/AnchorLink';
 import DealerBadge from '../ui/DealerBadge';
 import Link from 'next/link';
 import Brand from './Brand';
@@ -24,18 +25,18 @@ export default async function SiteFooter() {
           </div>
           <nav
             aria-label="Pied de page"
-            className="flex items-start gap-[27px] text-[11px] mobile:grid mobile:grid-cols-2 mobile:gap-3"
+            className="flex items-start gap-[27px] text-sm mobile:grid mobile:grid-cols-2 mobile:gap-3"
           >
             {NAV_ITEMS.map((item) => (
-              <Link key={item.label} href={item.href} className="py-1">
+              <AnchorLink key={item.label} href={item.href} className="py-1">
                 {item.label}
-              </Link>
+              </AnchorLink>
             ))}
           </nav>
         </div>
-        <div className="mb-7 grid grid-cols-[1.4fr_1fr_1fr] gap-8 border-t border-[#cfd7c9] pt-6 text-[11px] mobile:grid-cols-1 mobile:gap-5">
+        <div className="mb-7 grid grid-cols-[1.4fr_1fr_1fr] gap-8 border-t border-[#cfd7c9] pt-6 text-sm mobile:grid-cols-1 mobile:gap-5">
           <address className="not-italic">
-            <b className="mb-1.5 block text-xs">Atelier et magasin</b>
+            <b className="mb-1.5 block text-sm">Atelier et magasin</b>
             <p className="m-0 text-muted">{info.address}</p>
             <a
               href={telHref(info)}
@@ -45,7 +46,7 @@ export default async function SiteFooter() {
             </a>
           </address>
           <div>
-            <b className="mb-1.5 block text-xs">Horaires</b>
+            <b className="mb-1.5 block text-sm">Horaires</b>
             {hoursLines(info.hours).map((line) => (
               <p key={line} className="m-0 text-muted">
                 {line}
@@ -53,7 +54,7 @@ export default async function SiteFooter() {
             ))}
           </div>
           <div>
-            <b className="mb-1.5 block text-xs">Informations</b>
+            <b className="mb-1.5 block text-sm">Informations</b>
             <p className="m-0 flex flex-col items-start">
               <Link
                 href="/cookies"
@@ -66,7 +67,7 @@ export default async function SiteFooter() {
           </div>
         </div>
         <div
-          className={`flex justify-between gap-5 border-t border-[#cfd7c9] pt-[17px] text-[10px] text-muted mobile:flex-col mobile:gap-2 mobile:text-[10px]`}
+          className={`flex justify-between gap-5 border-t border-[#cfd7c9] pt-[17px] text-sm text-muted mobile:flex-col mobile:gap-2`}
         >
           <span>
             © {new Date().getFullYear()} Forestar · Braine-le-Comte, Belgique ·

@@ -51,8 +51,8 @@ export default function CookiesPage() {
             <ul className="list-disc space-y-1 pl-6">
               <li>
                 <strong>Finalité :</strong> compter les pages vues et savoir si
-                les visites mènent à une demande (devis, rappel, entretien) ou à
-                un appel téléphonique.
+                les visites mènent à une demande (devis, contact, entretien) ou
+                à un appel téléphonique.
               </li>
               <li>
                 <strong>Cookies :</strong> <code>_ga</code> et{' '}
@@ -61,7 +61,7 @@ export default function CookiesPage() {
               </li>
               <li>
                 <strong>Événements envoyés :</strong> la page vue, une demande
-                de devis, de rappel ou d&apos;entretien envoyée avec succès, et
+                de devis, de contact ou d&apos;entretien envoyée avec succès, et
                 un clic sur le numéro de téléphone. Rien de ce que vous
                 saisissez dans un formulaire n&apos;est transmis à Google
                 Analytics.
@@ -83,7 +83,7 @@ export default function CookiesPage() {
               retrait arrête la mesure immédiatement. Vous pouvez aussi
               supprimer les cookies depuis les réglages de votre navigateur.
             </p>
-            <CookieSettingsButton className="min-h-11 rounded-action border border-forest px-5 text-[13px] font-bold text-forest hover:bg-sage" />
+            <CookieSettingsButton className="min-h-11 rounded-action border border-forest px-5 text-sm font-bold text-forest hover:bg-sage" />
           </section>
 
           <p>

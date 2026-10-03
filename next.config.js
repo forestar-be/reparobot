@@ -95,6 +95,9 @@ const nextConfig = {
       { source: '/about', destination: '/', statusCode: 301 },
       { source: '/contact', destination: '/#contact', statusCode: 301 },
       { source: '/devis/demande', destination: '/devis', permanent: true },
+      // « Être rappelé » est devenu « Être recontacté » (D-25) ; la chaîne de requête
+      // (`?robot=`) suit d'elle-même.
+      { source: '/rappel', destination: '/etre-recontacte', permanent: true },
     ];
   },
   async headers() {

@@ -72,7 +72,7 @@ export default function QuoteContactFields({
           <input type="text" autoComplete="address-level2" {...bind('city')} />
         </Field>
       </Fields>
-      <p className="mt-[18px] mb-0 text-xs text-muted">
+      <p className="mt-[18px] mb-0 text-sm text-muted">
         * Champs obligatoires. Votre adresse nous aide à préparer
         l’installation.
       </p>

@@ -1,8 +1,7 @@
 /**
- * Menu du site (R005-S02) : Robots Husqvarna · Entretien & réparation · Conseils · Contact.
+ * Menu du site (R005-S02) : Robots Husqvarna · Entretien & réparation · Contact.
  * Une seule liste pour l'en-tête, le menu mobile et le pied de page.
  *
- * - « Conseils » mène à la section de l'accueil qui réunit les deux calculateurs ;
  * - « Contact » à l'ancre `#contact` de l'accueil.
  */
 export interface NavItem {
@@ -16,14 +15,13 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: 'Robots Husqvarna',
     href: '/robots',
-    activeFor: ['/robots', '/devis', '/rappel'],
+    activeFor: ['/robots', '/devis', '/etre-recontacte'],
   },
   {
     label: 'Entretien & réparation',
     href: '/entretien-reparation',
     activeFor: ['/entretien-reparation'],
   },
-  { label: 'Conseils', href: '/#conseils', activeFor: ['/calculateur-'] },
   { label: 'Contact', href: '/#contact', activeFor: [] },
 ];
 

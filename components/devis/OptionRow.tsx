@@ -30,14 +30,12 @@ export default function OptionRow({
           className="mt-[5px] h-[17px] w-[17px] shrink-0 accent-forest"
         />
         <span className="flex-1">
-          <b className="mb-[3px] block text-[13px] mobile:text-xs">{title}</b>
+          <b className="mb-[3px] block text-sm">{title}</b>
           {description && (
-            <span className="block text-[11px] text-muted mobile:text-[10px]">
-              {description}
-            </span>
+            <span className="block text-sm text-muted">{description}</span>
           )}
         </span>
-        <span className="text-xs font-bold whitespace-nowrap text-forest mobile:text-[11px]">
+        <span className="text-sm font-bold whitespace-nowrap text-forest">
           {cost}
         </span>
       </label>

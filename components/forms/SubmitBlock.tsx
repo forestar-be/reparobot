@@ -46,12 +46,12 @@ export default function SubmitBlock({
         {pending ? 'Envoi en cours…' : label}
       </Button>
       {waitingForTurnstile && !pending && (
-        <p role="status" className="mt-2 text-center text-[10px] text-muted">
+        <p role="status" className="mt-2 text-center text-sm text-muted">
           Vérification anti-robot en cours…
         </p>
       )}
       <p
-        className={`my-3 text-[10px] text-muted ${
+        className={`my-3 text-sm text-muted ${
           hintAlign === 'center' ? 'text-center' : ''
         }`}
       >

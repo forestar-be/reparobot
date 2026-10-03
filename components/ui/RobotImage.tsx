@@ -29,7 +29,7 @@ export default function RobotImage({
         className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted"
       >
         <Glyph name="robot" className="h-1/3 max-h-24 w-1/3 max-w-24" />
-        <span className="text-[11px]">Photo à venir</span>
+        <span className="text-sm">Photo à venir</span>
       </div>
     );
   }

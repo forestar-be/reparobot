@@ -21,19 +21,50 @@ L.Marker.prototype.options.icon = DefaultIcon;
 // Define proper types for coordinates
 type LatLngTuple = [number, number];
 
+/** Contenu de la bulle d'un repère : titre, adresse et un lien externe. */
+export interface MapPopup {
+  title: string;
+  address: string;
+  linkLabel: string;
+  linkHref: string;
+}
+
 interface MapProps {
   center: LatLngTuple;
   zoom?: number;
   markerPosition?: LatLngTuple;
-  popupContent?: string;
+  popup?: MapPopup;
   'aria-label'?: string;
+}
+
+/** Bulle construite en nœuds DOM (jamais en HTML) : aucune valeur de l'API n'y est interprétée. */
+function buildPopup({ title, address, linkLabel, linkHref }: MapPopup) {
+  const box = document.createElement('div');
+  box.style.fontSize = '14px';
+  box.style.lineHeight = '1.5';
+  const heading = document.createElement('strong');
+  heading.textContent = title;
+  heading.style.display = 'block';
+  heading.style.fontSize = '15px';
+  const text = document.createElement('p');
+  text.textContent = address;
+  text.style.margin = '2px 0 6px';
+  const link = document.createElement('a');
+  link.href = linkHref;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.textContent = linkLabel;
+  link.style.fontWeight = '700';
+  link.style.textDecoration = 'underline';
+  box.append(heading, text, link);
+  return box;
 }
 
 const Map = ({
   center,
   zoom = 13,
   markerPosition,
-  popupContent = 'Default popup content',
+  popup,
   'aria-label': ariaLabel,
 }: MapProps): JSX.Element => {
   const mapRef = useRef<L.Map | null>(null);
@@ -82,8 +113,13 @@ const Map = ({
       if (markerPosition && markerPosition.length === 2) {
         const markerLatLng = L.latLng(markerPosition[0], markerPosition[1]);
         const marker = L.marker(markerLatLng).addTo(map);
-        if (popupContent) {
-          marker.bindPopup(popupContent);
+        if (popup) {
+          marker.bindPopup(buildPopup(popup), {
+            maxWidth: 220,
+            // la bulle se recale hors des boutons de zoom, en haut à gauche
+            autoPanPaddingTopLeft: [56, 16],
+            autoPanPaddingBottomRight: [16, 16],
+          });
         }
       }
 
@@ -102,7 +138,7 @@ const Map = ({
         mapRef.current = null;
       }
     };
-  }, [center, zoom, markerPosition, popupContent]);
+  }, [center, zoom, markerPosition, popup]);
 
   return (
     <div

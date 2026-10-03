@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="wrap py-24 mobile:py-14">
-      <p className="mb-3 text-[10px] font-extrabold tracking-[0.16em] text-forest uppercase">
+      <p className="mb-3 text-xs font-extrabold tracking-[0.16em] text-forest uppercase">
         Erreur 404
       </p>
       <h1 className="mb-4 text-[41px] mobile:text-[33px]">
