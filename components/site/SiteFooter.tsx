@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Brand from './Brand';
 import { NAV_ITEMS } from './nav-items';
 
-/** TVA de Forestar (anciennement config/footer.json). */
+/** TVA de Forestar. */
 const VAT_NUMBER = 'BE0806-685-256';
 
 /**

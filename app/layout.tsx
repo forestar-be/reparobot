@@ -103,88 +103,6 @@ export const metadata: Metadata = {
   category: 'jardinage',
 };
 
-// Structured Data for SEO
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': SITE_URL,
-  name: 'Forestar - Entretien Robot Husqvarna',
-  alternateName: 'Reparobot',
-  description:
-    'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
-  image: `${SITE_URL}/images/logo/logo-70x70.png`,
-  logo: `${SITE_URL}/images/logo/logo-70x70.png`,
-  url: SITE_URL,
-  telephone: '+3267830706',
-  email: 'info@forestar.be',
-  priceRange: '€€',
-  vatID: 'BE0806-685-256',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: "160 Chaussée d'ecaussinnes",
-    addressLocality: 'Braine le comte',
-    postalCode: '7090',
-    addressCountry: 'BE',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 50.6082,
-    longitude: 4.1284,
-  },
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '09:00',
-    closes: '18:00',
-  },
-  serviceArea: {
-    '@type': 'Country',
-    name: 'Belgique',
-  },
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Services Robot Tondeuse',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Entretien Robot Tondeuse',
-          description:
-            "Service professionnel d'entretien de robots tondeuses Husqvarna",
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Réparation Robot Tondeuse',
-          description:
-            'Réparation professionnelle de robots tondeuses toutes marques',
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Achat Robot Tondeuse',
-          description: 'Vente de robots tondeuses Husqvarna avec installation',
-          brand: ['Husqvarna'],
-        },
-      },
-    ],
-  },
-  areaServed: 'Belgique',
-  knowsAbout: [
-    'Robot Tondeuse',
-    'Husqvarna',
-    'Entretien',
-    'Réparation',
-    'Installation',
-  ],
-  slogan: 'Votre spécialiste robot tondeuse en Belgique',
-};
-
 export default async function RootLayout({
   children,
 }: {
@@ -193,13 +111,6 @@ export default async function RootLayout({
   const info = await getSiteInfo();
   return (
     <html lang="fr" className={manrope.variable}>
-      <head>
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </head>
       <body>
         <a href="#contenu" className="skip-link">
           Aller au contenu

@@ -10,7 +10,7 @@
  *
  * Les valeurs de secours sont celles qui seront écrites dans les clés Config de
  * production (relevées sur forestar.be, même magasin). Les coordonnées GPS sont celles
- * de l'épingle de la carte (`config/contact.json`) ; les anciens JSON-LD en portaient
+ * de l’épingle de la carte ; les anciens JSON-LD en portaient
  * de fausses.
  */
 

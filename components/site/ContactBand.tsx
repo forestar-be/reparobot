@@ -1,5 +1,6 @@
 import { getSiteInfo, hoursLines, telHref } from '../../lib/site-info';
 import Eyebrow from '../ui/Eyebrow';
+import ContactMap from './ContactMap';
 
 /**
  * Contact : adresse, horaires, téléphone (site-info). `id="contact"` sert l'ancre du
@@ -7,8 +8,10 @@ import Eyebrow from '../ui/Eyebrow';
  */
 export default async function ContactBand({
   anchor = false,
+  map = false,
 }: {
   anchor?: boolean;
+  map?: boolean;
 }) {
   const info = await getSiteInfo();
   const mapHref = `https://www.openstreetmap.org/?mlat=${info.latitude}&mlon=${info.longitude}#map=17/${info.latitude}/${info.longitude}`;
@@ -71,6 +74,15 @@ export default async function ContactBand({
           ))}
         </div>
       </div>
+      {map ? (
+        <div className="col-span-2 mobile:col-span-1">
+          <ContactMap
+            latitude={info.latitude}
+            longitude={info.longitude}
+            address={info.address}
+          />
+        </div>
+      ) : null}
     </section>
   );
 }
