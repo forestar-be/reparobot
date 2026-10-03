@@ -1,7 +1,6 @@
 'use client';
 
 import contactData from '../config/contact.json';
-import { trackEvent } from '../utils/analytics';
 import { useState, type JSX } from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import ClientMapWrapper from './ClientMapWrapper';
@@ -17,28 +16,6 @@ interface ContactProps {
 
 const Contact = (): JSX.Element => {
   const [contact] = useState<ContactProps[]>(contactData);
-
-  const handlePhoneClick = () => {
-    trackEvent('contact_phone_click', 'contact_interaction', 'phone_number', 1);
-  };
-
-  const handleEmailClick = () => {
-    trackEvent(
-      'contact_email_click',
-      'contact_interaction',
-      'email_address',
-      1,
-    );
-  };
-
-  const handleAddressClick = () => {
-    trackEvent(
-      'contact_address_click',
-      'contact_interaction',
-      'physical_address',
-      1,
-    );
-  };
 
   return (
     <section
@@ -111,7 +88,6 @@ const Contact = (): JSX.Element => {
                             href={`tel:${item.phone}`}
                             className="text-xl font-bold text-gray-900 transition-colors hover:text-primary-500"
                             title={`Call us at ${item.phone}`}
-                            onClick={handlePhoneClick}
                           >
                             {item.phone}
                           </a>
@@ -153,7 +129,6 @@ const Contact = (): JSX.Element => {
                             href={`mailto:${item.email}`}
                             className="text-xl font-bold break-all text-gray-900 transition-colors hover:text-primary-500"
                             title={`Email us at ${item.email}`}
-                            onClick={handleEmailClick}
                           >
                             {item.email}
                           </a>
@@ -197,7 +172,6 @@ const Contact = (): JSX.Element => {
                             rel="noopener noreferrer"
                             className="text-xl font-bold text-gray-900 transition-colors hover:text-primary-500"
                             title={`Find us at ${item.address}`}
-                            onClick={handleAddressClick}
                           >
                             {item.address}
                           </a>
@@ -235,14 +209,12 @@ const Contact = (): JSX.Element => {
                       <a
                         href={`tel:${item.phone}`}
                         className="rounded-xl bg-primary-500 px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-primary-600"
-                        onClick={handlePhoneClick}
                       >
                         📞 Appeler
                       </a>
                       <a
                         href={`mailto:${item.email}`}
                         className="rounded-xl bg-gray-100 px-4 py-3 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
-                        onClick={handleEmailClick}
                       >
                         ✉️ Email
                       </a>

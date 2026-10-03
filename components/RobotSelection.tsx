@@ -1,7 +1,6 @@
 'use client';
 
 import type { MaintenanceInfo, Robot, RobotCategory } from '../lib/robots';
-import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useRef, useState, type JSX } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -22,7 +21,6 @@ const RobotSelection = ({
   const [selectedRobot, setSelectedRobot] = useState<Robot | null>(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
-  const [hasTrackedView, setHasTrackedView] = useState(false);
 
   // Handle screen size changes
   useEffect(() => {
@@ -39,17 +37,8 @@ const RobotSelection = ({
     router.push('/devis/demande');
   };
 
-  // Track view
-  useEffect(() => {
-    if (!hasTrackedView) {
-      trackEvent('page_view', 'navigation', 'robot_selection_page');
-      setHasTrackedView(true);
-    }
-  }, [hasTrackedView]);
-
   const handleRobotClick = (robot: Robot) => {
     setSelectedRobot(robot);
-    trackEvent('robot_selection', 'user_interaction', `robot_${robot.id}`);
   };
 
   const handleCloseForm = () => {

@@ -1,8 +1,7 @@
 'use client';
 
 import heroData from '../config/hero.json';
-import { trackEvent } from '../utils/analytics';
-import { useEffect, useRef, useState, type JSX } from 'react';
+import { useRef, useState, type JSX } from 'react';
 import { ChevronDown } from 'lucide-react';
 import HeroButtons from './HeroButtons/HeroButtons';
 
@@ -22,43 +21,11 @@ const Hero = ({
 }: HeroComponentProps): JSX.Element => {
   const [hero] = useState<HeroProps[]>(heroData);
   const heroRef = useRef<HTMLDivElement | null>(null);
-  const [hasTrackedView, setHasTrackedView] = useState(false); // State to ensure the event is sent only once
 
   // Calculate years of experience automatically
   const currentYear = new Date().getFullYear();
   const foundingYear = 2008;
   const yearsOfExperience = currentYear - foundingYear;
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasTrackedView) {
-            // Track Hero section visibility
-            trackEvent(
-              'section_view', // More consistent event name in snake_case
-              'user_engagement', // More standard GA4 category
-              'hero_section', // Keep the section identifier
-            );
-            setHasTrackedView(true); // Prevent duplicate tracking
-          }
-        });
-      },
-      {
-        threshold: 0.5, // Trigger when 50% of the Hero section is visible
-      },
-    );
-
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    return () => {
-      if (heroRef.current) {
-        observer.unobserve(heroRef.current);
-      }
-    };
-  }, [hasTrackedView]);
 
   return (
     <div ref={heroRef}>

@@ -1,9 +1,9 @@
 'use client';
 
 import { submitRobotReservation } from '../lib/actions';
+import { trackLead } from '../lib/analytics';
 import type { MaintenanceInfo, Robot } from '../lib/robots';
 import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
-import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
@@ -110,7 +110,6 @@ const RobotContactForm = ({
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
 
   const formRef = useRef<HTMLDivElement | null>(null);
-  const [hasTrackedView, setHasTrackedView] = useState(false);
 
   // Initialize form values with default states
   useEffect(() => {
@@ -128,37 +127,6 @@ const RobotContactForm = ({
     });
     setFormValues(initialFormValues);
   }, []);
-
-  // Track form visibility
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasTrackedView) {
-            trackEvent(
-              'section_view',
-              'form_interaction',
-              'robot_form_section',
-            );
-            setHasTrackedView(true);
-          }
-        });
-      },
-      {
-        threshold: 0.5,
-      },
-    );
-
-    if (formRef.current) {
-      observer.observe(formRef.current);
-    }
-
-    return () => {
-      if (formRef.current) {
-        observer.unobserve(formRef.current);
-      }
-    };
-  }, [hasTrackedView]);
 
   // Calculate total price
   useEffect(() => {
@@ -215,7 +183,6 @@ const RobotContactForm = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!validateForm()) {
-      trackEvent('form_submit_error', 'form_interaction', 'validation_failed');
       return;
     }
 
@@ -257,11 +224,6 @@ const RobotContactForm = ({
           setTurnstileResetSignal((precedent) => precedent + 1);
           setModalType('error');
           setModalMessage(refus);
-          trackEvent(
-            'form_submit_error',
-            'form_interaction',
-            'turnstile_refus',
-          );
           return;
         }
         throw new Error(result.error || 'Erreur lors de la soumission');
@@ -273,21 +235,14 @@ const RobotContactForm = ({
       setModalMessage(
         'Votre demande de réservation a été soumise avec succès. Nous vous contacterons très prochainement.',
       );
-
-      trackEvent(
-        'form_submission',
-        'form_interaction',
-        'robot_form_submission_success',
-        totalPrice,
-      );
+      // Après la réponse de succès du serveur seulement (R004, AC-03).
+      trackLead('rappel');
     } catch (error) {
       console.error('Error submitting form', error);
       setModalType('error');
       setModalMessage(
         "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
       );
-
-      trackEvent('form_submit_error', 'form_interaction', 'submission_failed');
     } finally {
       setIsLoading(false);
       setModalOpen(true);
@@ -303,7 +258,6 @@ const RobotContactForm = ({
 
   const handleOpenTerms = () => {
     setTermsOpen(true);
-    trackEvent('dialog_open', 'form_interaction', 'terms_dialog');
   };
 
   const handleCloseTerms = () => {

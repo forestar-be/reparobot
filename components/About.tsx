@@ -1,7 +1,6 @@
 'use client';
 
 import aboutData from '../config/about.json';
-import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useRef, useState } from 'react';
 import CountUp from 'react-countup';
 import SectionDivider from './SectionDivider';
@@ -21,14 +20,6 @@ const CountUpWrapper = ({ value, suffix, description }: AboutProps) => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (counterRef.current) {
-            trackEvent(
-              'view_stat_counter',
-              'engagement',
-              `stat_${description.toLowerCase().replace(/\s+/g, '_')}`,
-              value,
-            );
-          }
         }
       },
       { threshold: 0.5 },
@@ -57,38 +48,7 @@ const CountUpWrapper = ({ value, suffix, description }: AboutProps) => {
 };
 
 const About: React.FC = () => {
-  const [hasTrackedSection, setHasTrackedSection] = useState(false);
   const [about] = useState<AboutProps[]>(aboutData);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasTrackedSection) {
-            trackEvent('view_section', 'engagement', 'about_section');
-            setHasTrackedSection(true);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      observer.observe(aboutSection);
-    }
-
-    return () => {
-      if (aboutSection) {
-        observer.unobserve(aboutSection);
-      }
-    };
-  }, [hasTrackedSection]);
-
-  const handleHover = (description: string) => {
-    const formattedDescription = description.toLowerCase().replace(/\s+/g, '_');
-    trackEvent('hover_stat', 'engagement', `stat_${formattedDescription}`);
-  };
 
   return (
     <section
@@ -164,7 +124,6 @@ const About: React.FC = () => {
                 key={i}
                 className="group relative"
                 aria-label={`Statistic ${item.value}${item.suffix}`}
-                onMouseEnter={() => handleHover(item.description)}
               >
                 {/* Main card */}
                 <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-white p-4 text-center shadow-xs transition-all duration-300 hover:border-gray-200 hover:shadow-xl">

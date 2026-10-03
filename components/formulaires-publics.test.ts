@@ -110,3 +110,37 @@ describe('server actions', () => {
     expect(lectures).toEqual(['process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY']);
   });
 });
+
+/**
+ * R004-S02 (AC-03) — `generate_lead` ne part qu'après la réponse de succès du serveur.
+ *
+ * Un refus (Turnstile, validation, erreur serveur) n'est pas un contact obtenu : le
+ * compter fausserait la mesure que la refonte doit comparer. Le contrôle est textuel,
+ * comme le précédent — le défaut serait un appel placé avant le test de `result.success`,
+ * que le type de `trackLead` ne distingue pas. Le comportement (aucun envoi sans
+ * consentement, jamais d'exception) est prouvé dans `lib/analytics.test.ts`.
+ */
+const LEADS = [
+  { fichier: 'components/QuoteRequestForm.tsx', lead: 'devis' },
+  { fichier: 'components/RobotContactForm.tsx', lead: 'rappel' },
+  { fichier: 'components/ServiceForm.tsx', lead: 'entretien' },
+] as const;
+
+describe.each(LEADS)('$fichier : lead $lead', ({ fichier, lead }) => {
+  const code = sansCommentaires(source(fichier));
+
+  it('appelle trackLead exactement une fois, avec son type', () => {
+    expect(code.match(/trackLead\(/g) ?? []).toHaveLength(1);
+    expect(code).toContain(`trackLead('${lead}')`);
+  });
+
+  it("l'appelle après le refus du serveur, jamais avant", () => {
+    const refus = code.indexOf('if (!result.success)');
+    expect(refus).toBeGreaterThan(-1);
+    expect(code.indexOf('trackLead(')).toBeGreaterThan(refus);
+  });
+
+  it('ne passe plus par les anciens trackEvent', () => {
+    expect(code).not.toMatch(/trackEvent/);
+  });
+});

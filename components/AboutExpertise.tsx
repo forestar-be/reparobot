@@ -1,6 +1,5 @@
 'use client';
 
-import { trackEvent } from '../utils/analytics';
 import React, {
   useCallback,
   useEffect,
@@ -19,8 +18,6 @@ interface StatData {
 }
 
 const AboutExpertise: React.FC = () => {
-  const [hasTrackedSection, setHasTrackedSection] = useState(false);
-
   // Automatic statistics calculation
   const statisticsData = useMemo(() => {
     const currentYear = new Date().getFullYear();
@@ -170,12 +167,6 @@ const AboutExpertise: React.FC = () => {
           ([entry]) => {
             if (entry.isIntersecting) {
               setIsVisible(true);
-              trackEvent(
-                'view_stat_counter',
-                'engagement',
-                `stat_${description.toLowerCase().replace(/\s+/g, '_')}`,
-                value,
-              );
             }
           },
           { threshold: 0.5 },
@@ -204,38 +195,6 @@ const AboutExpertise: React.FC = () => {
     },
     [],
   );
-
-  // Track section visibility with useCallback
-  const handleSectionTracking = useCallback(() => {
-    if (!hasTrackedSection) {
-      trackEvent('view_section', 'engagement', 'about_expertise_section');
-      setHasTrackedSection(true);
-    }
-  }, [hasTrackedSection]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            handleSectionTracking();
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-
-    const aboutSection = document.getElementById('about-expertise');
-    if (aboutSection) {
-      observer.observe(aboutSection);
-    }
-
-    return () => {
-      if (aboutSection) {
-        observer.unobserve(aboutSection);
-      }
-    };
-  }, [handleSectionTracking]);
 
   return (
     <section
@@ -289,13 +248,6 @@ const AboutExpertise: React.FC = () => {
                 <div
                   key={index}
                   className={`group relative overflow-hidden rounded-2xl border ${colors.border} ${colors.hover} bg-linear-to-br ${colors.bg} p-8 text-center shadow-xs transition-all duration-300 hover:scale-105 hover:shadow-xl`}
-                  onMouseEnter={() =>
-                    trackEvent(
-                      'hover_stat',
-                      'engagement',
-                      `stat_${stat.description.toLowerCase().replace(/\s+/g, '_')}`,
-                    )
-                  }
                 >
                   {/* Icon */}
                   <div className="mb-4 text-4xl">{stat.icon}</div>

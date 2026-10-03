@@ -1,5 +1,7 @@
+import CookieSettingsButton from '../../components/CookieSettingsButton';
 import footerData from '../../config/footer.json';
 import { useState, type JSX } from 'react';
+import Link from 'next/link';
 
 interface FooterProps {
   copyright: string;
@@ -17,6 +19,15 @@ const Footer = (): JSX.Element => {
             Copyright &copy; {new Date().getFullYear()} {footer.copyright}.
           </p>
           <p className="text-sm text-gray-300">TVA {footer.TVA}</p>
+          <p className="flex flex-wrap items-center justify-center gap-x-4 text-sm text-gray-300">
+            <Link
+              href="/cookies"
+              className="inline-flex min-h-11 items-center transition-colors hover:text-white"
+            >
+              Cookies
+            </Link>
+            <CookieSettingsButton className="inline-flex min-h-11 items-center transition-colors hover:text-white" />
+          </p>
           <p className="text-xs text-gray-400">
             Services professionnels fournis par{' '}
             <a

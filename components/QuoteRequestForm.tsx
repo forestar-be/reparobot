@@ -5,6 +5,7 @@ import {
   fetchRobots,
   submitQuoteRequest,
 } from '../lib/actions';
+import { trackLead } from '../lib/analytics';
 import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
 import React, { useEffect, useState, type JSX } from 'react';
 import Link from 'next/link';
@@ -176,6 +177,8 @@ const QuoteRequestForm = (): JSX.Element => {
         setRequestId(result.data.requestId);
       }
       setSubmitSuccess(true);
+      // Après la réponse de succès du serveur seulement (R004, AC-03).
+      trackLead('devis');
 
       // Reset form
       setFormData({

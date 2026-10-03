@@ -1,7 +1,6 @@
 'use client';
 
 import servicesData from '../config/services.json';
-import { trackEvent } from '../utils/analytics';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -58,35 +57,9 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
       useState<ServicesProps | null>(null);
     const [isFormEdited, setIsFormEdited] = useState(false);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [isSectionViewed, setIsSectionViewed] = useState(false);
     const [highlightedServices, setHighlightedServices] = useState<string[]>(
       [],
     );
-
-    // Track when the Services section enters the viewport
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && !isSectionViewed) {
-              trackEvent('section_view', 'user_engagement', 'services_section');
-              setIsSectionViewed(true);
-            }
-          });
-        },
-        { threshold: 0.5 },
-      );
-
-      if (ref && 'current' in ref && ref.current) {
-        observer.observe(ref.current);
-      }
-
-      return () => {
-        if (ref && 'current' in ref && ref.current) {
-          observer.unobserve(ref.current);
-        }
-      };
-    }, [isSectionViewed]);
 
     // Listen for custom events to highlight specific services
     useEffect(() => {
@@ -125,12 +98,6 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
 
     const handleServiceClick = useCallback(
       (service: ServicesProps) => {
-        trackEvent(
-          'service_card_click',
-          'service_interaction',
-          `service_${service.name.toLowerCase().replace(/\s+/g, '_')}`,
-        );
-
         // If the service is configured to link externally, navigate to that URL
         if (service.isExternalLink && service.externalUrl) {
           router.push(service.externalUrl);

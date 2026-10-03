@@ -3,8 +3,8 @@
 
 import conditions from '../config/conditions.json';
 import { submitServiceForm } from '../lib/actions';
+import { trackLead } from '../lib/analytics';
 import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
-import { trackEvent } from '../utils/analytics';
 import React, { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
@@ -35,7 +35,6 @@ const ServiceForm = ({
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
 
   const formRef = useRef<HTMLFormElement | null>(null);
-  const [hasTrackedView, setHasTrackedView] = useState(false);
 
   // Initialize form values with default states
   useEffect(() => {
@@ -53,37 +52,6 @@ const ServiceForm = ({
     });
     setFormValues(initialFormValues);
   }, [service.formFields]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasTrackedView) {
-            // Track ServiceForm section visibility
-            trackEvent(
-              'section_view', // Action: consistent with other section views
-              'form_interaction', // Category: snake_case, consistent category naming
-              'service_form_section', // Label: snake_case, more consistent naming
-            );
-            setHasTrackedView(true); // Prevent duplicate tracking
-          }
-        });
-      },
-      {
-        threshold: 0.5, // Trigger when 50% of the form is visible
-      },
-    );
-
-    if (formRef.current) {
-      observer.observe(formRef.current);
-    }
-
-    return () => {
-      if (formRef.current) {
-        observer.unobserve(formRef.current);
-      }
-    };
-  }, [hasTrackedView]);
 
   useEffect(() => {
     if (service.basePrice !== undefined) {
@@ -131,12 +99,6 @@ const ServiceForm = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!validateForm()) {
-      // Track form submission with validation errors
-      trackEvent(
-        'form_submit_error', // Action: snake_case, more specific
-        'form_interaction', // Category: already good, keep snake_case
-        'validation_failed', // Label: snake_case, more specific
-      );
       return;
     }
 
@@ -169,11 +131,6 @@ const ServiceForm = ({
           setTurnstileResetSignal((precedent) => precedent + 1);
           setModalType('error');
           setModalMessage(refus);
-          trackEvent(
-            'form_submit_error',
-            'form_interaction',
-            'turnstile_refus',
-          );
           return;
         }
         throw new Error(result.error || 'Erreur lors de la soumission');
@@ -183,26 +140,13 @@ const ServiceForm = ({
       setErrors({});
       setModalType('success');
       setModalMessage('Votre demande a été soumise avec succès');
-
-      // Track successful form submission
-      trackEvent(
-        'form_submission', // Keep it snake_case
-        'form_interaction', // Category
-        'form_submission_success', // Label
-        99,
-      );
+      // Après la réponse de succès du serveur seulement (R004, AC-03).
+      trackLead('entretien');
     } catch (error) {
       console.error('Error submitting form', error);
       setModalType('error');
       setModalMessage(
         "Une erreur s'est produite lors de la soumission du formulaire. Veuillez réessayer ou contacter le support.",
-      );
-
-      // Track failed form submission
-      trackEvent(
-        'form_submit_error', // Action: snake_case, clearer error event
-        'form_interaction', // Category: already good, keep snake_case
-        'submission_failed', // Label: snake_case, more consistent
       );
     } finally {
       setIsLoading(false);
@@ -219,11 +163,6 @@ const ServiceForm = ({
 
   const handleOpenTerms = () => {
     setTermsOpen(true);
-    trackEvent(
-      'dialog_open', // Action: snake_case, more generic for reuse
-      'form_interaction', // Category: already good, keep snake_case
-      'terms_dialog', // Label: snake_case, more concise
-    );
   };
 
   const handleCloseTerms = () => {

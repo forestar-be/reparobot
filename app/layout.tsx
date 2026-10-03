@@ -1,3 +1,5 @@
+import Analytics from '../components/Analytics';
+import CookieBanner from '../components/CookieBanner';
 import PageLayout from '../layout/PageLayout';
 import { SITE_URL } from '../lib/site';
 import React from 'react';
@@ -187,6 +189,8 @@ export default function RootLayout({
       </head>
       <body>
         <PageLayout>{children}</PageLayout>
+        <Analytics />
+        <CookieBanner />
       </body>
     </html>
   );
