@@ -138,7 +138,7 @@ export default function QuoteForm({
         </p>
         <ol
           aria-label="Les étapes"
-          className="m-0 mt-6 flex list-none flex-wrap items-center gap-[22px] p-0 text-[11px] text-muted mobile:mt-[19px] mobile:gap-3 mobile:text-[9px]"
+          className="m-0 mt-6 flex list-none flex-wrap items-center gap-[22px] p-0 text-[11px] text-muted mobile:mt-[19px] mobile:gap-3 mobile:text-[10px]"
         >
           {STEPS.map((step, index) => (
             <li

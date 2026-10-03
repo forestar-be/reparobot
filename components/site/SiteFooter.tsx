@@ -66,7 +66,7 @@ export default async function SiteFooter() {
           </div>
         </div>
         <div
-          className={`flex justify-between gap-5 border-t border-[#cfd7c9] pt-[17px] text-[10px] text-muted mobile:flex-col mobile:gap-2 mobile:text-[9px]`}
+          className={`flex justify-between gap-5 border-t border-[#cfd7c9] pt-[17px] text-[10px] text-muted mobile:flex-col mobile:gap-2 mobile:text-[10px]`}
         >
           <span>
             © {new Date().getFullYear()} Forestar · Braine-le-Comte, Belgique ·

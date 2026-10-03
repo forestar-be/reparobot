@@ -140,7 +140,7 @@ export default async function EntretienPage() {
                   card.highlight ? '!border-[#9baa92]' : ''
                 }`}
               >
-                <div className="mb-[18px] min-h-[17px] text-[9px] font-extrabold tracking-[0.16em] text-forest uppercase mobile:mb-[13px] mobile:min-h-0">
+                <div className="mb-[18px] min-h-[17px] text-[10px] font-extrabold tracking-[0.16em] text-forest uppercase mobile:mb-[13px] mobile:min-h-0">
                   {card.eyebrow}
                 </div>
                 <h2 className="mb-[17px] text-2xl mobile:mb-[13px] mobile:text-[25px]">

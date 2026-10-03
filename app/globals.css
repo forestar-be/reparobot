@@ -292,6 +292,14 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Barre fixe mobile (MobileBar, ~59 px + zone de sécurité) : un élément qui prend le
+     focus au clavier ne doit jamais passer dessous. */
+  @media (max-width: 760px) {
+    html {
+      scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+  }
+
   body {
     margin: 0;
     background: var(--color-ivory);

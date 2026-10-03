@@ -36,7 +36,7 @@ export default function Price({
       {formatEuro(amount)}
       <small
         className={`block font-normal tracking-normal text-muted ${
-          size === 'compact' ? 'text-[10px] mobile:text-[8px]' : 'text-[10px]'
+          size === 'compact' ? 'text-[10px] mobile:text-[10px]' : 'text-[10px]'
         }`}
       >
         TVAC, robot seul

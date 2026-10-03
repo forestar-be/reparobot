@@ -12,7 +12,7 @@ export default function Eyebrow({
 }) {
   return (
     <div
-      className={`mb-[17px] text-[10px] font-extrabold tracking-[0.16em] uppercase mobile:mb-[13px] mobile:text-[9px] ${
+      className={`mb-[17px] text-[10px] font-extrabold tracking-[0.16em] uppercase mobile:mb-[13px] mobile:text-[10px] ${
         dark ? 'text-on-dark-eyebrow' : 'text-forest'
       } ${className}`}
     >

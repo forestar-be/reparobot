@@ -198,7 +198,7 @@ export default async function RobotPage({ params }: { params: Params }) {
                 />
               </div>
             </div>
-            <div className="mt-[13px] flex justify-between gap-3.5 text-[10px] text-muted mobile:text-[9px]">
+            <div className="mt-[13px] flex justify-between gap-3.5 text-[10px] text-muted mobile:text-[10px]">
               <span>{image ? 'Visuel Husqvarna' : 'Photo à venir'}</span>
               {robot.reference ? (
                 <span>Réf. {robot.reference.split('_')[0]}</span>
@@ -404,7 +404,7 @@ function Spec({
         divided ? 'border-l border-line pl-[17px] mobile:pl-3' : ''
       }`}
     >
-      <dt className="text-[10px] text-muted mobile:text-[9px]">{label}</dt>
+      <dt className="text-[10px] text-muted mobile:text-[10px]">{label}</dt>
       <dd className="m-0 text-[15px] font-bold text-forest mobile:text-[13px]">
         {value}
       </dd>

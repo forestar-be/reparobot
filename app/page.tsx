@@ -118,7 +118,7 @@ export default async function Home() {
               sizes="(max-width: 760px) 100vw, 620px"
               className="object-cover mobile:object-[center_52%]"
             />
-            <figcaption className="absolute bottom-[17px] left-5 rounded-[3px] bg-ivory/90 px-3 py-[5px] text-[10px] tracking-[0.045em] text-forest mobile:bottom-[11px] mobile:left-3 mobile:text-[9px]">
+            <figcaption className="absolute bottom-[17px] left-5 rounded-[3px] bg-ivory/90 px-3 py-[5px] text-[10px] tracking-[0.045em] text-forest mobile:bottom-[11px] mobile:left-3 mobile:text-[10px]">
               Automower® 430V NERA · mise en scène.
             </figcaption>
           </figure>
