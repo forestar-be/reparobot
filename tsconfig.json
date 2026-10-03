@@ -10,11 +10,11 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -33,7 +33,8 @@
     "layout",
     "trash/components",
     ".next/types/**/*.ts",
-    "./provider"
+    "./provider",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,5 @@
 import footerData from '../../config/footer.json';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 
 interface FooterProps {
   copyright: string;

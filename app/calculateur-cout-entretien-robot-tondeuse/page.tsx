@@ -2,7 +2,7 @@
 'use client';
 
 import CalculatorClientWrapper from '../../components/tool/Calculator/CalculatorClientWrapper';
-import { Suspense } from 'react';
+import { Suspense, type JSX } from 'react';
 
 // app/calculator/page.tsx
 

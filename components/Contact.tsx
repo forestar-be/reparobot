@@ -2,7 +2,7 @@
 
 import contactData from '../config/contact.json';
 import { trackEvent } from '../utils/analytics';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import ClientMapWrapper from './ClientMapWrapper';
 import SectionDivider from './SectionDivider';

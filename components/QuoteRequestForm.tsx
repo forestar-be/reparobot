@@ -6,7 +6,7 @@ import {
   submitQuoteRequest,
 } from '../lib/actions';
 import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, type JSX } from 'react';
 import Link from 'next/link';
 import Modal from './Modal';
 import TurnstileWidget from './TurnstileWidget';

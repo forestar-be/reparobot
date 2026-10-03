@@ -1,7 +1,7 @@
 'use client';
 
 import ROICalculateurWrapper from '../../components/tool/ROICalculator/ROICalculatorWrapper';
-import { Suspense } from 'react';
+import { Suspense, type JSX } from 'react';
 
 export default function ROICalculatorPage(): JSX.Element {
   return (

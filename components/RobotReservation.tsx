@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 

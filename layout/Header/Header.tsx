@@ -1,6 +1,6 @@
 import { Logo } from '../../components/Logo';
 import headerData from '../../config/header.json';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';

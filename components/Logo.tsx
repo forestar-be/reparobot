@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import Image from 'next/image';
 
 export const Logo = ({ isDark }: { isDark: boolean }): JSX.Element => {

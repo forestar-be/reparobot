@@ -2,7 +2,7 @@
 
 import type { MaintenanceInfo, Robot, RobotCategory } from '../lib/robots';
 import { trackEvent } from '../utils/analytics';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type JSX } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import RobotContactForm from './RobotContactForm';

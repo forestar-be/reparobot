@@ -2,7 +2,7 @@
 
 import heroData from '../config/hero.json';
 import { trackEvent } from '../utils/analytics';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import HeroButtons from './HeroButtons/HeroButtons';
@@ -13,8 +13,8 @@ interface HeroProps {
 }
 
 interface HeroComponentProps {
-  servicesRef: React.RefObject<HTMLElement>;
-  entretienServiceRef: React.RefObject<HTMLDivElement>;
+  servicesRef: React.RefObject<HTMLElement | null>;
+  entretienServiceRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const Hero = ({

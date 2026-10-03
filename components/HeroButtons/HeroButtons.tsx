@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import Link from 'next/link';
 
 interface HeroButtonsProps {
-  servicesRef: React.RefObject<HTMLElement>;
-  entretienServiceRef: React.RefObject<HTMLDivElement>;
+  servicesRef: React.RefObject<HTMLElement | null>;
+  entretienServiceRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const HeroButtons = ({

@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * Called by the server when config is updated
  *
  * Usage: GET /api/revalidate?secret=YOUR_SECRET&tag=robots-catalog
+ * Tags acceptés : robots-catalog, service-offers (forfaits d'entretien), site-info
  */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -35,13 +36,17 @@ export async function GET(request: NextRequest) {
   }
 
   // Allowed tags for revalidation
-  const allowedTags = ['robots-catalog'];
+  const allowedTags = ['robots-catalog', 'service-offers', 'site-info'];
   if (!allowedTags.includes(tag)) {
     return NextResponse.json({ error: 'Invalid tag' }, { status: 400 });
   }
 
   try {
-    revalidateTag(tag);
+    // Next 16 : le second argument est obligatoire. `{ expire: 0 }` expire la
+    // donnée tout de suite (comportement de Next 15) : le gérant qui modifie un
+    // robot ou un forfait voit le site à jour dès la requête suivante, sans
+    // servir une fois l'ancienne version (ce que ferait le profil 'max').
+    revalidateTag(tag, { expire: 0 });
     console.log(`Cache revalidated for tag: ${tag}`);
     return NextResponse.json({
       revalidated: true,

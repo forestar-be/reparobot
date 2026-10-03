@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type JSX } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronUp } from 'lucide-react';
 import Footer from './Footer/Footer';

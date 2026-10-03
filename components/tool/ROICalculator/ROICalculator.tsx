@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState, type JSX } from 'react';
 import './ROICalculator.css';
 
 interface Errors {

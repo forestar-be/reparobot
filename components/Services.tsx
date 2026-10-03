@@ -29,7 +29,7 @@ interface FormField {
 }
 
 interface ServicesComponentProps {
-  entretienServiceRef: React.RefObject<HTMLDivElement>;
+  entretienServiceRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(

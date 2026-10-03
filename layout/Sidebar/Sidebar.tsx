@@ -1,7 +1,7 @@
 import { Logo } from '../../components/Logo';
 import headerData from '../../config/header.json';
 import { HeaderProps } from '../Header/Header';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';

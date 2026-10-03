@@ -4,7 +4,7 @@ import AboutExpertise from '../components/AboutExpertise';
 import Contact from '../components/Contact';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, type JSX } from 'react';
 
 // Données structurées pour la page d'accueil
 const structuredData = {

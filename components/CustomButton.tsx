@@ -2,7 +2,7 @@
 // Import Next.js Link for client-side navigation
 import { trackEvent } from '../utils/analytics';
 // Import the tracking utility
-import React from 'react';
+import React, { type JSX } from 'react';
 import Link from 'next/link';
 
 interface Props {
