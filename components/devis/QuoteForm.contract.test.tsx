@@ -11,6 +11,11 @@ import { quoteContextFor } from '../../lib/quote';
 import type { Robot } from '../../lib/robots';
 import { TURNSTILE_HEADER } from '../../lib/turnstile';
 import {
+  fakeTurnstile,
+  fetchMock,
+  removeTurnstile,
+} from '../forms/contract-helpers';
+import {
   cleanup,
   fireEvent,
   render,
@@ -65,34 +70,6 @@ const context = quoteContextFor(
   accessories.antennas,
 );
 
-type Fake = {
-  render: ReturnType<typeof vi.fn>;
-  reset: ReturnType<typeof vi.fn>;
-  remove: ReturnType<typeof vi.fn>;
-};
-
-/** Faux Turnstile : délivre un jeton tout de suite, ou jamais (`deliver: false`). */
-function fakeTurnstile(deliver: boolean): Fake {
-  const api: Fake = {
-    render: vi.fn(
-      (_c: HTMLElement, options: { callback: (t: string) => void }) => {
-        if (deliver) options.callback('jeton-turnstile');
-        return 'widget-1';
-      },
-    ),
-    reset: vi.fn(),
-    remove: vi.fn(),
-  };
-  (window as unknown as { turnstile: Fake }).turnstile = api;
-  return api;
-}
-
-function fetchMock(response: Response) {
-  const mock = vi.fn(async (_url: string, _init?: RequestInit) => response);
-  vi.stubGlobal('fetch', mock);
-  return mock;
-}
-
 function renderForm() {
   return render(
     <QuoteForm robot={robot} context={context} accessories={accessories} />,
@@ -133,7 +110,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
-  delete (window as unknown as { turnstile?: Fake }).turnstile;
+  removeTurnstile();
 });
 
 describe('formulaire de devis', () => {
