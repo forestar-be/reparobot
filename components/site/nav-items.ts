@@ -2,7 +2,7 @@
  * Menu du site (R005-S02) : Robots Husqvarna · Entretien & réparation · Contact.
  * Une seule liste pour l'en-tête, le menu mobile et le pied de page.
  *
- * - « Contact » à l'ancre `#contact` de l'accueil.
+ * - « Contact » mène à la page `/contact` (coordonnées, carte, formulaire).
  */
 export interface NavItem {
   label: string;
@@ -22,7 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/entretien-reparation',
     activeFor: ['/entretien-reparation'],
   },
-  { label: 'Contact', href: '/#contact', activeFor: [] },
+  { label: 'Contact', href: '/contact', activeFor: ['/contact'] },
 ];
 
 /** L'entrée est active si le chemin courant commence par l'un de ses préfixes. */

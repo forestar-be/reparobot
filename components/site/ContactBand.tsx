@@ -3,24 +3,15 @@ import {
   hoursLines,
   mapsHref,
   telHref,
+  type SiteInfo,
 } from '../../lib/site-info';
 import Eyebrow from '../ui/Eyebrow';
 import ContactMap from './ContactMap';
 
-/**
- * Contact : adresse, horaires, téléphone (site-info). `id="contact"` sert l'ancre du
- * menu ; une seule section de ce nom par page (l'accueil).
- */
-export default async function ContactBand({
-  anchor = false,
-  map = false,
-}: {
-  anchor?: boolean;
-  map?: boolean;
-}) {
-  const info = await getSiteInfo();
+/** Adresse (lien Google Maps), téléphone et horaires : accueil et page `/contact`. */
+export function ContactCoordinates({ info }: { info: SiteInfo }) {
   const [street, ...city] = info.address.split(/,\s*/);
-  const coordinates = (
+  return (
     <div className="grid grid-cols-2 gap-[25px] mobile:grid-cols-1 mobile:gap-5">
       <div>
         <b className="mb-2 block text-sm">Venez nous rencontrer</b>
@@ -55,6 +46,21 @@ export default async function ContactBand({
       </div>
     </div>
   );
+}
+
+/**
+ * Contact : adresse, horaires, téléphone (site-info). `id="contact"` sert l'ancre du
+ * menu ; une seule section de ce nom par page (l'accueil).
+ */
+export default async function ContactBand({
+  anchor = false,
+  map = false,
+}: {
+  anchor?: boolean;
+  map?: boolean;
+}) {
+  const info = await getSiteInfo();
+  const coordinates = <ContactCoordinates info={info} />;
   return (
     <section
       id={anchor ? 'contact' : undefined}
