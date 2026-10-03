@@ -117,6 +117,7 @@ export default async function RobotsPage({
             </Link>
           </div>
 
+          <h2 className="sr-only">Modèles disponibles</h2>
           {robots.length > 0 ? (
             <ul className="m-0 grid list-none grid-cols-3 gap-[22px] p-0 tablet:gap-[15px] mobile:grid-cols-1 mobile:gap-[19px]">
               {robots.map((robot, index) => (
@@ -153,7 +154,7 @@ export default async function RobotsPage({
             >
               {catalog.categories.map((category, index) => (
                 <article key={category.id}>
-                  <span className="mb-[15px] block text-[11px] text-[#7a8c6e] mobile:mb-[9px]">
+                  <span className="mb-[15px] block text-[11px] text-muted mobile:mb-[9px]">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <h2 className="mb-3 text-[21px]">{category.name}</h2>

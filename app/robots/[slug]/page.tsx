@@ -330,7 +330,7 @@ export default async function RobotPage({ params }: { params: Params }) {
                   >
                     <span
                       aria-hidden="true"
-                      className="pt-0.5 text-[11px] text-[#738769]"
+                      className="pt-0.5 text-[11px] text-muted"
                     >
                       {String(index + 1).padStart(2, '0')}
                     </span>
@@ -400,16 +400,14 @@ function Spec({
 }) {
   return (
     <div
-      className={`py-[18px] pr-2 mobile:py-3.5 mobile:pr-1.5 ${
+      className={`flex flex-col-reverse py-[18px] pr-2 mobile:py-3.5 mobile:pr-1.5 ${
         divided ? 'border-l border-line pl-[17px] mobile:pl-3' : ''
       }`}
     >
-      <div className="flex flex-col-reverse">
-        <dt className="text-[10px] text-muted mobile:text-[9px]">{label}</dt>
-        <dd className="m-0 text-[15px] font-bold text-forest mobile:text-[13px]">
-          {value}
-        </dd>
-      </div>
+      <dt className="text-[10px] text-muted mobile:text-[9px]">{label}</dt>
+      <dd className="m-0 text-[15px] font-bold text-forest mobile:text-[13px]">
+        {value}
+      </dd>
     </div>
   );
 }
