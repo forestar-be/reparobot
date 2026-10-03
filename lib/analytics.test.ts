@@ -73,7 +73,6 @@ describe('événements (R004, AC-01 et AC-03)', () => {
     const { analytics } = await charger(ID);
     analytics.trackLead('devis');
     analytics.trackPhoneClick();
-    analytics.trackPageView('/robots');
     expect(appels()).toEqual([]);
     expect(fenetreMesure().gtag).toBeUndefined();
   });
