@@ -38,7 +38,7 @@ export interface RobotsCatalog {
 }
 
 // Fallback data in case API is unavailable (for build time / offline scenarios)
-const FALLBACK_CATALOG: RobotsCatalog = {
+export const FALLBACK_CATALOG: RobotsCatalog = {
   categories: [
     {
       id: 'wired',
@@ -128,10 +128,10 @@ export async function getFeaturedRobots(): Promise<Robot[]> {
 }
 
 /**
- * Nombre de robots du catalogue.
- * (Réservé à l'ancienne page /robots ; retiré avec elle en R005-S03.)
+ * Vrai si le catalogue est le repli (API absente ou en erreur), pas la vraie liste :
+ * une fiche introuvable dans un repli n'est pas un 404, c'est une panne — elle ne
+ * doit pas être mise en cache comme « inconnue ».
  */
-export async function getRobotsCount(): Promise<number> {
-  const catalog = await getRobotsCatalog();
-  return catalog.robots.length;
+export function isFallbackCatalog(catalog: RobotsCatalog): boolean {
+  return catalog === FALLBACK_CATALOG;
 }

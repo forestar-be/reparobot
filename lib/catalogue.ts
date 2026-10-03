@@ -78,3 +78,33 @@ export function countLabel(shown: number, total: number): string {
   }
   return `${shown} ${word} sur ${total}`;
 }
+
+/**
+ * La description d'un robot (`publicDescription`) commence par une ligne d'accroche,
+ * puis le détail. « Robot tondeuse pour…\nHusqvarna Automower® 305 présente… ».
+ */
+export function splitDescription(description: string | null | undefined): {
+  lead: string;
+  body: string;
+} {
+  const lines = (description ?? '')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (lines.length === 0) return { lead: '', body: '' };
+  if (lines.length === 1) return { lead: lines[0], body: '' };
+  return { lead: lines[0], body: lines.slice(1).join('\n') };
+}
+
+/** Description sur une ligne pour les balises meta : accroche seule, sans retour à la ligne. */
+export function metaDescription(
+  lead: string,
+  extra: string,
+  max = 158,
+): string {
+  const text = `${lead.replace(/[.\s]+$/, '')}. ${extra}`
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…`;
+}

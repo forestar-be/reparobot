@@ -86,9 +86,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
-  // R006-S04 : l'ancien formulaire de devis vit désormais sur `/devis` (la chaîne de requête suit).
+  // Anciennes adresses : 301 vers l'accueil, au bloc contact pour `/contact` (R009), et l'ancien
+  // formulaire de devis vers `/devis`, la chaîne de requête suivant (R006-S04).
+  // `statusCode: 301` et non `permanent: true`, qui répondrait 308 : on garde donc 308 seulement
+  // pour `/devis/demande`.
   async redirects() {
     return [
+      { source: '/about', destination: '/', statusCode: 301 },
+      { source: '/contact', destination: '/#contact', statusCode: 301 },
       { source: '/devis/demande', destination: '/devis', permanent: true },
     ];
   },

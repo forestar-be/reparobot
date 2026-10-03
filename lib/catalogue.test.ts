@@ -3,8 +3,10 @@ import {
   catalogueHref,
   countLabel,
   filterRobots,
+  metaDescription,
   parseCatalogueFilters,
   robotShortName,
+  splitDescription,
   typeOfRobot,
 } from './catalogue';
 import type { Robot } from './robots';
@@ -105,5 +107,22 @@ describe('petits formats', () => {
     expect(countLabel(1, 16)).toBe('1 modèle sur 16');
     expect(countLabel(1, 1)).toBe('1 modèle présenté');
     expect(countLabel(0, 16)).toBe('0 modèle sur 16');
+  });
+});
+
+describe('splitDescription / metaDescription', () => {
+  it('sépare l’accroche et le détail', () => {
+    expect(splitDescription('Accroche\nDétail un\nDétail deux')).toEqual({
+      lead: 'Accroche',
+      body: 'Détail un\nDétail deux',
+    });
+    expect(splitDescription('Seule')).toEqual({ lead: 'Seule', body: '' });
+    expect(splitDescription(null)).toEqual({ lead: '', body: '' });
+  });
+  it('metaDescription tient dans la limite sans couper un mot', () => {
+    const d = metaDescription('Robot tondeuse.', 'x '.repeat(200), 100);
+    expect(d.length).toBeLessThanOrEqual(100);
+    expect(d.endsWith('…')).toBe(true);
+    expect(metaDescription('Court', 'suite.')).toBe('Court. suite.');
   });
 });

@@ -107,8 +107,7 @@ const Map = ({
   return (
     <div
       ref={containerRef}
-      className="h-96 w-full"
-      style={{ minHeight: '24rem' }}
+      className="h-full min-h-64 w-full"
       role="region"
       aria-label={ariaLabel || 'Interactive map'}
     />
