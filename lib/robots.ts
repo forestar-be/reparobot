@@ -126,12 +126,3 @@ export async function getFeaturedRobots(): Promise<Robot[]> {
   const catalog = await getRobotsCatalog();
   return catalog.robots.filter((robot) => robot.isFeatured);
 }
-
-/**
- * Nombre de robots du catalogue.
- * (Réservé à l'ancienne page /robots ; retiré avec elle en R005-S03.)
- */
-export async function getRobotsCount(): Promise<number> {
-  const catalog = await getRobotsCatalog();
-  return catalog.robots.length;
-}
