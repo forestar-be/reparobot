@@ -44,7 +44,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 transition-opacity"
           onClick={onClose}
         />
       )}

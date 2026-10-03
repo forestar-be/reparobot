@@ -267,7 +267,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         ? entretienServiceRef
                         : null
                     }
-                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-500 ${
+                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition-all duration-500 ${
                       isHighlighted
                         ? 'border-green-400'
                         : 'border-gray-100 hover:border-primary-200 hover:shadow-xl'
@@ -309,7 +309,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         quality={85}
                       />
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
 
                       {/* Service Icon */}
                       <div className="absolute left-4 top-4">
@@ -363,7 +363,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         {service.name}
                       </h3>
 
-                      <p className="mb-4 flex-grow text-sm leading-relaxed text-gray-600 md:text-base">
+                      <p className="mb-4 grow text-sm leading-relaxed text-gray-600 md:text-base/6">
                         {service.description}
                       </p>
 
@@ -402,7 +402,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     </div>
 
                     {/* Decorative element */}
-                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-gradient-to-br from-primary-500/10 to-transparent"></div>
+                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-linear-to-br from-primary-500/10 to-transparent"></div>
                   </div>
                 );
               })}
@@ -441,7 +441,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         ? entretienServiceRef
                         : null
                     }
-                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-500 ${
+                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition-all duration-500 ${
                       isHighlighted
                         ? 'border-green-400'
                         : 'border-gray-100 hover:border-primary-200 hover:shadow-xl'
@@ -482,7 +482,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         quality={85}
                       />
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
 
                       {/* Service Icon */}
                       <div className="absolute left-4 top-4">
@@ -536,7 +536,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         {service.name}
                       </h3>
 
-                      <p className="mb-4 flex-grow text-sm leading-relaxed text-gray-600 md:text-base">
+                      <p className="mb-4 grow text-sm leading-relaxed text-gray-600 md:text-base/6">
                         {service.description}
                       </p>
 
@@ -575,14 +575,14 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     </div>
 
                     {/* Decorative element */}
-                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-gradient-to-br from-primary-500/10 to-transparent"></div>
+                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-linear-to-br from-primary-500/10 to-transparent"></div>
                   </div>
                 );
               })}
             </div>
             {/* Bottom CTA */}
             <div className="mt-10 text-center">
-              <div className="inline-flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+              <div className="inline-flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-xs">
                 <span className="text-gray-600">
                   Besoin d'aide pour choisir ?
                 </span>

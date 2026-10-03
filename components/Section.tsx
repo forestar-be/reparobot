@@ -52,7 +52,7 @@ const Section: React.FC<SectionProps> = ({
       style={getPatternStyle()}
     >
       {pattern !== 'none' && (
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-white/80 to-transparent" />
       )}
       <div className="relative z-10">{children}</div>
     </section>

@@ -93,7 +93,7 @@ const Presentation = () => {
             <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
               Pourquoi nous choisir ?
             </h2>
-            <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-primary-400 to-primary-600"></div>
+            <div className="mx-auto h-1 w-24 rounded-full bg-linear-to-r from-primary-400 to-primary-600"></div>
           </div>
 
           {/* Content Grid */}
@@ -109,7 +109,7 @@ const Presentation = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Icon */}
-                    <div className="mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                    <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                       <div className="text-lg">
                         {index % 4 === 0 && '🎯'}
                         {index % 4 === 1 && '⚡'}
@@ -162,7 +162,7 @@ const Presentation = () => {
                       'Support technique 7j/7',
                     ].map((feature, idx) => (
                       <div key={idx} className="flex items-center gap-3">
-                        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-500">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500">
                           <svg
                             className="h-3 w-3 text-white"
                             fill="currentColor"
@@ -184,8 +184,8 @@ const Presentation = () => {
                 </div>
 
                 {/* Decorative elements */}
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary-300/30 to-transparent"></div>
-                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-gradient-to-tr from-primary-200/40 to-transparent"></div>
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-linear-to-br from-primary-300/30 to-transparent"></div>
+                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-linear-to-tr from-primary-200/40 to-transparent"></div>
               </div>
 
               {/* Floating stats */}
@@ -224,7 +224,7 @@ const Presentation = () => {
                   .map((sentence, index) => (
                     <div
                       key={index + Math.ceil(sentences.length / 2)}
-                      className="animate-fade-in rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                      className="animate-fade-in rounded-2xl border border-gray-100 bg-white p-6 shadow-xs transition-shadow duration-300 hover:shadow-md"
                       style={{
                         animationDelay: `${(index + Math.ceil(sentences.length / 2)) * 0.1}s`,
                       }}
@@ -244,7 +244,7 @@ const Presentation = () => {
 
           {/* CTA Section */}
           <div className="mt-12 text-center">
-            <div className="rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 p-8 text-white">
+            <div className="rounded-2xl bg-linear-to-r from-primary-500 to-primary-600 p-8 text-white">
               <h3 className="mb-4 font-display text-2xl font-bold">
                 Prêt à confier votre robot tondeuse à des experts ?
               </h3>

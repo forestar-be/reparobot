@@ -43,7 +43,7 @@ const CustomButton = ({
   const buttonClasses = `
     text-gray-700 hover:text-primary-600 active:text-primary-700 
     uppercase mx-3 ml-4 px-3 py-2 rounded-md transition-colors duration-200
-    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+    focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
   `;
 
   // If the link is external, render an <a> tag
