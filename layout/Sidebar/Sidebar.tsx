@@ -44,14 +44,14 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 transition-opacity"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-80 transform bg-white shadow-xl transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 z-50 h-full w-80 transform bg-white shadow-xl transition-transform duration-300 ease-in-out ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -69,7 +69,7 @@ const Sidebar = ({ open, onClose }: Props): JSX.Element => {
                   {header.title}
                 </span>
                 {header.subtitle && (
-                  <span className="absolute -bottom-1 -right-2 whitespace-nowrap text-xs font-medium text-gray-500">
+                  <span className="absolute -right-2 -bottom-1 text-xs font-medium whitespace-nowrap text-gray-500">
                     {header.subtitle}
                   </span>
                 )}

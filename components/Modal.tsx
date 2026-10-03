@@ -161,7 +161,7 @@ const Modal: React.FC<ModalProps> = ({
           <div className="flex justify-center">
             <button
               onClick={handleCloseClick}
-              className="btn-primary w-full px-6 py-3 text-sm sm:w-auto sm:text-base"
+              className="w-full btn-primary px-6 py-3 text-sm sm:w-auto sm:text-base"
             >
               {type === 'error' ? 'Compris' : 'OK'}
             </button>

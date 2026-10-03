@@ -174,7 +174,7 @@ const PageLayout = ({ children }: Props): JSX.Element => {
       {/* Scroll to top button */}
       <button
         onClick={() => scrollTo('page-top')}
-        className={`fixed bottom-6 right-8 z-50 transform rounded-full bg-primary-500 p-3 text-white shadow-lg transition-all duration-300 hover:bg-primary-600 ${
+        className={`fixed right-8 bottom-6 z-50 transform rounded-full bg-primary-500 p-3 text-white shadow-lg transition-all duration-300 hover:bg-primary-600 ${
           showScrollTop
             ? 'translate-y-0 scale-100 opacity-100'
             : 'translate-y-16 scale-90 opacity-0'

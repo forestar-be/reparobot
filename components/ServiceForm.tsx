@@ -330,7 +330,7 @@ const ServiceForm = ({
             <div className="flex items-start">
               <input
                 type="checkbox"
-                className="mt-1 h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:h-4 sm:w-4"
+                className="mt-1 h-5 w-5 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:h-4 sm:w-4"
                 checked={formValues[field.label] || false}
                 onChange={(e) => handleChange(field.label, e.target.checked)}
                 aria-describedby={`${field.label}-error`}
@@ -419,7 +419,7 @@ const ServiceForm = ({
       {/* Form Header */}
       <button
         onClick={() => onClose()}
-        className="absolute right-3 top-6 z-50 rounded-full p-2 hover:bg-gray-100"
+        className="absolute top-6 right-3 z-50 rounded-full p-2 hover:bg-gray-100"
         aria-label="Fermer le formulaire"
       >
         <X className="h-5 w-5" />
@@ -427,7 +427,7 @@ const ServiceForm = ({
 
       <form
         ref={formRef}
-        className="relative rounded-bl-[32px] rounded-tl-[32px] bg-white p-4 sm:p-6"
+        className="relative rounded-tl-[32px] rounded-bl-[32px] bg-white p-4 sm:p-6"
         onSubmit={handleSubmit}
         noValidate
         aria-labelledby="service-form-title"
@@ -484,13 +484,13 @@ const ServiceForm = ({
 
         {/* Submission Modal */}
         {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="mx-4 max-w-md rounded-lg bg-white p-6">
               <h3 className="mb-4 text-lg font-bold">Envoi du formulaire</h3>
               <p className="mb-6 text-gray-700">{modalMessage}</p>
               <button
                 onClick={handleCloseModal}
-                className="btn-primary w-full"
+                className="w-full btn-primary"
                 autoFocus
               >
                 Fermer
@@ -501,7 +501,7 @@ const ServiceForm = ({
 
         {/* Terms and Conditions Dialog */}
         {termsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-xl font-bold">Conditions Générales</h3>

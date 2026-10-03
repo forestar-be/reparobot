@@ -201,13 +201,13 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
         <section
           id="services"
           ref={ref}
-          className="section-padding-small relative border-b border-gray-100 bg-white"
+          className="relative border-b border-gray-100 bg-white section-padding-small"
           aria-labelledby="services-title"
         >
           {/* Background decoration */}
-          <div className="bg-grid-pattern absolute inset-0 opacity-5"></div>
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-          <div className="container-custom relative">
+          <div className="relative container-custom">
             <div className="mb-8 text-center">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-700">
                 🚀 Nos Services Premium
@@ -267,7 +267,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         ? entretienServiceRef
                         : null
                     }
-                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-500 ${
+                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition-all duration-500 ${
                       isHighlighted
                         ? 'border-green-400'
                         : 'border-gray-100 hover:border-primary-200 hover:shadow-xl'
@@ -309,10 +309,10 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         quality={85}
                       />
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
 
                       {/* Service Icon */}
-                      <div className="absolute left-4 top-4">
+                      <div className="absolute top-4 left-4">
                         <div
                           className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl shadow-lg backdrop-blur-sm transition-all duration-300 ${
                             isHighlighted
@@ -363,7 +363,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         {service.name}
                       </h3>
 
-                      <p className="mb-4 flex-grow text-sm leading-relaxed text-gray-600 md:text-base">
+                      <p className="mb-4 grow text-sm leading-relaxed text-gray-600 md:text-base/6">
                         {service.description}
                       </p>
 
@@ -402,7 +402,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     </div>
 
                     {/* Decorative element */}
-                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-gradient-to-br from-primary-500/10 to-transparent"></div>
+                    <div className="absolute -top-2 -right-2 h-20 w-20 rotate-45 transform rounded-full bg-linear-to-br from-primary-500/10 to-transparent"></div>
                   </div>
                 );
               })}
@@ -441,7 +441,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         ? entretienServiceRef
                         : null
                     }
-                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-500 ${
+                    className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition-all duration-500 ${
                       isHighlighted
                         ? 'border-green-400'
                         : 'border-gray-100 hover:border-primary-200 hover:shadow-xl'
@@ -482,10 +482,10 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         quality={85}
                       />
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
 
                       {/* Service Icon */}
-                      <div className="absolute left-4 top-4">
+                      <div className="absolute top-4 left-4">
                         <div
                           className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl shadow-lg backdrop-blur-sm transition-all duration-300 ${
                             isHighlighted
@@ -536,7 +536,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                         {service.name}
                       </h3>
 
-                      <p className="mb-4 flex-grow text-sm leading-relaxed text-gray-600 md:text-base">
+                      <p className="mb-4 grow text-sm leading-relaxed text-gray-600 md:text-base/6">
                         {service.description}
                       </p>
 
@@ -575,14 +575,14 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     </div>
 
                     {/* Decorative element */}
-                    <div className="absolute -right-2 -top-2 h-20 w-20 rotate-45 transform rounded-full bg-gradient-to-br from-primary-500/10 to-transparent"></div>
+                    <div className="absolute -top-2 -right-2 h-20 w-20 rotate-45 transform rounded-full bg-linear-to-br from-primary-500/10 to-transparent"></div>
                   </div>
                 );
               })}
             </div>
             {/* Bottom CTA */}
             <div className="mt-10 text-center">
-              <div className="inline-flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+              <div className="inline-flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-xs">
                 <span className="text-gray-600">
                   Besoin d'aide pour choisir ?
                 </span>
@@ -594,7 +594,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
             {/* Service Form Modal */}
             {selectedService && (
               <div className="fixed inset-0 z-50 overflow-y-auto">
-                <div className="flex min-h-screen items-center justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+                <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                   <div
                     className="fixed inset-0 transition-opacity"
                     aria-hidden="true"
@@ -609,7 +609,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     &#8203;
                   </span>
 
-                  <div className="inline-block transform overflow-hidden rounded-2xl bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6 sm:align-middle">
+                  <div className="inline-block transform overflow-hidden rounded-2xl bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6 sm:align-middle">
                     <ServiceForm
                       service={selectedService}
                       onClose={handleCloseForm}
@@ -622,7 +622,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
             {/* Confirmation Dialog */}
             {isConfirmDialogOpen && (
               <div className="fixed inset-0 z-50 overflow-y-auto">
-                <div className="flex min-h-screen items-center justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+                <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                   <div
                     className="fixed inset-0 transition-opacity"
                     aria-hidden="true"
@@ -637,7 +637,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                     &#8203;
                   </span>
 
-                  <div className="inline-block transform overflow-hidden rounded-2xl bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+                  <div className="inline-block transform overflow-hidden rounded-2xl bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
                     <div>
                       <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
                         <svg
@@ -654,7 +654,7 @@ const Services = React.forwardRef<HTMLElement, ServicesComponentProps>(
                           />
                         </svg>
                       </div>
-                      <h3 className="mb-2 text-center text-lg font-bold leading-6 text-gray-900">
+                      <h3 className="mb-2 text-center text-lg leading-6 font-bold text-gray-900">
                         Confirmer la fermeture
                       </h3>
                       <p className="mb-6 text-center text-sm text-gray-500">

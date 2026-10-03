@@ -74,7 +74,7 @@ const HeroButtons = ({
       {/* First Button - Acheter un robot tondeuse */}
       <Link
         href="#services"
-        className="group relative inline-block w-[320px] min-w-[320px] overflow-hidden rounded-lg border-2 border-blue-400/40 bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-4 py-2 text-center font-semibold text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:transform hover:border-blue-300/60 hover:shadow-2xl hover:shadow-blue-500/25 sm:rounded-xl sm:px-6 sm:py-3 md:w-auto md:rounded-2xl md:px-4 md:py-2 lg:px-8 lg:py-4"
+        className="group relative inline-block w-[320px] min-w-[320px] overflow-hidden rounded-lg border-2 border-blue-400/40 bg-linear-to-r from-blue-500/20 to-purple-500/20 px-4 py-2 text-center font-semibold text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:transform hover:border-blue-300/60 hover:shadow-2xl hover:shadow-blue-500/25 sm:rounded-xl sm:px-6 sm:py-3 md:w-auto md:rounded-2xl md:px-4 md:py-2 lg:px-8 lg:py-4"
         aria-label="Acheter un robot tondeuse"
         onClick={handleBuyRobotClick}
       >
@@ -109,14 +109,14 @@ const HeroButtons = ({
             />
           </svg>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-purple-500/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-        <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-20 sm:rounded-xl md:rounded-2xl"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-blue-500/30 to-purple-500/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+        <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-linear-to-r from-blue-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-20 sm:rounded-xl md:rounded-2xl"></div>
       </Link>
 
       {/* Second Button - Entretien & Réparation */}
       <Link
         href="#service-entretien_robot"
-        className="group relative inline-block w-[320px] min-w-[320px] overflow-hidden rounded-lg border-2 border-green-400/40 bg-gradient-to-r from-green-500/20 to-blue-500/20 px-4 py-2 text-center font-semibold text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:transform hover:border-green-300/60 hover:shadow-2xl hover:shadow-green-500/25 sm:rounded-xl sm:px-6 sm:py-3 md:w-auto md:rounded-2xl md:px-4 md:py-2 lg:px-8 lg:py-4"
+        className="group relative inline-block w-[320px] min-w-[320px] overflow-hidden rounded-lg border-2 border-green-400/40 bg-linear-to-r from-green-500/20 to-blue-500/20 px-4 py-2 text-center font-semibold text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:transform hover:border-green-300/60 hover:shadow-2xl hover:shadow-green-500/25 sm:rounded-xl sm:px-6 sm:py-3 md:w-auto md:rounded-2xl md:px-4 md:py-2 lg:px-8 lg:py-4"
         aria-label="Services d'entretien et réparation de robots tondeuses"
         onClick={handleMaintenanceClick}
       >
@@ -158,8 +158,8 @@ const HeroButtons = ({
             />
           </svg>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/30 to-blue-500/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-        <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-gradient-to-r from-green-400 to-blue-400 opacity-0 transition-opacity duration-300 group-hover:opacity-20 sm:rounded-xl md:rounded-2xl"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-green-500/30 to-blue-500/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+        <div className="absolute inset-0 rounded-lg border-2 border-transparent bg-linear-to-r from-green-400 to-blue-400 opacity-0 transition-opacity duration-300 group-hover:opacity-20 sm:rounded-xl md:rounded-2xl"></div>
       </Link>
     </div>
   );

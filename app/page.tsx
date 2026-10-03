@@ -106,7 +106,7 @@ const Home = (): JSX.Element => {
         {/* Hero Section */}
         <Suspense
           fallback={
-            <div className="flex h-screen items-center justify-center bg-gradient-to-br from-primary-50 to-white">
+            <div className="flex h-screen items-center justify-center bg-linear-to-br from-primary-50 to-white">
               <div className="animate-pulse text-primary-500">
                 Chargement...
               </div>

@@ -43,7 +43,7 @@ const Contact = (): JSX.Element => {
   return (
     <section
       id="contact"
-      className="section-padding-small relative overflow-hidden bg-gradient-to-b from-primary-50 to-gray-50"
+      className="relative overflow-hidden bg-linear-to-b from-primary-50 to-gray-50 section-padding-small"
       aria-labelledby="contact-title"
     >
       {/* Top Divider */}
@@ -51,16 +51,16 @@ const Contact = (): JSX.Element => {
 
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute right-0 top-0 h-96 w-96 -translate-y-1/2 translate-x-1/2 transform rounded-full bg-primary-200 opacity-15 blur-3xl"></div>
+        <div className="absolute top-0 right-0 h-96 w-96 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-primary-200 opacity-15 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 transform rounded-full bg-primary-300 opacity-20 blur-2xl"></div>
         {/* Geometric pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute left-20 top-20 h-32 w-32 rounded-full border border-primary-300"></div>
-          <div className="absolute bottom-20 right-20 h-24 w-24 rotate-45 rounded-lg border border-primary-400"></div>
+          <div className="absolute top-20 left-20 h-32 w-32 rounded-full border border-primary-300"></div>
+          <div className="absolute right-20 bottom-20 h-24 w-24 rotate-45 rounded-lg border border-primary-400"></div>
         </div>
       </div>
 
-      <div className="container-custom relative pt-8">
+      <div className="relative container-custom pt-8">
         {/* Title Section */}
         <div className="mb-8 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-700">
@@ -76,7 +76,7 @@ const Contact = (): JSX.Element => {
             Notre équipe d'experts est à votre disposition pour répondre à
             toutes vos questions
           </p>
-          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-primary-400 to-primary-600"></div>
+          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-linear-to-r from-primary-400 to-primary-600"></div>
         </div>
 
         {/* Contact Information */}
@@ -89,7 +89,7 @@ const Contact = (): JSX.Element => {
             <div className="order-2 lg:order-1">
               <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-8 shadow-xl">
                 {/* Background pattern */}
-                <div className="bg-grid-pattern absolute inset-0 opacity-5"></div>
+                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
                 <div className="relative z-10">
                   <h3 className="mb-8 font-display text-2xl font-bold text-gray-900">
@@ -100,7 +100,7 @@ const Contact = (): JSX.Element => {
                     {/* Phone */}
                     <div className="group">
                       <div className="flex items-center">
-                        <div className="mr-5 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mr-5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <Phone className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -142,7 +142,7 @@ const Contact = (): JSX.Element => {
                     {/* Email */}
                     <div className="group">
                       <div className="flex items-center">
-                        <div className="mr-5 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mr-5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <Mail className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -151,7 +151,7 @@ const Contact = (): JSX.Element => {
                           </div>
                           <a
                             href={`mailto:${item.email}`}
-                            className="break-all text-xl font-bold text-gray-900 transition-colors hover:text-primary-500"
+                            className="text-xl font-bold break-all text-gray-900 transition-colors hover:text-primary-500"
                             title={`Email us at ${item.email}`}
                             onClick={handleEmailClick}
                           >
@@ -184,7 +184,7 @@ const Contact = (): JSX.Element => {
                     {/* Address */}
                     <div className="group">
                       <div className="flex items-start">
-                        <div className="mr-5 mt-1 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
+                        <div className="mt-1 mr-5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-100 transition-colors duration-300 group-hover:bg-primary-200">
                           <MapPin className="h-6 w-6 text-primary-500" />
                         </div>
                         <div className="flex-1">
@@ -205,7 +205,7 @@ const Contact = (): JSX.Element => {
                             Visitez notre atelier
                           </p>
                         </div>
-                        <div className="ml-4 mt-2 self-start opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="mt-2 ml-4 self-start opacity-0 transition-opacity group-hover:opacity-100">
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500">
                             <svg
                               className="h-4 w-4 text-white"
@@ -251,8 +251,8 @@ const Contact = (): JSX.Element => {
                 </div>
 
                 {/* Decorative elements */}
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary-300/30 to-transparent"></div>
-                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-gradient-to-tr from-primary-200/40 to-transparent"></div>
+                <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-linear-to-br from-primary-300/30 to-transparent"></div>
+                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-linear-to-tr from-primary-200/40 to-transparent"></div>
               </div>
             </div>
 
@@ -294,7 +294,7 @@ const Contact = (): JSX.Element => {
 
         {/* Additional Info */}
         <div className="mt-12">
-          <div className="rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 p-8 text-center text-white">
+          <div className="rounded-2xl bg-linear-to-r from-primary-500 to-primary-600 p-8 text-center text-white">
             <h3 className="mb-4 font-display text-2xl font-bold">
               Horaires d'ouverture
             </h3>

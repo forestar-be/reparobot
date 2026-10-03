@@ -18,6 +18,8 @@ module.exports = {
     "@ianvs/prettier-plugin-sort-imports", // auto‑sort and group your imports
     "prettier-plugin-tailwindcss", // class-ordering for Tailwind CSS (must be last)
   ],
+  // Tailwind 4 : le plugin lit le thème dans la feuille de style (plus de tailwind.config.js)
+  tailwindStylesheet: "./app/globals.css",
   // Configuration for @ianvs/prettier-plugin-sort-imports
   importOrder: [
     // 1) React core

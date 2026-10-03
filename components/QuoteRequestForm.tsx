@@ -222,9 +222,9 @@ const QuoteRequestForm = (): JSX.Element => {
 
   if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900">
-        <div className="container-custom pb-8 pt-32 sm:pb-16">
-          <div className="card mx-auto max-w-2xl border border-primary-200/30 bg-white/95 text-center shadow-2xl backdrop-blur-lg">
+      <div className="min-h-screen bg-linear-to-br from-slate-900 via-primary-900 to-blue-900">
+        <div className="container-custom pt-32 pb-8 sm:pb-16">
+          <div className="mx-auto max-w-2xl card border border-primary-200/30 bg-white/95 text-center shadow-2xl backdrop-blur-lg">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 sm:mb-6 sm:h-20 sm:w-20">
               <svg
                 className="h-8 w-8 text-green-600 sm:h-10 sm:w-10"
@@ -269,26 +269,26 @@ const QuoteRequestForm = (): JSX.Element => {
               </h3>
               <div className="space-y-2 text-left text-xs text-gray-700 sm:text-sm">
                 <div className="flex items-start gap-2">
-                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📧</span>
+                  <span className="mt-0.5 shrink-0 text-blue-600">📧</span>
                   <span>
                     Vous recevrez un email avec votre devis d'achat détaillé
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="mt-0.5 flex-shrink-0 text-blue-600">✍️</span>
+                  <span className="mt-0.5 shrink-0 text-blue-600">✍️</span>
                   <span>
                     Cliquez sur le lien pour signer votre bon de commande
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📬</span>
+                  <span className="mt-0.5 shrink-0 text-blue-600">📬</span>
                   <span>
                     Si vous ne recevez pas l'email, vérifiez vos spams ou
                     contactez-nous
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="mt-0.5 flex-shrink-0 text-blue-600">📞</span>
+                  <span className="mt-0.5 shrink-0 text-blue-600">📞</span>
                   <span>
                     Notre équipe vous contactera pour programmer la
                     livraison/installation
@@ -321,19 +321,19 @@ const QuoteRequestForm = (): JSX.Element => {
                     needsInstaller: true,
                   });
                 }}
-                className="btn-primary w-full px-4 py-3 text-sm sm:w-auto sm:text-base"
+                className="w-full btn-primary px-4 py-3 text-sm sm:w-auto sm:text-base"
               >
                 Faire une nouvelle demande
               </button>
               <Link
                 href="/#contact"
-                className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
+                className="w-full btn-secondary px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
               >
                 Contacter notre équipe
               </Link>
               <Link
                 href="/"
-                className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
+                className="w-full btn-secondary px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
               >
                 Retour à l'accueil
               </Link>
@@ -369,9 +369,9 @@ const QuoteRequestForm = (): JSX.Element => {
         />
       )}
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900">
-        <div className="container-custom pb-8 pt-32 sm:pb-16">
-          <div className="card mx-auto max-w-4xl border border-primary-200/30 bg-white/95 shadow-2xl backdrop-blur-lg">
+      <div className="min-h-screen bg-linear-to-br from-slate-900 via-primary-900 to-blue-900">
+        <div className="container-custom pt-32 pb-8 sm:pb-16">
+          <div className="mx-auto max-w-4xl card border border-primary-200/30 bg-white/95 shadow-2xl backdrop-blur-lg">
             {/* Header Section with Digital Process Explanation */}
             <div className="mb-6 text-center sm:mb-8">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-2 text-xs font-medium text-primary-700 sm:mb-4 sm:px-4 sm:text-sm">
@@ -386,7 +386,7 @@ const QuoteRequestForm = (): JSX.Element => {
               </p>
 
               {/* Process Steps */}
-              <div className="mx-auto mb-6 max-w-3xl rounded-xl bg-gradient-to-br from-primary-50 to-blue-50 p-4 sm:mb-8 sm:p-6">
+              <div className="mx-auto mb-6 max-w-3xl rounded-xl bg-linear-to-br from-primary-50 to-blue-50 p-4 sm:mb-8 sm:p-6">
                 <h3 className="mb-3 text-base font-semibold text-gray-900 sm:mb-4 sm:text-lg">
                   📧 Processus 100% Digital
                 </h3>
@@ -439,11 +439,11 @@ const QuoteRequestForm = (): JSX.Element => {
 
             <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
               {/* Sélection du robot - EN PREMIER */}
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 to-blue-600 p-4 text-white sm:p-6 lg:p-8">
+              <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-primary-600 to-blue-600 p-4 text-white sm:p-6 lg:p-8">
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative">
                   <div className="mb-4 flex flex-col items-start gap-3 sm:mb-6 sm:flex-row sm:items-center">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm sm:h-12 sm:w-12">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm sm:h-12 sm:w-12">
                       <span className="text-xl sm:text-2xl">🤖</span>
                     </div>
                     <div className="flex-1">
@@ -512,7 +512,7 @@ const QuoteRequestForm = (): JSX.Element => {
               </div>
 
               {/* Accessoires optionnels */}
-              <div className="rounded-2xl border border-orange-200/50 bg-gradient-to-br from-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
+              <div className="rounded-2xl border border-orange-200/50 bg-linear-to-br from-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
                 <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold sm:mb-6 sm:gap-3 sm:text-2xl">
                   <span className="text-xl sm:text-2xl">🔧</span>
                   Accessoires optionnels
@@ -656,7 +656,7 @@ const QuoteRequestForm = (): JSX.Element => {
                 </div>
 
                 {(selectedPlugin || selectedAntenna || selectedShelter) && (
-                  <div className="mt-6 rounded-xl bg-white/90 p-4 shadow-sm">
+                  <div className="mt-6 rounded-xl bg-white/90 p-4 shadow-xs">
                     <h4 className="mb-3 font-semibold text-gray-900">
                       Accessoires sélectionnés :
                     </h4>
@@ -793,7 +793,7 @@ const QuoteRequestForm = (): JSX.Element => {
               </div>
 
               {/* Options d'installation */}
-              <div className="rounded-2xl border border-green-200/50 bg-gradient-to-br from-green-50 to-blue-50 p-4 sm:p-6 lg:p-8">
+              <div className="rounded-2xl border border-green-200/50 bg-linear-to-br from-green-50 to-blue-50 p-4 sm:p-6 lg:p-8">
                 <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold sm:mb-6 sm:gap-3 sm:text-2xl">
                   <span className="text-xl sm:text-2xl">🔧</span>
                   Options d'installation
@@ -804,7 +804,7 @@ const QuoteRequestForm = (): JSX.Element => {
                     <input
                       type="checkbox"
                       id="needsInstaller"
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
                       checked={formData.needsInstaller}
                       onChange={(e) =>
                         handleChange('needsInstaller', e.target.checked)
@@ -823,7 +823,7 @@ const QuoteRequestForm = (): JSX.Element => {
                       <input
                         type="checkbox"
                         id="hasWire"
-                        className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
                         checked={formData.hasWire}
                         onChange={(e) =>
                           handleChange('hasWire', e.target.checked)
@@ -862,7 +862,7 @@ const QuoteRequestForm = (): JSX.Element => {
                       <input
                         type="checkbox"
                         id="hasAntennaSupport"
-                        className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
                         checked={formData.hasAntennaSupport}
                         onChange={(e) =>
                           handleChange('hasAntennaSupport', e.target.checked)
@@ -880,7 +880,7 @@ const QuoteRequestForm = (): JSX.Element => {
                       <input
                         type="checkbox"
                         id="hasPlacement"
-                        className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500 sm:mt-0"
                         checked={formData.hasPlacement}
                         onChange={(e) =>
                           handleChange('hasPlacement', e.target.checked)
@@ -914,7 +914,7 @@ const QuoteRequestForm = (): JSX.Element => {
 
               {/* Récapitulatif */}
               {selectedRobot && (
-                <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-700 p-4 text-white sm:p-6 lg:p-8">
+                <div className="rounded-2xl bg-linear-to-br from-gray-900 to-gray-700 p-4 text-white sm:p-6 lg:p-8">
                   <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold sm:mb-6 sm:gap-3 sm:text-2xl">
                     <span className="text-xl sm:text-2xl">📋</span>
                     Récapitulatif de votre commande
@@ -1047,7 +1047,7 @@ const QuoteRequestForm = (): JSX.Element => {
                     !formData.robotInventoryId ||
                     (turnstileEnabled() && !turnstileToken)
                   }
-                  className="btn-primary w-full px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[200px] sm:text-base"
+                  className="w-full btn-primary px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[200px] sm:text-base"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">
@@ -1063,7 +1063,7 @@ const QuoteRequestForm = (): JSX.Element => {
 
                 <Link
                   href="/devis"
-                  className="btn-secondary w-full px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
+                  className="w-full btn-secondary px-4 py-3 text-center text-sm sm:w-auto sm:text-base"
                 >
                   Retour
                 </Link>

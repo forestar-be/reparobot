@@ -70,16 +70,16 @@ const Hero = ({
         style={{ backgroundImage: 'url(/images/hero.webp)' }}
       >
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/80" />
+        <div className="absolute inset-0 bg-linear-to-br from-black/70 via-black/60 to-black/80" />
 
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute left-1/4 top-1/4 h-32 w-32 animate-pulse rounded-full bg-primary-500 mix-blend-multiply blur-xl filter sm:h-48 sm:w-48 md:h-64 md:w-64"></div>
-          <div className="animation-delay-2000 absolute left-1/2 top-3/4 h-48 w-48 -translate-x-1/2 transform animate-pulse rounded-full bg-green-400 mix-blend-multiply blur-xl filter sm:h-72 sm:w-72 md:h-96 md:w-96"></div>
+          <div className="absolute top-1/4 left-1/4 h-32 w-32 animate-pulse rounded-full bg-primary-500 mix-blend-multiply blur-xl filter sm:h-48 sm:w-48 md:h-64 md:w-64"></div>
+          <div className="animation-delay-2000 absolute top-3/4 left-1/2 h-48 w-48 -translate-x-1/2 transform animate-pulse rounded-full bg-green-400 mix-blend-multiply blur-xl filter sm:h-72 sm:w-72 md:h-96 md:w-96"></div>
         </div>
 
         {/* Content */}
-        <div className="container-custom relative z-10 flex flex-col items-center justify-center pb-16 pt-32 text-center sm:pb-20">
+        <div className="relative z-10 container-custom flex flex-col items-center justify-center pt-32 pb-16 text-center sm:pb-20">
           {hero.slice(0, 1).map((item, i) => (
             <div
               key={i}
@@ -87,19 +87,19 @@ const Hero = ({
             >
               {/* Main Title */}
               <div className="mb-6 sm:mb-8">
-                <h1 className="mb-4 mt-4 animate-slide-up font-display text-2xl font-bold leading-tight text-white drop-shadow-2xl sm:mb-6 sm:mt-6 sm:text-3xl md:text-4xl lg:text-5xl">
+                <h1 className="mt-4 mb-4 animate-slide-up font-display text-2xl leading-tight font-bold text-white drop-shadow-2xl sm:mt-6 sm:mb-6 sm:text-3xl/9 md:text-4xl/10 lg:text-5xl/none">
                   <span className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {searchParams.get('x')
                       ? searchParams.get('x')
                       : item.description}
                   </span>
                 </h1>
-                <div className="mx-auto h-1 w-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 sm:w-24"></div>
+                <div className="mx-auto h-1 w-16 rounded-full bg-linear-to-r from-blue-400 to-purple-400 sm:w-24"></div>
               </div>
 
               {/* Subtitle */}
               <div className="animation-delay-200 mx-auto mb-8 max-w-4xl animate-slide-up sm:mb-10">
-                <p className="text-lg font-light leading-relaxed text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-lg md:text-xl lg:text-2xl">
+                <p className="text-lg leading-relaxed font-light text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-lg/7 md:text-xl/7 lg:text-2xl/8">
                   {item.title}
                 </p>
               </div>
@@ -115,7 +115,7 @@ const Hero = ({
               {/* Trust Indicators - Chips Style */}
               <div className="animation-delay-600 mx-auto grid max-w-5xl animate-fade-in grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
                 <div className="group">
-                  <div className="inline-flex w-full items-center justify-center whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-2 py-1.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
+                  <div className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-2 py-1.5 whitespace-nowrap backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
                     <div className="flex items-center">
                       <div className="mr-1 rounded-full bg-blue-500/20 p-0.5 sm:mr-1.5 sm:p-1">
                         <svg
@@ -133,7 +133,7 @@ const Hero = ({
                         </svg>
                       </div>
                       <div className="flex items-center text-white">
-                        <span className="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
+                        <span className="bg-linear-to-r from-white to-blue-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           {yearsOfExperience} ans
                         </span>
                         <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
@@ -152,7 +152,7 @@ const Hero = ({
                         '_blank',
                       );
                     }}
-                    className="inline-flex w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-2 py-1.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5"
+                    className="inline-flex w-full cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/10 px-2 py-1.5 whitespace-nowrap backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 focus:ring-2 focus:ring-yellow-500/50 focus:outline-hidden sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5"
                     aria-label="Voir nos avis Google"
                   >
                     <div className="flex items-center">
@@ -166,7 +166,7 @@ const Hero = ({
                         </svg>
                       </div>
                       <div className="flex items-center text-white">
-                        <span className="bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
+                        <span className="bg-linear-to-r from-white to-yellow-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           4.6★
                         </span>
                         <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
@@ -178,7 +178,7 @@ const Hero = ({
                 </div>
 
                 <div className="group">
-                  <div className="inline-flex w-full items-center justify-center whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-2 py-1.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
+                  <div className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-2 py-1.5 whitespace-nowrap backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
                     <div className="flex items-center">
                       <div className="mr-1 rounded-full bg-purple-500/20 p-0.5 sm:mr-1.5 sm:p-1">
                         <svg
@@ -196,7 +196,7 @@ const Hero = ({
                         </svg>
                       </div>
                       <div className="flex items-center text-white">
-                        <span className="bg-gradient-to-r from-white to-purple-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
+                        <span className="bg-linear-to-r from-white to-purple-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           Expert
                         </span>
                         <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
@@ -208,7 +208,7 @@ const Hero = ({
                 </div>
 
                 <div className="group">
-                  <div className="inline-flex w-full items-center justify-center whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-2 py-1.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
+                  <div className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-2 py-1.5 whitespace-nowrap backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-3 sm:py-2 md:px-4 md:py-2.5">
                     <div className="flex items-center">
                       <div className="mr-1 rounded-full bg-green-500/20 p-0.5 sm:mr-1.5 sm:p-1">
                         <svg
@@ -226,7 +226,7 @@ const Hero = ({
                         </svg>
                       </div>
                       <div className="flex items-center text-white">
-                        <span className="bg-gradient-to-r from-white to-green-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
+                        <span className="bg-linear-to-r from-white to-green-200 bg-clip-text text-sm font-semibold text-transparent sm:text-sm">
                           &lt;24h
                         </span>
                         <span className="ml-0.5 text-xs font-medium text-white/80 sm:ml-1 sm:text-xs">
@@ -242,7 +242,7 @@ const Hero = ({
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-1 left-0 right-0 z-20 flex animate-bounce justify-center sm:bottom-2">
+        <div className="absolute right-0 bottom-1 left-0 z-20 flex animate-bounce justify-center sm:bottom-2">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -259,7 +259,7 @@ const Hero = ({
                 });
               }
             }}
-            className="group flex cursor-pointer flex-col items-center text-white/70 transition-all duration-300 hover:text-white focus:outline-none"
+            className="group flex cursor-pointer flex-col items-center text-white/70 transition-all duration-300 hover:text-white focus:outline-hidden"
             aria-label="Scroll to services section"
           >
             <span className="mb-0.5 text-sm font-medium transition-colors group-hover:text-primary-300 sm:mb-1">

@@ -58,17 +58,17 @@ const RobotSelection = ({
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-primary-900 to-blue-900 pb-8 pt-32"
+      className="min-h-screen bg-linear-to-br from-slate-900 via-primary-900 to-blue-900 pt-32 pb-8"
       ref={topRef}
     >
       <div className="container-custom mx-auto max-w-7xl px-4">
         {/* Main Card Container */}
         <div className="card border border-white/20 bg-white/95 shadow-2xl backdrop-blur-sm">
           {/* Robot Reservation Header - Principal */}
-          <div className="-m-6 mb-8 rounded-t-xl bg-gradient-to-br from-primary-600 via-primary-700 to-blue-600 p-8 text-white shadow-xl">
+          <div className="-m-6 mb-8 rounded-t-xl bg-linear-to-br from-primary-600 via-primary-700 to-blue-600 p-8 text-white shadow-xl">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
-              <div className="absolute -right-4 -top-4 h-24 w-24 rotate-45 rounded-lg bg-white"></div>
+              <div className="absolute -top-4 -right-4 h-24 w-24 rotate-45 rounded-lg bg-white"></div>
               <div className="absolute -bottom-4 -left-4 h-16 w-16 rotate-12 rounded-lg bg-white"></div>
             </div>
 
@@ -77,7 +77,7 @@ const RobotSelection = ({
               <div className="absolute -top-4 right-4 hidden lg:block">
                 <div className="w-80 transform rounded-xl border border-white/30 bg-white/95 p-4 shadow-xl backdrop-blur-lg transition-all duration-300 hover:scale-105">
                   <div className="text-center">
-                    <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600">
+                    <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-r from-emerald-500 to-emerald-600">
                       <span className="text-sm text-white">⚡</span>
                     </div>
                     <h3 className="mb-1 text-lg font-bold text-gray-800">
@@ -100,7 +100,7 @@ const RobotSelection = ({
 
                     <button
                       onClick={handleQuoteRequest}
-                      className="w-full rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:from-emerald-600 hover:to-emerald-700"
+                      className="w-full rounded-lg bg-linear-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:from-emerald-600 hover:to-emerald-700"
                     >
                       📋 Obtenir mon devis
                     </button>
@@ -115,12 +115,12 @@ const RobotSelection = ({
               <div className="absolute -top-2 right-0 lg:hidden">
                 <button
                   onClick={handleQuoteRequest}
-                  className="group rounded-lg border border-emerald-300/50 bg-emerald-500/90 px-3 py-2 text-xs font-medium text-white backdrop-blur transition-all duration-300 hover:bg-emerald-600"
+                  className="group rounded-lg border border-emerald-300/50 bg-emerald-500/90 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm transition-all duration-300 hover:bg-emerald-600"
                 >
                   <div className="flex items-center gap-1">
                     <span className="text-xs">⚡</span>
                     <div className="text-left">
-                      <div className="font-semibold leading-tight">
+                      <div className="leading-tight font-semibold">
                         Devis immédiat
                       </div>
                       <div className="text-xs leading-tight text-emerald-100">
@@ -159,7 +159,7 @@ const RobotSelection = ({
           {categories.map((category) => (
             <div key={category.id} className="mb-12">
               {/* Category Header */}
-              <div className="mb-8 rounded-xl border border-primary-200/50 bg-gradient-to-r from-primary-50 to-blue-50 p-6">
+              <div className="mb-8 rounded-xl border border-primary-200/50 bg-linear-to-r from-primary-50 to-blue-50 p-6">
                 <h2 className="mb-3 text-3xl font-bold text-gray-800">
                   {category.name}
                 </h2>
@@ -194,16 +194,16 @@ const RobotSelection = ({
                             height={160}
                             className="h-40 w-full bg-gray-100 object-cover object-center transition-transform duration-500 group-hover:scale-110"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                          <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
                           {/* Status Badge */}
-                          <div className="absolute right-3 top-3 rounded-full bg-gradient-to-r from-primary-500 to-blue-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                          <div className="absolute top-3 right-3 rounded-full bg-linear-to-r from-primary-500 to-blue-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
                             Réservation
                           </div>
 
                           {/* Promotion Badge */}
                           {robot.promotion && (
-                            <div className="absolute bottom-3 left-3 rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                            <div className="absolute bottom-3 left-3 rounded-full bg-linear-to-r from-red-500 to-pink-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
                               {robot.promotion}
                             </div>
                           )}
@@ -246,7 +246,7 @@ const RobotSelection = ({
 
                             {/* Action Button */}
                             <div className="mt-4">
-                              <div className="w-full rounded-lg bg-gradient-to-r from-primary-500 to-blue-500 px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-300 group-hover:from-primary-600 group-hover:to-blue-600 group-hover:shadow-lg">
+                              <div className="w-full rounded-lg bg-linear-to-r from-primary-500 to-blue-500 px-4 py-2 text-center text-sm font-semibold text-white transition-all duration-300 group-hover:from-primary-600 group-hover:to-blue-600 group-hover:shadow-lg">
                                 <span className="block group-hover:hidden">
                                   Réserver
                                 </span>
@@ -268,7 +268,7 @@ const RobotSelection = ({
 
       {/* Modal Dialog */}
       {selectedRobot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div
             className={`max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-lg bg-white ${
               isSmallScreen ? 'h-full max-h-full' : ''

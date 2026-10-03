@@ -59,7 +59,7 @@ const SectionDivider: React.FC<SectionDividerProps> = ({
       <div
         className={`${baseClasses} flex items-center justify-center py-4 ${className}`}
       >
-        <div className="h-px w-full max-w-xs bg-gradient-to-r from-transparent via-primary-300/50 to-transparent" />
+        <div className="h-px w-full max-w-xs bg-linear-to-r from-transparent via-primary-300/50 to-transparent" />
       </div>
     );
   }
@@ -70,9 +70,9 @@ const SectionDivider: React.FC<SectionDividerProps> = ({
       className={`${baseClasses} flex items-center justify-center py-6 ${className}`}
     >
       <div className="flex items-center space-x-4">
-        <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary-300/60"></div>
+        <div className="h-px w-16 bg-linear-to-r from-transparent to-primary-300/60"></div>
         <div className="h-3 w-3 rounded-full bg-primary-500/80 shadow-lg"></div>
-        <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary-300/60"></div>
+        <div className="h-px w-16 bg-linear-to-l from-transparent to-primary-300/60"></div>
       </div>
     </div>
   );

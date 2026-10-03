@@ -93,7 +93,7 @@ const About: React.FC = () => {
   return (
     <section
       id="about"
-      className="section-padding-small relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100"
+      className="relative overflow-hidden border-b border-gray-200 bg-linear-to-br from-gray-50 to-gray-100 section-padding-small"
       aria-labelledby="about-title"
     >
       {/* Top Divider */}
@@ -101,13 +101,13 @@ const About: React.FC = () => {
 
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 transform rounded-full bg-primary-200 opacity-10 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary-300 opacity-15 blur-2xl"></div>
+        <div className="absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 transform rounded-full bg-primary-200 opacity-10 blur-3xl"></div>
+        <div className="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-primary-300 opacity-15 blur-2xl"></div>
         {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent"></div>
       </div>
 
-      <div className="container-custom relative pt-8">
+      <div className="relative container-custom pt-8">
         <div className="mb-8 text-center">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-700">
             📊 Nos Performances
@@ -167,10 +167,10 @@ const About: React.FC = () => {
                 onMouseEnter={() => handleHover(item.description)}
               >
                 {/* Main card */}
-                <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:border-gray-200 hover:shadow-xl">
+                <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-white p-4 text-center shadow-xs transition-all duration-300 hover:border-gray-200 hover:shadow-xl">
                   {/* Background gradient */}
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
+                    className={`absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
                       colorName === 'blue'
                         ? 'from-blue-50 to-transparent'
                         : colorName === 'green'
@@ -250,13 +250,13 @@ const About: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="relative z-10 text-xs font-medium leading-tight text-gray-600">
+                  <p className="relative z-10 text-xs leading-tight font-medium text-gray-600">
                     {item.description}
                   </p>
 
                   {/* Decorative elements */}
                   <div
-                    className={`absolute -right-2 -top-2 h-12 w-12 rounded-full bg-gradient-to-br ${
+                    className={`absolute -top-2 -right-2 h-12 w-12 rounded-full bg-linear-to-br ${
                       colorName === 'blue'
                         ? 'from-blue-300/20 to-transparent'
                         : colorName === 'green'
@@ -277,7 +277,7 @@ const About: React.FC = () => {
                     }`}
                   ></div>
                   <div
-                    className={`absolute -bottom-2 -left-2 h-8 w-8 rounded-full bg-gradient-to-tr ${
+                    className={`absolute -bottom-2 -left-2 h-8 w-8 rounded-full bg-linear-to-tr ${
                       colorName === 'blue'
                         ? 'from-blue-200/30 to-transparent'
                         : colorName === 'green'
@@ -331,7 +331,7 @@ const About: React.FC = () => {
         {/* Additional content */}
         <div className="mt-12 text-center">
           <div className="mx-auto max-w-4xl">
-            <div className="rounded-2xl border border-primary-100 bg-gradient-to-r from-primary-50 to-white p-8">
+            <div className="rounded-2xl border border-primary-100 bg-linear-to-r from-primary-50 to-white p-8">
               <h3 className="mb-4 font-display text-2xl font-bold text-gray-900">
                 Pourquoi ces chiffres comptent ?
               </h3>
@@ -378,7 +378,7 @@ const About: React.FC = () => {
               <div className="mt-6">
                 <a
                   href="#contact"
-                  className="btn-primary inline-flex items-center gap-2 px-6 py-3"
+                  className="inline-flex btn-primary items-center gap-2 px-6 py-3"
                 >
                   <span>Rejoignez nos clients satisfaits</span>
                   <svg

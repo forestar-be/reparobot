@@ -368,7 +368,7 @@ const RobotContactForm = ({
             <div className="flex items-center">
               <input
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 rounded-sm border-gray-300 text-primary-600 focus:ring-primary-500"
                 checked={formValues[field.label] || false}
                 onChange={(e) => handleChange(field.label, e.target.checked)}
               />
@@ -444,7 +444,7 @@ const RobotContactForm = ({
       {/* Close Button */}
       <button
         onClick={() => onClose()}
-        className="absolute right-4 top-4 z-10 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 lg:bg-transparent lg:shadow-none"
+        className="absolute top-4 right-4 z-10 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 lg:bg-transparent lg:shadow-none"
         aria-label="Fermer le formulaire"
       >
         <X className="h-5 w-5" />
@@ -539,7 +539,7 @@ const RobotContactForm = ({
           <button
             type="submit"
             disabled={isLoading || (turnstileEnabled() && !turnstileToken)}
-            className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-6 w-full btn-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -591,13 +591,13 @@ const RobotContactForm = ({
 
       {/* Submission Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 max-w-md rounded-lg bg-white p-6">
             <h3 className="mb-4 text-lg font-bold">
               {modalType === 'success' ? 'Réservation envoyée' : 'Erreur'}
             </h3>
             <p className="mb-6 text-gray-700">{modalMessage}</p>
-            <button onClick={handleCloseModal} className="btn-primary w-full">
+            <button onClick={handleCloseModal} className="w-full btn-primary">
               Fermer
             </button>
           </div>
@@ -606,7 +606,7 @@ const RobotContactForm = ({
 
       {/* Terms and Conditions Dialog */}
       {termsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-xl font-bold">Conditions Générales</h3>

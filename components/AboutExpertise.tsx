@@ -240,17 +240,17 @@ const AboutExpertise: React.FC = () => {
   return (
     <section
       id="about"
-      className="section-padding relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-primary-50/30"
+      className="relative overflow-hidden border-b border-gray-100 bg-linear-to-br from-gray-50 via-white to-primary-50/30 section-padding"
       aria-labelledby="about-expertise-title"
     >
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 transform rounded-full bg-primary-200 opacity-10 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-primary-300 opacity-15 blur-2xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+        <div className="absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 transform rounded-full bg-primary-200 opacity-10 blur-3xl"></div>
+        <div className="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-primary-300 opacity-15 blur-2xl"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent"></div>
       </div>
 
-      <div className="container-custom relative">
+      <div className="relative container-custom">
         {/* Header Section */}
         <div className="mb-16 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-2 text-sm font-medium text-primary-700">
@@ -288,7 +288,7 @@ const AboutExpertise: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className={`group relative overflow-hidden rounded-2xl border ${colors.border} ${colors.hover} bg-gradient-to-br ${colors.bg} p-8 text-center shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+                  className={`group relative overflow-hidden rounded-2xl border ${colors.border} ${colors.hover} bg-linear-to-br ${colors.bg} p-8 text-center shadow-xs transition-all duration-300 hover:scale-105 hover:shadow-xl`}
                   onMouseEnter={() =>
                     trackEvent(
                       'hover_stat',
@@ -314,12 +314,12 @@ const AboutExpertise: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm font-medium leading-tight text-gray-700">
+                  <p className="text-sm leading-tight font-medium text-gray-700">
                     {stat.description}
                   </p>
 
                   {/* Decorative elements */}
-                  <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/30 opacity-50"></div>
+                  <div className="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-white/30 opacity-50"></div>
                   <div className="absolute -bottom-2 -left-2 h-12 w-12 rounded-full bg-white/20 opacity-30"></div>
                 </div>
               );
@@ -343,7 +343,7 @@ const AboutExpertise: React.FC = () => {
                     className="group flex animate-fade-in items-start gap-4"
                     style={{ animationDelay: `${index * 0.2}s` }}
                   >
-                    <div className="mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-100 text-xl transition-colors duration-300 group-hover:bg-primary-200">
+                    <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-xl transition-colors duration-300 group-hover:bg-primary-200">
                       {feature.icon}
                     </div>
                     <div className="flex-1">
@@ -365,7 +365,7 @@ const AboutExpertise: React.FC = () => {
             {/* Main feature card */}
             <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-8 shadow-xl">
               {/* Background pattern */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-br from-primary-50/50 to-transparent"></div>
 
               <div className="relative z-10">
                 <div className="mb-6 text-center">
@@ -411,12 +411,12 @@ const AboutExpertise: React.FC = () => {
               </div>
 
               {/* Decorative elements */}
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br from-primary-300/30 to-transparent"></div>
-              <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-gradient-to-tr from-primary-200/40 to-transparent"></div>
+              <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-linear-to-br from-primary-300/30 to-transparent"></div>
+              <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-linear-to-tr from-primary-200/40 to-transparent"></div>
             </div>
 
             {/* Floating stats */}
-            <div className="absolute -left-6 -top-6 z-20 rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
+            <div className="absolute -top-6 -left-6 z-20 rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
                   <span className="text-xl">✅</span>
@@ -428,7 +428,7 @@ const AboutExpertise: React.FC = () => {
               </div>
             </div>
 
-            <div className="absolute -bottom-6 -right-6 z-20 rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
+            <div className="absolute -right-6 -bottom-6 z-20 rounded-2xl border border-gray-100 bg-white p-4 shadow-lg">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
                   <span className="text-xl">⚡</span>
@@ -447,7 +447,7 @@ const AboutExpertise: React.FC = () => {
           {expertiseContent.features.slice(2).map((feature, index) => (
             <div
               key={index + 2}
-              className="animate-fade-in rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
+              className="animate-fade-in rounded-2xl border border-gray-100 bg-white p-6 shadow-xs transition-shadow duration-300 hover:shadow-md"
               style={{ animationDelay: `${(index + 2) * 0.2}s` }}
             >
               <div className="mb-4 flex items-center gap-3">
@@ -465,7 +465,7 @@ const AboutExpertise: React.FC = () => {
 
         {/* CTA Section */}
         <div className="mt-16 text-center">
-          <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-r from-primary-600 to-primary-700 p-8 text-white shadow-2xl md:p-12">
+          <div className="mx-auto max-w-4xl rounded-3xl bg-linear-to-r from-primary-600 to-primary-700 p-8 text-white shadow-2xl md:p-12">
             <h3 className="mb-4 font-display text-3xl font-bold">
               Prêt à confier votre robot tondeuse à des experts ?
             </h3>
