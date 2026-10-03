@@ -67,7 +67,7 @@ export default async function Home() {
       <div className="wrap">
         <section className="grid grid-cols-[1.04fr_1fr] items-center gap-[65px] pt-[38px] tablet:gap-[30px] mobile:grid-cols-1 mobile:gap-5 mobile:pt-[22px]">
           <div>
-            <DealerBadge />
+            <DealerBadge withTagline={false} />
             <h1 className="mt-[22px] text-[15px] font-bold tracking-normal text-forest mobile:mt-[17px]">
               Robots tondeuses Husqvarna à Braine-le-Comte
             </h1>
