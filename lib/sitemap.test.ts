@@ -6,8 +6,6 @@ const catalog = {
     { slug: 'husqvarna-automower-305' },
     { slug: 'husqvarna-automower-308v' },
   ],
-  maintenance: { description: '', price: null },
-  generatedAt: '',
 };
 let fallback = false;
 vi.mock('./robots', () => ({

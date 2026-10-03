@@ -24,17 +24,9 @@ export interface Robot {
   inventoryId: number;
 }
 
-export interface MaintenanceInfo {
-  description: string;
-  /** `null` si le forfait n'est pas chiffré : préférer `/service-offers`. */
-  price: number | null;
-}
-
 export interface RobotsCatalog {
   categories: RobotCategory[];
   robots: Robot[];
-  maintenance: MaintenanceInfo;
-  generatedAt: string;
 }
 
 // Fallback data in case API is unavailable (for build time / offline scenarios)
@@ -54,12 +46,6 @@ export const FALLBACK_CATALOG: RobotsCatalog = {
     },
   ],
   robots: [],
-  maintenance: {
-    description:
-      "Entretien de fin d'année (remise à l'abri, nettoyage complet, mise à jour)",
-    price: null,
-  },
-  generatedAt: '2026-01-01T00:00:00.000Z',
 };
 
 /**
