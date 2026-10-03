@@ -123,15 +123,15 @@ describe('submitServiceForm', () => {
   });
 });
 
-describe('submitRobotReservation', () => {
+describe('submitCallbackRequest', () => {
   it('poste sur /submit-form avec le jeton', async () => {
     const mock = fetchMock(new Response('{}', { status: 200 }));
-    const { submitRobotReservation } = await loadActions();
+    const { submitCallbackRequest } = await loadActions();
 
-    await submitRobotReservation({ robot: 'Ambrogio' }, 'jeton-reservation');
+    await submitCallbackRequest({ Robot: 'Ambrogio' }, 'jeton-rappel');
 
     expect(urlOf(mock)).toBe(`${API_URL}/submit-form`);
-    expect(headersOf(mock).get(TURNSTILE_HEADER)).toBe('jeton-reservation');
+    expect(headersOf(mock).get(TURNSTILE_HEADER)).toBe('jeton-rappel');
   });
 });
 

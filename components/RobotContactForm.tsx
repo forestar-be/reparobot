@@ -1,6 +1,6 @@
 'use client';
 
-import { submitRobotReservation } from '../lib/actions';
+import { submitCallbackRequest } from '../lib/actions';
 import { trackLead } from '../lib/analytics';
 import type { MaintenanceInfo, Robot } from '../lib/robots';
 import { turnstileEnabled, turnstileMessage } from '../lib/turnstile';
@@ -213,7 +213,7 @@ const RobotContactForm = ({
     }
 
     try {
-      const result = await submitRobotReservation(
+      const result = await submitCallbackRequest(
         formattedValues,
         turnstileToken,
       );

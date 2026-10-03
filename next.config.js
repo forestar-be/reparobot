@@ -86,6 +86,12 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // R006-S04 : l'ancien formulaire de devis vit désormais sur `/devis` (la chaîne de requête suit).
+  async redirects() {
+    return [
+      { source: '/devis/demande', destination: '/devis', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

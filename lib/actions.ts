@@ -4,6 +4,7 @@
  * Server Actions for API calls that require authentication.
  * These actions run on the server, keeping AUTH_TOKEN secure and never exposing it to the client.
  */
+import type { QuoteRequestBody } from './quote';
 import { TURNSTILE_HEADER } from './turnstile';
 
 const API_URL = process.env.API_URL;
@@ -43,49 +44,8 @@ async function refusalCode(response: Response): Promise<string | undefined> {
 }
 
 // Types
-interface Robot {
-  id: number;
-  name: string;
-  reference?: string;
-  sellingPrice?: number;
-}
-
-interface Accessory {
-  id: number;
-  name: string;
-  reference?: string;
-  category: 'PLUGIN' | 'ANTENNA' | 'SHELTER';
-  sellingPrice?: number;
-}
-
-interface AccessoriesData {
-  plugins: Accessory[];
-  antennas: Accessory[];
-  shelters: Accessory[];
-}
-
-interface QuoteRequestData {
-  clientFirstName: string;
-  clientLastName: string;
-  clientEmail: string;
-  clientPhone: string;
-  clientAddress: string;
-  clientCity: string;
-  robotInventoryId: number | '';
-  pluginInventoryId: number | '';
-  antennaInventoryId: number | '';
-  shelterInventoryId: number | '';
-  hasWire: boolean;
-  wireLength: number;
-  hasAntennaSupport: boolean;
-  hasPlacement: boolean;
-  installationNotes: string;
-  needsInstaller: boolean;
-}
-
-interface FormSubmitData {
-  [key: string]: string | number | boolean | null | undefined;
-}
+/** Corps de `POST /submit-form` : paires libellé → valeur, lues telles quelles dans l'email. */
+type FormSubmitData = Record<string, string | boolean>;
 
 // Response types
 interface ApiResponse<T> {
@@ -97,83 +57,10 @@ interface ApiResponse<T> {
 }
 
 /**
- * Fetch available robots for quote request form
- */
-export async function fetchRobots(): Promise<ApiResponse<Robot[]>> {
-  if (!API_URL || !AUTH_TOKEN) {
-    console.error('API_URL or AUTH_TOKEN not configured');
-    return { success: false, error: 'Configuration manquante' };
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/robots`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${AUTH_TOKEN}`,
-      },
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return { success: true, data: data.data || [] };
-  } catch (error) {
-    console.error('Error fetching robots:', error);
-    return {
-      success: false,
-      error: 'Erreur lors du chargement des robots disponibles',
-    };
-  }
-}
-
-/**
- * Fetch available accessories for quote request form
- */
-export async function fetchAccessories(): Promise<
-  ApiResponse<AccessoriesData>
-> {
-  if (!API_URL || !AUTH_TOKEN) {
-    console.error('API_URL or AUTH_TOKEN not configured');
-    return { success: false, error: 'Configuration manquante' };
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/accessories`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${AUTH_TOKEN}`,
-      },
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return {
-      success: true,
-      data: data.data || { plugins: [], antennas: [], shelters: [] },
-    };
-  } catch (error) {
-    console.error('Error fetching accessories:', error);
-    return {
-      success: false,
-      error: 'Erreur lors du chargement des accessoires disponibles',
-    };
-  }
-}
-
-/**
- * Submit a quote request
+ * Devis d'achat (R006-S01) : `POST /quote-request`, qui persiste le bon avec `source = SITE`.
  */
 export async function submitQuoteRequest(
-  formData: QuoteRequestData,
+  formData: QuoteRequestBody,
   turnstileToken?: string,
 ): Promise<ApiResponse<{ requestId: number }>> {
   if (!API_URL || !AUTH_TOKEN) {
@@ -214,29 +101,23 @@ export async function submitQuoteRequest(
 }
 
 /**
- * Submit robot reservation form
+ * « Être rappelé » (R006-S02) : `POST /submit-form` avec `Type de demande: Rappel`.
+ * Le corps vient de `buildCallbackBody` (lib/callback.ts).
  */
-export async function submitRobotReservation(
+export async function submitCallbackRequest(
   formData: FormSubmitData,
   turnstileToken?: string,
 ): Promise<ApiResponse<void>> {
-  return postPublicForm(formData, turnstileToken, 'la réservation');
+  return postPublicForm(formData, turnstileToken, 'la demande de rappel');
 }
 
 /**
- * Soumet une demande de service (R006-S01).
+ * « Réserver un passage » (R007) : `POST /submit-form` avec `Type de demande`
+ * Entretien, Réparation ou Installation et `Marque`.
  *
- * Le composant `ServiceForm` appelait lui-même
- * `fetch(`${API_URL}/submit-form`)` depuis le **navigateur**, en lisant
- * `process.env.API_URL` et `process.env.AUTH_TOKEN` — que Next ne remplace pas
- * côté client. L'URL valait donc `undefined/submit-form` et la requête
- * repartait en 404 : le formulaire ne fonctionnait plus du tout, et le client
- * voyait « Network response was not ok » (D-13). Il passe par cette action,
- * comme les deux autres formulaires du site.
- *
- * Même route que la réservation de robot : forestar-server lit le corps et
- * envoie l'email interne correspondant. Deux noms distincts malgré tout, pour
- * que les journaux et les appels disent lequel des deux parcours est en cause.
+ * Passe par une server action, jamais par un `fetch` du navigateur : `API_URL` et
+ * `AUTH_TOKEN` ne sont pas remplacés côté client par Next, et l'ancien formulaire
+ * partait ainsi vers `undefined/submit-form` (D-13, du 25 janv. au 22 sept. 2026).
  */
 export async function submitServiceForm(
   formData: FormSubmitData,
