@@ -19,7 +19,8 @@ export default function RobotImage({
   sizes: string;
   priority?: boolean;
 }) {
-  const missing = !src;
+  // Seule une URL absolue de l’API est une vraie photo.
+  const missing = !src || !/^https?:\/\//.test(src);
   if (missing) {
     return (
       <div
