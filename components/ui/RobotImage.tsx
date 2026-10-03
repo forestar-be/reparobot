@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Glyph from './Glyph';
 
 /** Image neutre de l'API quand le robot n'a pas encore de photo (H-02). */
-const NEUTRAL_IMAGE = '/images/robots/default.webp';
 
 /**
  * Photo d'un robot, entière (jamais rognée). Sans photo (valeur neutre de l'API ou
@@ -20,8 +19,7 @@ export default function RobotImage({
   sizes: string;
   priority?: boolean;
 }) {
-  const missing =
-    !src || src === NEUTRAL_IMAGE || src.endsWith('/default.webp');
+  const missing = !src;
   if (missing) {
     return (
       <div

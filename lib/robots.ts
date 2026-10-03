@@ -14,7 +14,8 @@ export interface Robot {
   name: string;
   category: string;
   description: string;
-  image: string;
+  /** URL absolue de la photo, `null` sans photo (visuel neutre). */
+  image: string | null;
   maxSurface: number;
   maxSlope: number;
   price: number;

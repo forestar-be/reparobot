@@ -43,7 +43,7 @@ type Params = Promise<{ slug: string }>;
 
 /** Absolue seulement : l'image neutre locale n'est pas une photo de produit. */
 function absoluteImage(src: string | null | undefined): string | null {
-  if (!src || src.endsWith('/default.webp')) return null;
+  if (!src) return null;
   if (/^https?:\/\//.test(src)) return src;
   return null;
 }
