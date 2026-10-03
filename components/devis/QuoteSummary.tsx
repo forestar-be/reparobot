@@ -11,7 +11,7 @@ import Glyph from '../ui/Glyph';
 const amountText = (amount: number | null): string =>
   amount === null ? 'prix confirmé dans le devis' : formatEuro(amount);
 
-/** « Installation non comprise » ou « Installation comprise : 200 € » (D-14). */
+/** « Installation non comprise » ou « Installation comprise : X € » (D-14). */
 export function installationNote(quote: Quote): string {
   if (!quote.installationIncluded) return 'Installation non comprise.';
   return `Installation comprise : ${amountText(quote.installationAmount)}.`;
