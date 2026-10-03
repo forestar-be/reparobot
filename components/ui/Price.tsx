@@ -19,7 +19,7 @@ export default function Price({
         className={`text-[37px] leading-[1.3] font-bold tracking-[-0.05em] text-ink mobile:text-[34px] ${className}`}
       >
         {formatEuro(amount)}
-        <span className="ml-3 text-[11px] font-normal tracking-normal text-muted mobile:ml-2.5">
+        <span className="ml-3 text-sm font-normal tracking-normal text-muted mobile:ml-2.5">
           TVAC, robot seul
         </span>
       </div>
@@ -34,11 +34,7 @@ export default function Price({
       className={`font-bold tracking-[-0.04em] text-ink ${sizing} ${className}`}
     >
       {formatEuro(amount)}
-      <small
-        className={`block font-normal tracking-normal text-muted ${
-          size === 'compact' ? 'text-[10px] mobile:text-[10px]' : 'text-[10px]'
-        }`}
-      >
+      <small className="block text-sm font-normal tracking-normal text-muted">
         TVAC, robot seul
       </small>
     </div>

@@ -1,12 +1,13 @@
+import ContactForm from '../../components/contact/ContactForm';
 import PhoneBlock from '../../components/forms/PhoneBlock';
 import SelectedRobot from '../../components/forms/SelectedRobot';
-import CallbackForm from '../../components/rappel/CallbackForm';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { TextLink } from '../../components/ui/Button';
 import Eyebrow from '../../components/ui/Eyebrow';
 import TrustStrip from '../../components/ui/TrustStrip';
 import { robotShortName } from '../../lib/catalogue';
 import { getRobotBySlug } from '../../lib/robots';
+import { baseOffer, getServiceOffers } from '../../lib/service-offers';
 import { siteUrl } from '../../lib/site';
 import { getSiteInfo } from '../../lib/site-info';
 import type { Metadata } from 'next';
@@ -17,28 +18,31 @@ const slugOf = (value: string | string[] | undefined): string =>
   (Array.isArray(value) ? value[0] : value)?.trim() ?? '';
 
 export const metadata: Metadata = {
-  title: 'Être rappelé',
+  title: 'Être recontacté',
   description:
-    'Un conseil, une question sur un robot tondeuse Husqvarna ? Laissez-nous votre numéro, nous vous rappelons.',
+    'Un conseil, une question sur un robot tondeuse Husqvarna ? Laissez-nous vos coordonnées, nous vous recontactons par téléphone ou par email.',
   // Un formulaire, pas une page à référencer : les moteurs indexent les fiches.
   robots: { index: false, follow: true },
 };
 
 /**
- * `/rappel?robot=<slug>` (R006-S02). Sans robot, ou avec une adresse inconnue, le formulaire
- * reste utilisable, sans robot en tête : quelqu'un qui veut un conseil avant d'avoir choisi est
- * justement celui qu'il faut rappeler, et le renvoyer au catalogue serait une impasse. Le sujet de
- * l'email garde alors son préfixe seul (« Demande de rappel »).
+ * `/etre-recontacte?robot=<slug>` (R006-S02, D-25 ; ex-`/rappel`). Sans robot, ou avec une adresse
+ * inconnue, le formulaire reste utilisable, sans robot en tête : quelqu'un qui veut un conseil
+ * avant d'avoir choisi est justement celui qu'il faut recontacter, et le renvoyer au catalogue
+ * serait une impasse. Le sujet de l'email garde alors son préfixe seul (« Demande de contact »).
  */
-export default async function RappelPage({
+export default async function EtreRecontactePage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const [robot, info] = await Promise.all([
+  const [robot, info, offers] = await Promise.all([
     getRobotBySlug(slugOf((await searchParams).robot)),
     getSiteInfo(),
+    getServiceOffers(),
   ]);
+  // La case « entretien annuel » porte le prix du forfait BASE ; sans forfait, elle disparaît.
+  const maintenancePrice = baseOffer(offers, 'MAINTENANCE')?.price ?? null;
 
   return (
     <>
@@ -53,7 +57,7 @@ export default async function RappelPage({
                 },
               ]
             : []),
-          { label: 'Être rappelé' },
+          { label: 'Être recontacté' },
         ]}
       />
       <div className="wrap">
@@ -66,13 +70,14 @@ export default async function RappelPage({
             )}
             <Eyebrow className="!mb-4">Un conseil, une question ?</Eyebrow>
             <h1 className="mb-[22px] text-[49px] mobile:mb-4 mobile:text-[35px]">
-              On en parle
+              On vous
               <br />
-              de vive voix.
+              recontacte.
             </h1>
-            <p className="m-0 max-w-[430px] text-sm text-muted mobile:text-xs">
+            <p className="m-0 max-w-[430px] text-[15px] text-muted">
               Un doute sur le modèle, votre jardin ou l’installation ?
-              Laissez-nous votre numéro, nous vous rappelons.
+              Dites-nous comment vous joindre, par téléphone ou par email : nous
+              revenons vers vous.
             </p>
             <PhoneBlock info={info} className="mt-[30px] mobile:hidden" />
             {robot && (
@@ -83,7 +88,8 @@ export default async function RappelPage({
               </div>
             )}
           </div>
-          <CallbackForm
+          <ContactForm
+            maintenancePrice={maintenancePrice}
             robot={
               robot
                 ? {

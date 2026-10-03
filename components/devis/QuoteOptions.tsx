@@ -65,7 +65,7 @@ export default function QuoteOptions({
         return (
           <div key={key}>
             {items.length > 1 && (
-              <p className="mt-4 mb-0 text-[10px] font-extrabold tracking-[0.16em] text-forest uppercase">
+              <p className="mt-4 mb-0 text-xs font-extrabold tracking-[0.16em] text-forest uppercase">
                 {label} · un seul choix
               </p>
             )}

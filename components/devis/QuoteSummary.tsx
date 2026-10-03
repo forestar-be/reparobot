@@ -57,7 +57,7 @@ export default function QuoteSummary({
         {quote.lines.map((line) => (
           <div
             key={line.key}
-            className="flex justify-between gap-3 border-b border-[#cdd7c6] py-2.5 text-xs mobile:text-[11px]"
+            className="flex justify-between gap-3 border-b border-[#cdd7c6] py-2.5 text-sm"
           >
             <dt>
               {line.label}
@@ -68,7 +68,7 @@ export default function QuoteSummary({
             <dd
               className={`m-0 text-right font-semibold ${
                 line.amount === null
-                  ? 'text-[11px] font-normal text-muted'
+                  ? 'text-sm font-normal text-muted'
                   : 'whitespace-nowrap'
               }`}
             >
@@ -79,14 +79,14 @@ export default function QuoteSummary({
       </dl>
       <div aria-live="polite" aria-atomic="true">
         <div className="flex items-baseline justify-between gap-[15px] pt-3 pb-1">
-          <span className="text-xs font-bold">
+          <span className="text-sm font-bold">
             {partial ? 'Sous-total TVAC' : 'Total TVAC'}
           </span>
           <b className="text-[29px] tracking-[-0.05em]">
             {formatEuro(quote.total)}
           </b>
         </div>
-        <p className="m-0 text-[10px] text-muted">
+        <p className="m-0 text-sm text-muted">
           {installationNote(quote)}
           {partial && (
             <>
@@ -110,7 +110,7 @@ export default function QuoteSummary({
           onToken={submission.onTurnstileToken}
         />
       </div>
-      <p className="mt-5 mb-0 flex gap-2.5 border-t border-[#cdd7c6] pt-[17px] text-[11px]">
+      <p className="mt-5 mb-0 flex gap-2.5 border-t border-[#cdd7c6] pt-[17px] text-sm">
         <Glyph name="mail" className="mt-0.5 h-[18px] w-[18px]" />
         Vous recevez le détail de votre configuration et pouvez signer votre
         devis en ligne.

@@ -80,7 +80,7 @@ describe('événements (R004, AC-01 et AC-03)', () => {
   it("après un refus : rien n'est envoyé", async () => {
     const { analytics, consent } = await charger(ID);
     consent.saveConsent(false);
-    analytics.trackLead('rappel');
+    analytics.trackLead('contact');
     analytics.trackPhoneClick();
     expect(appels()).toEqual([]);
   });
@@ -113,7 +113,7 @@ describe('événements (R004, AC-01 et AC-03)', () => {
     ]);
   });
 
-  it.each(['devis', 'rappel', 'entretien'] as const)(
+  it.each(['devis', 'contact', 'entretien'] as const)(
     'trackLead(%s) envoie lead_type=%s',
     async (type) => {
       const { analytics, consent } = await charger(ID);
@@ -152,7 +152,7 @@ describe('événements (R004, AC-01 et AC-03)', () => {
     const { analytics, consent } = await charger(ID);
     consent.saveConsent(true);
     analytics.trackLead('devis');
-    analytics.trackLead('rappel');
+    analytics.trackLead('contact');
     expect(appels().filter((a) => a[0] === 'config')).toHaveLength(1);
   });
 

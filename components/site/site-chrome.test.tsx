@@ -52,12 +52,11 @@ afterEach(() => {
 });
 
 describe('menu', () => {
-  it('liste les quatre entrées du brief, dans l’ordre, avec leurs adresses', async () => {
+  it('liste les trois entrées du menu (sans « Conseils », retiré le 4 oct. 2026), dans l’ordre, avec leurs adresses', async () => {
     const { NAV_ITEMS } = await import('./nav-items');
     expect(NAV_ITEMS.map((i) => [i.label, i.href])).toEqual([
       ['Robots Husqvarna', '/robots'],
       ['Entretien & réparation', '/entretien-reparation'],
-      ['Conseils', '/#conseils'],
       ['Contact', '/#contact'],
     ]);
   });
@@ -75,9 +74,9 @@ describe('menu', () => {
     expect(actives('/entretien-reparation')).toEqual([
       'Entretien & réparation',
     ]);
-    expect(actives('/calculateur-cout-entretien-robot-tondeuse')).toEqual([
-      'Conseils',
-    ]);
+    expect(actives('/etre-recontacte')).toEqual(['Robots Husqvarna']);
+    // les calculateurs restent joignables par leur adresse, mais sans entrée de menu
+    expect(actives('/calculateur-cout-entretien-robot-tondeuse')).toEqual([]);
     // `/robotsx` n'est pas `/robots`
     expect(actives('/robotsx')).toEqual([]);
   });
@@ -112,6 +111,13 @@ describe('HeaderBar', () => {
     const liens = screen.getAllByRole('link', { name: /Devis gratuit/ });
     expect(liens.length).toBeGreaterThan(0);
     for (const lien of liens) expect(lien.getAttribute('href')).toBe('/robots');
+  });
+
+  it('la signature se lit « reparobot.be »', async () => {
+    const { default: Brand } = await import('./Brand');
+    const { container } = render(<Brand />);
+    const nom = container.querySelector('b');
+    expect(nom?.textContent).toBe('reparobot.be');
   });
 
   it('la signature n’est pas un titre', async () => {

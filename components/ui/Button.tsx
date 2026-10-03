@@ -18,7 +18,7 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const BASE =
-  'inline-flex min-h-[49px] items-center justify-center gap-[18px] rounded-action border px-[22px] py-3 text-[13px] leading-[1.4] font-bold transition-[background-color,transform] duration-150';
+  'inline-flex min-h-[49px] items-center justify-center gap-[18px] rounded-action border px-[22px] py-3 text-sm leading-[1.4] font-bold transition-[background-color,transform] duration-150';
 
 interface CommonProps {
   variant?: Variant;
@@ -93,7 +93,7 @@ export function TextLink({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-3 border-b border-current pb-[3px] text-xs font-bold text-forest mobile:gap-[5px] ${className}`}
+      className={`inline-flex items-center gap-3 border-b border-current pb-[3px] text-sm font-bold text-forest mobile:gap-[5px] ${className}`}
     >
       {children}
       <Glyph name="arrow" className="h-5 w-5 mobile:h-3.5 mobile:w-3.5" />

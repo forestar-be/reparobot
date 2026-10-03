@@ -31,7 +31,7 @@ export default function CatalogueFilters({ filters }: { filters: Filters }) {
               href={catalogueHref({ type: tab.type, surface: filters.surface })}
               aria-current={active ? 'true' : undefined}
               scroll={false}
-              className={`flex min-h-[42px] items-center justify-center rounded px-[22px] py-2.5 text-xs font-semibold mobile:flex-1 mobile:px-3.5 mobile:py-2 mobile:text-[11px] ${
+              className={`flex min-h-[42px] items-center justify-center rounded px-[22px] py-2.5 text-sm font-semibold mobile:flex-1 mobile:px-3.5 mobile:py-2 ${
                 active
                   ? 'bg-white text-forest shadow-[0_2px_5px_#183e3210]'
                   : 'text-muted hover:text-forest'

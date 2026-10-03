@@ -1,5 +1,5 @@
 /**
- * Aides des tests de contrat des formulaires (devis, rappel, passage à l'atelier) : un faux
+ * Aides des tests de contrat des formulaires (devis, contact, passage à l'atelier) : un faux
  * `window.turnstile` et un faux `fetch`. Rien d'autre n'est simulé entre le clic et le réseau.
  */
 import { vi } from 'vitest';

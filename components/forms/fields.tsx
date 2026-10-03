@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Éléments communs des trois formulaires (devis, rappel, passage à l'atelier), au dessin de
+ * Éléments communs des trois formulaires (devis, contact, passage à l'atelier), au dessin de
  * la maquette : champs à libellé toujours visible, cadre blanc arrondi à 10 px, consentement
  * avec le détail de l'utilisation des données (`config/conditions.json`).
  */
@@ -10,7 +10,7 @@ import type { HTMLAttributes, ReactNode } from 'react';
 
 /** Classes d'un champ de saisie, d'une liste ou d'une zone de texte. */
 export const CONTROL =
-  'min-h-[46px] w-full rounded-[5px] border border-field bg-white px-3 py-2.5 text-[13px] text-ink placeholder:text-xs placeholder:font-normal placeholder:text-[#828a80] mobile:text-[13px]';
+  'min-h-[46px] w-full rounded-[5px] border border-field bg-white px-3 py-2.5 text-sm text-ink placeholder:text-sm placeholder:font-normal placeholder:text-[#828a80]';
 
 export const TEXTAREA = `${CONTROL} min-h-[109px] resize-y`;
 
@@ -42,7 +42,7 @@ export function PanelTitle({
     <div className="mb-6 flex items-center gap-[15px] mobile:mb-[18px] mobile:gap-2.5">
       <span
         aria-hidden="true"
-        className="flex h-[29px] w-[29px] items-center justify-center rounded-full border border-line text-[11px] text-forest mobile:h-[26px] mobile:w-[26px]"
+        className="flex h-[29px] w-[29px] items-center justify-center rounded-full border border-line text-sm text-forest mobile:h-[26px] mobile:w-[26px]"
       >
         {number}
       </span>
@@ -74,17 +74,20 @@ export function Field({
   required = false,
   wide = false,
   hint,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
   wide?: boolean;
   hint?: string;
+  /** Erreur de saisie : affichée sous le champ, qui doit porter `aria-invalid` et `aria-describedby`. */
+  error?: string;
   children: ReactNode;
 }) {
   return (
     <label
-      className={`block min-w-0 text-xs font-semibold text-ink mobile:text-[11px] ${
+      className={`block min-w-0 text-sm font-semibold text-ink ${
         wide ? 'col-span-full' : ''
       }`}
     >
@@ -92,8 +95,13 @@ export function Field({
       {required && <span aria-hidden="true"> *</span>}
       <span className="mt-[7px] block font-normal">{children}</span>
       {hint && (
-        <span className="mt-1.5 block text-[11px] font-normal text-muted">
+        <span className="mt-1.5 block text-sm font-normal text-muted">
           {hint}
+        </span>
+      )}
+      {error && (
+        <span className="mt-1.5 block text-sm font-semibold text-[#7a2a1f]">
+          {error}
         </span>
       )}
     </label>
@@ -104,18 +112,23 @@ export function Field({
 export function ConsentCheck({
   checked,
   onChange,
+  error,
 }: {
   checked: boolean;
   onChange: (value: boolean) => void;
+  /** Message affiché quand la case n'est pas cochée à l'envoi. */
+  error?: string;
 }) {
   const terms = conditions.terms_and_conditions;
   return (
     <div className="my-4">
-      <label className="flex items-start gap-2.5 text-[11px] font-normal mobile:text-[10px]">
+      <label className="flex items-start gap-2.5 text-sm font-normal">
         <input
           type="checkbox"
           name="consentement"
           required
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? 'consentement-erreur' : undefined}
           checked={checked}
           onChange={(event) => onChange(event.target.checked)}
           className="mt-1 h-4 w-4 shrink-0 accent-forest"
@@ -125,7 +138,15 @@ export function ConsentCheck({
           demande.
         </span>
       </label>
-      <details className="mt-2 pl-[26px] text-[10px] leading-relaxed text-muted">
+      {error && (
+        <p
+          id="consentement-erreur"
+          className="mt-1.5 mb-0 pl-[26px] text-sm font-semibold text-[#7a2a1f]"
+        >
+          {error}
+        </p>
+      )}
+      <details className="mt-2 pl-[26px] text-sm leading-relaxed text-muted">
         <summary className="cursor-pointer font-semibold text-forest">
           Comment vos données sont utilisées
         </summary>
@@ -149,7 +170,7 @@ export function FormAlert({ message }: { message: string | null }) {
   return (
     <p
       role="alert"
-      className="mt-4 rounded-action border border-[#d9a49b] bg-[#fbeeeb] p-4 text-xs text-[#7a2a1f]"
+      className="mt-4 rounded-action border border-[#d9a49b] bg-[#fbeeeb] p-4 text-sm text-[#7a2a1f]"
     >
       {message}
     </p>

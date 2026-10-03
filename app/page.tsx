@@ -46,23 +46,6 @@ const WORKSHOP_SERVICES: ServiceKind[] = [
   'INSTALLATION_HELP',
 ];
 
-const ADVICE = [
-  {
-    icon: 'calc' as const,
-    title: 'Combien coûte l’entretien ?',
-    text: 'Estimez le budget annuel de votre robot, avec les options adaptées à vos habitudes.',
-    href: '/calculateur-cout-entretien-robot-tondeuse',
-    cta: 'Calculer mon budget',
-  },
-  {
-    icon: 'leaf' as const,
-    title: 'Quand le robot devient-il rentable ?',
-    text: 'Comparez les coûts de la tonte classique et d’un robot avec le calculateur de retour sur investissement.',
-    href: '/calculateur-retour-sur-investissement-robot-tondeuse',
-    cta: 'Comparer les coûts',
-  },
-];
-
 export default async function Home() {
   const [featured, offers, info] = await Promise.all([
     getFeaturedRobots(),
@@ -85,7 +68,7 @@ export default async function Home() {
         <section className="grid grid-cols-[1.04fr_1fr] items-center gap-[65px] pt-[38px] tablet:gap-[30px] mobile:grid-cols-1 mobile:gap-5 mobile:pt-[22px]">
           <div>
             <DealerBadge />
-            <h1 className="mt-[22px] text-[15px] font-bold tracking-normal text-forest mobile:mt-[17px] mobile:text-[13px]">
+            <h1 className="mt-[22px] text-[15px] font-bold tracking-normal text-forest mobile:mt-[17px]">
               Robots tondeuses Husqvarna à Braine-le-Comte
             </h1>
             <p className="mt-2 mb-[25px] max-w-[850px] text-[64px] leading-[1.12] font-semibold tracking-[-0.045em] text-ink tablet:text-[53px] mobile:mt-1.5 mobile:mb-[21px] mobile:text-[44px] mobile:leading-[1.05] mobile:tracking-[-0.055em]">
@@ -96,14 +79,14 @@ export default async function Home() {
             <div className="flex gap-2.5 tablet:flex-wrap tablet:gap-2 mobile:flex-col mobile:gap-[9px]">
               <Button
                 href="/robots"
-                className="mobile:w-full mobile:justify-between mobile:text-xs"
+                className="mobile:w-full mobile:justify-between"
               >
                 Choisir mon robot
               </Button>
               <Button
                 href="/entretien-reparation"
                 variant="outline"
-                className="mobile:w-full mobile:justify-between mobile:text-xs"
+                className="mobile:w-full mobile:justify-between"
               >
                 Entretien ou réparation
               </Button>
@@ -118,7 +101,7 @@ export default async function Home() {
               sizes="(max-width: 760px) 100vw, 620px"
               className="object-cover mobile:object-[center_52%]"
             />
-            <figcaption className="absolute bottom-[17px] left-5 rounded-[3px] bg-ivory/90 px-3 py-[5px] text-[10px] tracking-[0.045em] text-forest mobile:bottom-[11px] mobile:left-3 mobile:text-[10px]">
+            <figcaption className="absolute bottom-[17px] left-5 rounded-[3px] bg-ivory/90 px-3 py-[5px] text-xs tracking-[0.045em] text-forest mobile:bottom-[11px] mobile:left-3">
               Automower® 430V NERA · mise en scène.
             </figcaption>
           </figure>
@@ -171,7 +154,7 @@ export default async function Home() {
               <br />
               au prochain printemps.
             </h2>
-            <p className="m-0 max-w-[480px] text-on-dark-muted mobile:text-xs">
+            <p className="m-0 max-w-[480px] text-[15px] text-on-dark-muted">
               Forestar vend les robots Husqvarna et prend soin des robots de
               toutes marques. Installation, entretien ou panne : votre
               interlocuteur reste ici, à Braine-le-Comte.
@@ -197,7 +180,7 @@ export default async function Home() {
                         {offer.label}
                       </h3>
                       {offer.description ? (
-                        <p className="m-0 text-xs text-on-dark-muted mobile:text-[10px]">
+                        <p className="m-0 text-sm text-on-dark-muted">
                           {offer.description}
                         </p>
                       ) : null}
@@ -207,7 +190,7 @@ export default async function Home() {
                         {formatEuro(offer.price)}
                       </strong>
                     ) : (
-                      <span className="flex items-center gap-2 text-xs whitespace-nowrap text-on-dark-muted">
+                      <span className="flex items-center gap-2 text-sm whitespace-nowrap text-on-dark-muted">
                         Sur devis
                         <Glyph name="arrow" />
                       </span>
@@ -221,35 +204,6 @@ export default async function Home() {
       </section>
 
       <div className="wrap">
-        <section
-          id="conseils"
-          aria-labelledby="conseils-title"
-          className="py-[68px] mobile:py-[38px]"
-        >
-          <div className="mb-6 mobile:mb-[17px]">
-            <Eyebrow>Conseils &amp; calculateurs</Eyebrow>
-            <h2 id="conseils-title" className="text-[29px] mobile:text-[29px]">
-              Choisir en connaissance de cause.
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 gap-5 mobile:grid-cols-1 mobile:gap-[13px]">
-            {ADVICE.map((card) => (
-              <article
-                key={card.href}
-                className="rounded-card border border-line bg-sage p-7 mobile:p-[23px]"
-              >
-                <Glyph name={card.icon} className="h-[30px] w-[30px]" />
-                <h3 className="mt-[22px] mb-3 text-[22px] mobile:mt-4">
-                  {card.title}
-                </h3>
-                <p className="mb-5 max-w-[420px] text-[13px] text-muted">
-                  {card.text}
-                </p>
-                <TextLink href={card.href}>{card.cta}</TextLink>
-              </article>
-            ))}
-          </div>
-        </section>
         <ContactBand anchor map />
       </div>
     </>

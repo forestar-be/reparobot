@@ -23,7 +23,7 @@ export default function PhoneBlock({
           {info.phoneDisplay}
         </a>
         {hours && (
-          <small className="block text-[10px] leading-normal text-muted">
+          <small className="block text-sm leading-normal text-muted">
             {hours}
           </small>
         )}

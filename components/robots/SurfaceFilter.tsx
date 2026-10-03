@@ -28,7 +28,7 @@ export default function SurfaceFilter({
     <form
       action="/robots"
       method="get"
-      className="flex items-center gap-[13px] text-xs mobile:justify-between mobile:gap-3.5 mobile:text-[11px]"
+      className="flex items-center gap-[13px] text-sm mobile:justify-between mobile:gap-3.5"
     >
       {filters.type ? (
         <input type="hidden" name="type" value={filters.type} />
@@ -49,7 +49,7 @@ export default function SurfaceFilter({
             }),
           );
         }}
-        className="min-h-[46px] w-full min-w-[200px] rounded-[5px] border border-field bg-white px-3 py-2.5 text-[13px] text-ink mobile:min-h-[41px] mobile:w-[210px] mobile:min-w-0 mobile:text-[11px]"
+        className="min-h-[46px] w-full min-w-[200px] rounded-[5px] border border-field bg-white px-3 py-2.5 text-sm text-ink mobile:min-h-[41px] mobile:w-[210px] mobile:min-w-0"
       >
         <option value="">Toutes les surfaces</option>
         {steps.map((step) => (
@@ -61,7 +61,7 @@ export default function SurfaceFilter({
       <noscript>
         <button
           type="submit"
-          className="min-h-[46px] rounded-action border border-forest px-4 text-xs font-bold text-forest"
+          className="min-h-[46px] rounded-action border border-forest px-4 text-sm font-bold text-forest"
         >
           Filtrer
         </button>

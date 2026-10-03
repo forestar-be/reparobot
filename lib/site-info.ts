@@ -82,6 +82,18 @@ export async function getSiteInfo(): Promise<SiteInfo> {
   }
 }
 
+/** Nom du magasin, tel qu'on le cherche sur Google Maps et tel qu'il titre la bulle de la carte. */
+export const STORE_NAME = 'Forestar Shop';
+
+/** Site officiel de Forestar, proposé dans la bulle de la carte. */
+export const OFFICIAL_SITE_URL = 'https://www.forestar.be';
+
+/** Lien Google Maps vers le magasin (recherche « nom, adresse »), pour « Voir sur la carte ». */
+export function mapsHref(info: Pick<SiteInfo, 'address'>): string {
+  const query = encodeURIComponent(`${STORE_NAME}, ${info.address}`);
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
 /** Lignes d'horaires, sans ligne vide. */
 export function hoursLines(hours: string): string[] {
   return hours

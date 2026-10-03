@@ -92,7 +92,7 @@ export default async function RobotsPage({
             <h1 className="max-w-[850px] text-[54px] tablet:text-[48px] mobile:text-[40px] mobile:leading-[1.07]">
               Robots tondeuses Husqvarna Automower®
             </h1>
-            <p className="mt-4 max-w-[680px] text-sm text-muted mobile:mt-[15px] mobile:text-xs">
+            <p className="mt-4 max-w-[680px] text-[15px] text-muted mobile:mt-[15px]">
               Des petits espaces aux grandes pelouses, trouvez votre Husqvarna.
               <br />
               Les prix affichés sont TVAC, robot seul. L’installation est
@@ -104,7 +104,7 @@ export default async function RobotsPage({
 
         <section aria-label="Catalogue" className="pb-[58px] mobile:pb-8">
           <CatalogueFilters filters={filters} />
-          <div className="mb-[23px] flex items-center justify-between gap-5 text-[11px] text-muted mobile:mb-[19px] mobile:gap-2.5 mobile:text-[10px]">
+          <div className="mb-[23px] flex items-center justify-between gap-5 text-sm text-muted mobile:mb-[19px] mobile:gap-2.5">
             <span role="status" aria-live="polite">
               {countLabel(robots.length, catalog.robots.length)}
             </span>
@@ -134,12 +134,12 @@ export default async function RobotsPage({
               {filtered ? (
                 <Link
                   href="/robots"
-                  className="mt-3 inline-block border-b border-current text-xs font-bold text-forest"
+                  className="mt-3 inline-block border-b border-current text-sm font-bold text-forest"
                 >
                   Voir tous les robots
                 </Link>
               ) : (
-                <p className="mt-2 text-xs text-muted">
+                <p className="mt-2 text-sm text-muted">
                   Appelez-nous ou revenez dans quelques minutes.
                 </p>
               )}
@@ -154,11 +154,11 @@ export default async function RobotsPage({
             >
               {catalog.categories.map((category, index) => (
                 <article key={category.id}>
-                  <span className="mb-[15px] block text-[11px] text-muted mobile:mb-[9px]">
+                  <span className="mb-[15px] block text-sm text-muted mobile:mb-[9px]">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <h2 className="mb-3 text-[21px]">{category.name}</h2>
-                  <p className="m-0 text-xs text-muted">
+                  <p className="m-0 text-sm text-muted">
                     {category.description}
                   </p>
                 </article>

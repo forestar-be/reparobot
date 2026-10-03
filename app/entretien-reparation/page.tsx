@@ -104,7 +104,7 @@ export default async function EntretienPage() {
               <br />
               de bonnes mains.
             </h1>
-            <p className="m-0 max-w-[600px] text-sm text-muted mobile:text-xs">
+            <p className="m-0 max-w-[600px] text-[15px] text-muted">
               Un entretien avant la saison, une panne ou une installation à
               reprendre ? Retrouvez un atelier local à Braine-le-Comte, depuis
               2008.
@@ -118,7 +118,7 @@ export default async function EntretienPage() {
             <h2 className="mb-3.5 text-[25px] mobile:text-[23px]">
               Husqvarna ou une autre marque.
             </h2>
-            <p className="m-0 text-xs text-on-dark-muted">
+            <p className="m-0 text-sm text-on-dark-muted">
               L’atelier entretient et répare les robots de toutes marques.
               Expliquez-nous votre besoin et nous préparons votre passage.
             </p>
@@ -140,7 +140,7 @@ export default async function EntretienPage() {
                   card.highlight ? '!border-[#9baa92]' : ''
                 }`}
               >
-                <div className="mb-[18px] min-h-[17px] text-[10px] font-extrabold tracking-[0.16em] text-forest uppercase mobile:mb-[13px] mobile:min-h-0">
+                <div className="mb-[18px] min-h-[17px] text-xs font-extrabold tracking-[0.16em] text-forest uppercase mobile:mb-[13px] mobile:min-h-0">
                   {card.eyebrow}
                 </div>
                 <h2 className="mb-[17px] text-2xl mobile:mb-[13px] mobile:text-[25px]">
@@ -155,13 +155,13 @@ export default async function EntretienPage() {
                 >
                   {card.amount}
                   {card.amount !== 'Sur devis' && (
-                    <small className="text-[11px] font-normal tracking-normal">
+                    <small className="text-sm font-normal tracking-normal">
                       {' '}
                       TVAC
                     </small>
                   )}
                 </div>
-                <p className="mb-[22px] flex-1 text-xs text-muted">
+                <p className="mb-[22px] flex-1 text-sm text-muted">
                   {card.text}
                 </p>
                 <PresetLink kind={card.kind}>Réserver un passage</PresetLink>
@@ -177,7 +177,7 @@ export default async function EntretienPage() {
               {supplements.map((option) => (
                 <li
                   key={option.id}
-                  className="flex justify-between gap-[15px] pr-5 text-[11px] mobile:pr-0"
+                  className="flex justify-between gap-[15px] pr-5 text-sm mobile:pr-0"
                 >
                   <span>{option.label}</span>
                   <strong className="whitespace-nowrap text-forest">
@@ -185,7 +185,7 @@ export default async function EntretienPage() {
                   </strong>
                 </li>
               ))}
-              <li className="flex justify-between gap-[15px] pr-5 text-[11px] mobile:pr-0">
+              <li className="flex justify-between gap-[15px] pr-5 text-sm mobile:pr-0">
                 <span>Tous les forfaits et suppléments</span>
                 <strong className="whitespace-nowrap text-forest">TVAC</strong>
               </li>
@@ -205,11 +205,11 @@ export default async function EntretienPage() {
               >
                 Réserver un passage
               </h2>
-              <p className="m-0 max-w-[400px] text-[13px] text-muted mobile:text-xs">
+              <p className="m-0 max-w-[400px] text-[15px] text-muted">
                 Indiquez la marque de votre robot et ce dont vous avez besoin.
                 Nous vous recontactons pour convenir du passage.
               </p>
-              <ul className="my-[27px] list-none p-0 text-xs mobile:my-5 mobile:text-[11px]">
+              <ul className="my-[27px] list-none p-0 text-sm mobile:my-5">
                 {[
                   {
                     icon: 'check' as const,

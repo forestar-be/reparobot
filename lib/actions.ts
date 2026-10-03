@@ -101,14 +101,14 @@ export async function submitQuoteRequest(
 }
 
 /**
- * « Être rappelé » (R006-S02) : `POST /submit-form` avec `Type de demande: Rappel`.
- * Le corps vient de `buildCallbackBody` (lib/callback.ts).
+ * « Être recontacté » (D-25) : `POST /submit-form` avec `Type de demande: Contact`.
+ * Le corps vient de `buildContactBody` (lib/contact-request.ts).
  */
-export async function submitCallbackRequest(
+export async function submitContactRequest(
   formData: FormSubmitData,
   turnstileToken?: string,
 ): Promise<ApiResponse<void>> {
-  return postPublicForm(formData, turnstileToken, 'la demande de rappel');
+  return postPublicForm(formData, turnstileToken, 'la demande de contact');
 }
 
 /**

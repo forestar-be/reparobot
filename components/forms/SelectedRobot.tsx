@@ -17,7 +17,7 @@ export function robotSubtitle(robot: Robot): string {
 }
 
 /**
- * Robot choisi, avec sa photo : en tête du devis et du rappel, et dans le récapitulatif.
+ * Robot choisi, avec sa photo : en tête du devis et de la demande de contact, et dans le récapitulatif.
  * `changeHref` ajoute « Changer de robot » (retour au catalogue).
  */
 export default function SelectedRobot({
@@ -55,21 +55,19 @@ export default function SelectedRobot({
         <p
           className={`m-0 font-semibold tracking-[-0.02em] ${
             compact
-              ? 'text-[13px] leading-[1.3]'
-              : 'mb-[7px] text-[17px] leading-[1.3] mobile:text-sm'
+              ? 'text-sm leading-[1.3]'
+              : 'mb-[7px] text-[17px] leading-[1.3] mobile:text-[15px]'
           }`}
         >
           {robot.name}
         </p>
-        <p
-          className={`m-0 text-muted ${compact ? 'mt-1 text-[11px]' : 'text-[11px] mobile:text-[10px]'}`}
-        >
+        <p className={`m-0 text-sm text-muted ${compact ? 'mt-1' : ''}`}>
           {robotSubtitle(robot)}
         </p>
         {changeHref && (
           <Link
             href={changeHref}
-            className="mt-2 inline-flex items-center gap-3 border-b border-current pb-[3px] text-[10px] font-bold text-forest"
+            className="mt-2 inline-flex items-center gap-3 border-b border-current pb-[3px] text-sm font-bold text-forest"
           >
             Changer de robot
             <Glyph name="arrow" className="h-4 w-4" />

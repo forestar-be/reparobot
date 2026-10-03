@@ -30,10 +30,8 @@ export default async function TrustStrip() {
         <li key={item.title} className="flex items-center gap-3.5">
           <Glyph name={item.icon} className="h-[26px] w-[26px] text-forest" />
           <div>
-            <b className="block text-xs mobile:text-[11px]">{item.title}</b>
-            <p className="m-0 text-[11px] text-muted mobile:text-[10px]">
-              {item.text}
-            </p>
+            <b className="block text-[15px]">{item.title}</b>
+            <p className="m-0 text-sm text-muted">{item.text}</p>
           </div>
         </li>
       ))}

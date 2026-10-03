@@ -1,9 +1,9 @@
 'use client';
 
+import AnchorLink from '../ui/AnchorLink';
 import Button from '../ui/Button';
 import Glyph from '../ui/Glyph';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Brand from './Brand';
 import { isActive, NAV_ITEMS } from './nav-items';
@@ -43,19 +43,19 @@ export default function HeaderBar() {
         <Brand className="mr-auto" />
         <nav
           aria-label="Navigation principale"
-          className="flex items-center gap-7 text-[13px] font-semibold tablet:gap-[15px] tablet:text-[11px] mobile:hidden"
+          className="flex items-center gap-7 text-sm font-semibold tablet:gap-[15px] mobile:hidden"
         >
           {NAV_ITEMS.map((item) => {
             const active = isActive(item, pathname);
             return (
-              <Link
+              <AnchorLink
                 key={item.label}
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
                 className={linkClass(active)}
               >
                 {item.label}
-              </Link>
+              </AnchorLink>
             );
           })}
         </nav>
@@ -83,16 +83,17 @@ export default function HeaderBar() {
         {NAV_ITEMS.map((item) => {
           const active = isActive(item, pathname);
           return (
-            <Link
+            <AnchorLink
               key={item.label}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`border-b border-line py-[11px] text-[13px] ${
+              onClick={() => setOpen(false)}
+              className={`border-b border-line py-[11px] text-sm ${
                 active ? 'font-semibold text-forest' : ''
               }`}
             >
               {item.label}
-            </Link>
+            </AnchorLink>
           );
         })}
         <Button href="/robots" className="mt-[13px]">

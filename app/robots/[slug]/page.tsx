@@ -186,7 +186,7 @@ export default async function RobotPage({ params }: { params: Params }) {
         <section className="grid grid-cols-[1.12fr_1fr] items-start gap-[65px] pt-3 pb-[42px] tablet:gap-[35px] mobile:grid-cols-1 mobile:gap-[25px] mobile:pt-2.5 mobile:pb-[30px]">
           <div>
             <div className="relative h-[466px] rounded-panel border border-line bg-[#edf0e6] p-7 mobile:h-[297px] mobile:rounded-[9px] mobile:p-[22px]">
-              <Badge className="absolute top-[19px] left-[19px] z-10 mobile:text-[10px]">
+              <Badge className="absolute top-[19px] left-[19px] z-10">
                 {typeLabel(type)}
               </Badge>
               <div className="relative h-full w-full">
@@ -198,7 +198,7 @@ export default async function RobotPage({ params }: { params: Params }) {
                 />
               </div>
             </div>
-            <div className="mt-[13px] flex justify-between gap-3.5 text-[10px] text-muted mobile:text-[10px]">
+            <div className="mt-[13px] flex justify-between gap-3.5 text-sm text-muted">
               <span>{image ? 'Visuel Husqvarna' : 'Photo à venir'}</span>
               {robot.reference ? (
                 <span>Réf. {robot.reference.split('_')[0]}</span>
@@ -228,7 +228,7 @@ export default async function RobotPage({ params }: { params: Params }) {
               {robot.name}
             </h1>
             {lead ? (
-              <p className="mb-[23px] text-[13px] text-muted mobile:mb-[18px] mobile:text-xs">
+              <p className="mb-[23px] text-[15px] text-muted mobile:mb-[18px]">
                 {lead}
               </p>
             ) : null}
@@ -237,7 +237,7 @@ export default async function RobotPage({ params }: { params: Params }) {
               <Price amount={robot.price} size="big" />
               <InstallationPrice
                 amount={placement}
-                className="mt-1 text-[13px] text-forest"
+                className="mt-1 text-sm text-forest"
               />
               {robot.promotion ? (
                 <Badge tone="promo" className="mt-3 !text-xs">
@@ -250,20 +250,20 @@ export default async function RobotPage({ params }: { params: Params }) {
               <Button href={`/devis?robot=${robot.slug}`} full>
                 Recevoir mon devis
               </Button>
-              <span className="mt-[7px] block text-center text-[11px] text-muted mobile:text-[10px]">
+              <span className="mt-[7px] block text-center text-sm text-muted">
                 gratuit, par email, à signer en ligne
               </span>
             </div>
             <div className="mb-4">
               <Button
-                href={`/rappel?robot=${robot.slug}`}
+                href={`/etre-recontacte?robot=${robot.slug}`}
                 variant="outline"
                 full
               >
-                Être rappelé
+                Être recontacté
               </Button>
-              <span className="mt-[7px] block text-center text-[11px] text-muted mobile:text-[10px]">
-                un conseil, une question ? nous vous rappelons
+              <span className="mt-[7px] block text-center text-sm text-muted">
+                un conseil, une question ? nous vous recontactons
               </span>
             </div>
 
@@ -276,7 +276,7 @@ export default async function RobotPage({ params }: { params: Params }) {
                 >
                   {info.phoneDisplay}
                 </a>
-                <small className="block text-[10px] text-muted">
+                <small className="block text-sm text-muted">
                   {shortHours(info.hours)}
                 </small>
               </div>
@@ -295,7 +295,7 @@ export default async function RobotPage({ params }: { params: Params }) {
             >
               À propos de ce robot
             </h2>
-            <div className="max-w-[760px] space-y-3 text-[13px] text-muted">
+            <div className="max-w-[760px] space-y-3 text-[15px] text-muted">
               {body.split('\n').map((paragraph) => (
                 <p key={paragraph} className="m-0">
                   {paragraph}
@@ -311,7 +311,7 @@ export default async function RobotPage({ params }: { params: Params }) {
             <h2 className="mb-[21px] text-[28px] mobile:text-[27px]">
               {INSTALLATION_TITLE}
             </h2>
-            <p className="m-0 text-[11px] text-muted">
+            <p className="m-0 text-sm text-muted">
               Installation facultative : {formatEuro(placement)}, placement
               compris. Le montant du devis est affiché TVAC.
             </p>
@@ -330,18 +330,18 @@ export default async function RobotPage({ params }: { params: Params }) {
                   >
                     <span
                       aria-hidden="true"
-                      className="pt-0.5 text-[11px] text-muted"
+                      className="pt-0.5 text-sm text-muted"
                     >
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <div className="flex-1">
-                      <h3 className="mb-[5px] text-[13px] leading-[1.4] font-bold tracking-normal">
+                      <h3 className="mb-[5px] text-[15px] leading-[1.4] font-bold tracking-normal">
                         {item.title}
                       </h3>
-                      <p className="m-0 text-xs text-muted">{item.text}</p>
+                      <p className="m-0 text-sm text-muted">{item.text}</p>
                     </div>
                     {price ? (
-                      <strong className="text-xs whitespace-nowrap text-forest">
+                      <strong className="text-sm whitespace-nowrap text-forest">
                         {price}
                       </strong>
                     ) : null}
@@ -359,14 +359,14 @@ export default async function RobotPage({ params }: { params: Params }) {
               la suite de l’histoire.
             </h2>
             {maintenanceText ? (
-              <p className="mb-5 text-xs text-muted">{maintenanceText}</p>
+              <p className="mb-5 text-sm text-muted">{maintenanceText}</p>
             ) : null}
             {maintenance ? (
               <div className="my-[18px] text-[32px] leading-[1.2] font-bold">
                 {maintenancePrice !== null ? (
                   <>
                     {formatEuro(maintenancePrice)}{' '}
-                    <small className="text-[11px] font-normal text-muted">
+                    <small className="text-sm font-normal text-muted">
                       TVAC / entretien annuel
                     </small>
                   </>
@@ -404,10 +404,8 @@ function Spec({
         divided ? 'border-l border-line pl-[17px] mobile:pl-3' : ''
       }`}
     >
-      <dt className="text-[10px] text-muted mobile:text-[10px]">{label}</dt>
-      <dd className="m-0 text-[15px] font-bold text-forest mobile:text-[13px]">
-        {value}
-      </dd>
+      <dt className="text-sm text-muted">{label}</dt>
+      <dd className="m-0 text-[15px] font-bold text-forest">{value}</dd>
     </div>
   );
 }

@@ -9,7 +9,7 @@ export default async function SiteHeader() {
   const info = await getSiteInfo();
   return (
     <>
-      <div className="bg-forest py-2 text-[11px] tracking-[0.025em] text-on-dark mobile:py-[7px] mobile:text-[10px]">
+      <div className="bg-forest py-2 text-sm tracking-[0.025em] text-on-dark mobile:py-[7px]">
         <div className="wrap flex justify-between mobile:justify-center">
           <span>Votre spécialiste des robots tondeuses à Braine-le-Comte</span>
           <a href={telHref(info)} className="text-on-dark mobile:hidden">
