@@ -34,7 +34,9 @@ const nextConfig = {
               protocol: apiProtocol,
               hostname: apiHostname,
               port: apiPort,
-              pathname: '/**/images/**',
+              // L'API sert ses images à la racine (`/images/…`) depuis qu'elle n'a
+              // plus de préfixe : `/**/images/**` exigeait un segment devant.
+              pathname: '/images/**',
             },
           ]
         : []),
