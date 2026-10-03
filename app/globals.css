@@ -1,20 +1,312 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  /* Jetons du gabarit (maquette `final/`, R005-S02). Le bleu Husqvarna reste dans le logo. */
+  --color-forest: #183e32;
+  --color-forest-hover: #295340;
+  --color-ink: #202b25;
+  --color-muted: #606b61;
+  --color-ivory: #f7f7f0;
+  --color-sage: #e7ecdf;
+  --color-sage-soft: #f0f1e9;
+  --color-footer: #e9ede3;
+  --color-line: #d9dfd4;
+  --color-field: #c9d2c5;
+  --color-leaf: #6b8753;
+  --color-on-dark: #ecf0e5;
+  --color-on-dark-muted: #c5d3c1;
+  --color-on-dark-eyebrow: #bbd0a9;
+  --color-on-dark-line: #527060;
+
+  --radius-card: 10px;
+  --radius-panel: 12px;
+  --radius-action: 6px;
+
+  /* Couleurs historiques : encore lues par les formulaires et calculateurs. */
+  --color-primary-50: #f0f9f4;
+  --color-primary-100: #dcf2e7;
+  --color-primary-200: #bce5d1;
+  --color-primary-300: #8fd1b3;
+  --color-primary-400: #5bb58e;
+  --color-primary-500: #43a047;
+  --color-primary-600: #2e7d32;
+  --color-primary-700: #256a2a;
+  --color-primary-800: #205524;
+  --color-primary-900: #1c461f;
+  --color-primary-950: #0e2710;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Manrope : next/font/local dans app/layout.tsx (R005-S02), licence OFL dans app/fonts. */
+  --font-sans: var(--font-manrope), Arial, sans-serif;
+  --font-display: var(--font-manrope), Arial, sans-serif;
+
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+  --animate-slide-up: slideUp 0.6s ease-out forwards;
+  --animate-scale-in: scaleIn 0.5s ease-out forwards;
+  --animate-bounce-light: bounceLight 2s infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+
+  --breakpoint-xs: 475px;
+
+  --radius-4xl: 2rem;
+
+  --backdrop-blur-xs: 2px;
+
+  --shadow-soft:
+    0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+  --shadow-soft-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-back: cubic-bezier(0.36, 0, 0.66, -0.56);
+  --ease-in-out-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scaleIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes bounceLight {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-5px);
+    }
+    60% {
+      transform: translateY(-3px);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/*
+  Tailwind 4 — compatibilités avec le rendu de Tailwind 3 :
+  - le texte indicatif des champs reprenait gray-400, il est désormais la
+    couleur du texte à 50 % ;
+  - les boutons gardent le curseur « main » (Tailwind 4 les laisse en flèche).
+*/
+@layer base {
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility btn-primary {
+  @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+@utility btn-secondary {
+  @apply bg-white hover:bg-gray-50 text-primary-500 font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-primary-500 transform hover:-translate-y-0.5;
+}
+
+@utility btn-outline {
+  @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5;
+}
+
+@utility card {
+  @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6;
+}
+
+@utility section-padding {
+  @apply py-8 lg:py-10;
+}
+
+@utility section-padding-small {
+  @apply py-6 lg:py-8;
+}
+
+@utility section-padding-large {
+  @apply py-10 lg:py-12;
+}
+
+@utility container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@utility bg-grid-pattern {
+  /* Grid pattern for backgrounds */
+  background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+@utility section-primary {
+  /* Section variations */
+  background: linear-gradient(135deg, #f0f9f4 0%, #ffffff 100%);
+}
+
+@utility section-secondary {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+@utility section-accent {
+  background: linear-gradient(135deg, #f0f9f4 0%, #e5f3e8 100%);
+}
+
+@utility divider-fade-in {
+  /* Divider animations */
+  animation: fadeIn 1s ease-out;
+}
+
+@utility animate-fade-in {
+  /* Enhanced animations */
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@utility animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@utility animate-scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+@utility hover-lift {
+  /* Hover effects */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+@utility responsive-text {
+  /* Responsive typography improvements */
+  @apply text-base sm:text-lg md:text-xl;
+}
+
+@utility responsive-heading {
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+}
+
+@utility custom-scrollbar {
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #43a047;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #2e7d32;
+  }
+}
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 68px;
+    scroll-padding-top: 30px;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Barre fixe mobile (MobileBar, ~59 px + zone de sécurité) : un élément qui prend le
+     focus au clavier ne doit jamais passer dessous. */
+  @media (max-width: 760px) {
+    html {
+      scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
   }
 
   body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    @apply text-gray-900 bg-white;
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   h1,
@@ -23,121 +315,56 @@
   h4,
   h5,
   h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
-  }
+@custom-variant tablet (@media (max-width: 1100px));
+@custom-variant mobile (@media (max-width: 760px));
+@custom-variant wide (@media (min-width: 1600px));
 
-  .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-primary-500 font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-primary-500 transform hover:-translate-y-0.5;
+/* Largeur du contenu : 1 240 px à 1 440 px (marges de 100 px), 18 px à 390 px. */
+@utility wrap {
+  width: min(1240px, calc(100% - 80px));
+  margin-inline: auto;
+  @media (min-width: 1600px) {
+    width: min(1320px, calc(100% - 100px));
   }
-
-  .btn-outline {
-    @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5;
+  @media (max-width: 1100px) {
+    width: calc(100% - 48px);
   }
-
-  .card {
-    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6;
+  @media (max-width: 760px) {
+    width: calc(100% - 36px);
   }
+}
 
-  .section-padding {
-    @apply py-8 lg:py-10;
+@media (max-width: 760px) {
+  body {
+    font-size: 14px;
+    padding-bottom: 74px;
   }
+}
 
-  .section-padding-small {
-    @apply py-6 lg:py-8;
-  }
-
-  .section-padding-large {
-    @apply py-10 lg:py-12;
-  }
-
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Grid pattern for backgrounds */
-  .bg-grid-pattern {
-    background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Section variations */
-  .section-primary {
-    background: linear-gradient(135deg, #f0f9f4 0%, #ffffff 100%);
-  }
-
-  .section-secondary {
-    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  }
-
-  .section-accent {
-    background: linear-gradient(135deg, #f0f9f4 0%, #e5f3e8 100%);
-  }
-
-  /* Divider animations */
-  .divider-fade-in {
-    animation: fadeIn 1s ease-out;
-  }
-
-  /* Enhanced animations */
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-    opacity: 0;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  .animate-scale-in {
-    animation: scaleIn 0.5s ease-out forwards;
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  /* Hover effects */
-  .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Responsive typography improvements */
-  .responsive-text {
-    @apply text-base sm:text-lg md:text-xl;
-  }
-
-  .responsive-heading {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
-  }
-
-  /* Custom scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #43a047;
-    border-radius: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #2e7d32;
+/* Lien d'évitement : visible au clavier seulement. */
+@utility skip-link {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  z-index: 70;
+  background: #fff;
+  padding: 12px;
+  &:focus {
+    top: 10px;
   }
 }
 
@@ -187,6 +414,7 @@
   }
 }
 
+@layer base {
 /* Global reset for links */
 a {
   color: inherit;
@@ -209,6 +437,7 @@ a:active {
   text-decoration: none;
   -webkit-text-decoration: none;
 }
+}
 
 /* Smooth focus states */
 *:focus {
@@ -216,9 +445,8 @@ a:active {
 }
 
 *:focus-visible {
-  outline: 2px solid #43a047;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 3px solid var(--color-leaf);
+  outline-offset: 4px;
 }
 
 /* Improved accessibility */

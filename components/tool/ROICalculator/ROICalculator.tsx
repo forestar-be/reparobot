@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState, type JSX } from 'react';
 import './ROICalculator.css';
 
 interface Errors {
@@ -143,7 +143,7 @@ const ROICalculateur = (): JSX.Element => {
 
   return (
     <div className="calculateur-roi-container">
-      <h2>Calculateur de Retour sur Investissement (ROI)</h2>
+      <h1>Calculateur de Retour sur Investissement (ROI)</h1>
       <p>
         Comparez les coûts d'entretien traditionnels de votre pelouse avec ceux
         d'un robot tondeuse. Découvrez combien vous pourriez économiser sur

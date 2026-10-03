@@ -1,145 +1,257 @@
-'use client';
+import RobotCard from '../components/robots/RobotCard';
+import ContactBand from '../components/site/ContactBand';
+import Button, { TextLink } from '../components/ui/Button';
+import DealerBadge from '../components/ui/DealerBadge';
+import Eyebrow from '../components/ui/Eyebrow';
+import Glyph from '../components/ui/Glyph';
+import TrustStrip from '../components/ui/TrustStrip';
+import { formatEuro } from '../lib/format';
+import { buildLocalBusiness } from '../lib/local-business';
+import { getFeaturedRobots } from '../lib/robots';
+import {
+  baseOffer,
+  getServiceOffers,
+  type ServiceKind,
+} from '../lib/service-offers';
+import { siteUrl } from '../lib/site';
+import { getSiteInfo } from '../lib/site-info';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import AboutExpertise from '../components/AboutExpertise';
-import Contact from '../components/Contact';
-import Hero from '../components/Hero';
-import Services from '../components/Services';
-import React, { Suspense, useRef } from 'react';
+export const revalidate = 3600;
 
-// Données structurées pour la page d'accueil
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  '@id': 'https://reparobot.be',
-  name: 'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
-  description:
-    'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
-  url: 'https://reparobot.be',
-  mainEntity: {
-    '@type': 'Organization',
-    '@id': 'https://reparobot.be',
-    name: 'Forestar - Reparobot',
-    alternateName: 'Reparobot',
-    description:
-      'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
-    url: 'https://reparobot.be',
-    logo: 'https://reparobot.be/images/logo/logo-70x70.png',
-    image: 'https://reparobot.be/images/robot-tondeuse-husqvarna-belgique.jpg',
-    telephone: '+3267830706',
-    email: 'info@forestar.be',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: "160 Chaussée d'ecaussinnes",
-      addressLocality: 'Braine le comte',
-      postalCode: '7090',
-      addressCountry: 'BE',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 50.6082,
-      longitude: 4.1284,
-    },
-    openingHoursSpecification: {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-      opens: '09:00',
-      closes: '18:00',
-    },
-    areaServed: {
-      '@type': 'Country',
-      name: 'Belgique',
-    },
-    serviceArea: {
-      '@type': 'Country',
-      name: 'Belgique',
-    },
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Robots tondeuses Husqvarna à Braine-le-Comte | reparobot',
   },
-  hasPart: [
-    {
-      '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#services',
-      name: 'Services Robot Tondeuse',
-      description:
-        'Entretien, réparation et installation de robots tondeuses Husqvarna',
-      url: 'https://reparobot.be/#services',
-    },
-    {
-      '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#about',
-      name: 'À propos',
-      description:
-        'Notre expertise en robots tondeuses et notre engagement qualité',
-      url: 'https://reparobot.be/#about',
-    },
-    {
-      '@type': 'WebPageElement',
-      '@id': 'https://reparobot.be/#contact',
-      name: 'Contact',
-      description: 'Contactez nos experts robot tondeuse en Belgique',
-      url: 'https://reparobot.be/#contact',
-    },
-  ],
-  breadcrumb: {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Accueil',
-        item: 'https://reparobot.be',
-      },
-    ],
+  description:
+    'Revendeur agréé Husqvarna à Braine-le-Comte : robots tondeuses Automower®, installation, entretien et réparation de robots de toutes marques. Devis gratuit.',
+  alternates: { canonical: siteUrl('/') },
+  openGraph: {
+    type: 'website',
+    locale: 'fr_BE',
+    url: siteUrl('/'),
+    title: 'Robots tondeuses Husqvarna à Braine-le-Comte',
+    description:
+      'Choisissez votre robot Husqvarna, ou confiez-nous l’entretien et la réparation de votre robot, toutes marques.',
+    images: [{ url: siteUrl('/images/jardin-430v.png') }],
   },
 };
 
-const Home = (): JSX.Element => {
-  const servicesRef = useRef<HTMLElement>(null);
-  const entretienServiceRef = useRef<HTMLDivElement>(null);
+/** Les trois lignes de l'atelier : forfait de base de chaque service, dans cet ordre. */
+const WORKSHOP_SERVICES: ServiceKind[] = [
+  'MAINTENANCE',
+  'REPAIR',
+  'INSTALLATION_HELP',
+];
+
+const ADVICE = [
+  {
+    icon: 'calc' as const,
+    title: 'Combien coûte l’entretien ?',
+    text: 'Estimez le budget annuel de votre robot, avec les options adaptées à vos habitudes.',
+    href: '/calculateur-cout-entretien-robot-tondeuse',
+    cta: 'Calculer mon budget',
+  },
+  {
+    icon: 'leaf' as const,
+    title: 'Quand le robot devient-il rentable ?',
+    text: 'Comparez les coûts de la tonte classique et d’un robot avec le calculateur de retour sur investissement.',
+    href: '/calculateur-retour-sur-investissement-robot-tondeuse',
+    cta: 'Comparer les coûts',
+  },
+];
+
+export default async function Home() {
+  const [featured, offers, info] = await Promise.all([
+    getFeaturedRobots(),
+    getServiceOffers(),
+    getSiteInfo(),
+  ]);
+  const workshop = WORKSHOP_SERVICES.map((service) =>
+    baseOffer(offers, service),
+  ).filter((offer): offer is NonNullable<typeof offer> => Boolean(offer));
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildLocalBusiness(info)),
+        }}
       />
-      <main id="home" className="overflow-hidden">
-        {/* Hero Section */}
-        <Suspense
-          fallback={
-            <div className="flex h-screen items-center justify-center bg-gradient-to-br from-primary-50 to-white">
-              <div className="animate-pulse text-primary-500">
-                Chargement...
-              </div>
+      <div className="wrap">
+        <section className="grid grid-cols-[1.04fr_1fr] items-center gap-[65px] pt-[38px] tablet:gap-[30px] mobile:grid-cols-1 mobile:gap-5 mobile:pt-[22px]">
+          <div>
+            <DealerBadge />
+            <h1 className="mt-[22px] text-[15px] font-bold tracking-normal text-forest mobile:mt-[17px] mobile:text-[13px]">
+              Robots tondeuses Husqvarna à Braine-le-Comte
+            </h1>
+            <p className="mt-2 mb-[25px] max-w-[850px] text-[64px] leading-[1.12] font-semibold tracking-[-0.045em] text-ink tablet:text-[53px] mobile:mt-1.5 mobile:mb-[21px] mobile:text-[44px] mobile:leading-[1.05] mobile:tracking-[-0.055em]">
+              Votre jardin.
+              <br />
+              Notre spécialité.
+            </p>
+            <div className="flex gap-2.5 tablet:flex-wrap tablet:gap-2 mobile:flex-col mobile:gap-[9px]">
+              <Button
+                href="/robots"
+                className="mobile:w-full mobile:justify-between mobile:text-xs"
+              >
+                Choisir mon robot
+              </Button>
+              <Button
+                href="/entretien-reparation"
+                variant="outline"
+                className="mobile:w-full mobile:justify-between mobile:text-xs"
+              >
+                Entretien ou réparation
+              </Button>
             </div>
-          }
-        >
-          <Hero
-            servicesRef={servicesRef}
-            entretienServiceRef={entretienServiceRef}
-          />
-        </Suspense>
+          </div>
+          <figure className="relative m-0 h-[316px] overflow-hidden rounded-panel mobile:h-[150px] mobile:rounded-lg">
+            <Image
+              src="/images/jardin-430v.png"
+              alt="Husqvarna Automower 430V NERA dans un jardin arboré, mise en scène générée"
+              fill
+              priority
+              sizes="(max-width: 760px) 100vw, 620px"
+              className="object-cover mobile:object-[center_52%]"
+            />
+            <figcaption className="absolute bottom-[17px] left-5 rounded-[3px] bg-ivory/90 px-3 py-[5px] text-[10px] tracking-[0.045em] text-forest mobile:bottom-[11px] mobile:left-3 mobile:text-[10px]">
+              Automower® 430V NERA · mise en scène.
+            </figcaption>
+          </figure>
+        </section>
 
-        {/* Services Section */}
-        <Services ref={servicesRef} entretienServiceRef={entretienServiceRef} />
-
-        {/* About & Expertise Section */}
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center py-16">
-              <div className="animate-pulse text-primary-500">
-                Chargement du contenu...
-              </div>
+        {featured.length > 0 ? (
+          <section
+            aria-labelledby="featured-title"
+            className="pt-[34px] pb-[45px] mobile:py-[25px]"
+          >
+            <div className="mb-6 flex items-end justify-between gap-[25px] mobile:mb-[17px] mobile:items-center mobile:gap-3">
+              <h2
+                id="featured-title"
+                className="text-[29px] mobile:text-[23px]"
+              >
+                Un robot pour votre jardin.
+              </h2>
+              <TextLink href="/robots" className="mobile:whitespace-nowrap">
+                Toute la gamme
+              </TextLink>
             </div>
-          }
-        >
-          <AboutExpertise />
-        </Suspense>
+            <ul className="m-0 grid list-none grid-cols-4 gap-4 p-0 mobile:grid-cols-2 mobile:gap-2.5">
+              {featured.map((robot, index) => (
+                <RobotCard
+                  key={robot.id}
+                  robot={robot}
+                  featured
+                  priority={index < 2}
+                />
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
-        {/* Contact Section */}
-        <Contact />
-      </main>
+        <TrustStrip />
+      </div>
+
+      <section
+        aria-labelledby="atelier-title"
+        className="mt-8 bg-forest py-[68px] text-ivory mobile:mt-3 mobile:py-[38px]"
+      >
+        <div className="wrap grid grid-cols-2 items-center gap-[70px] mobile:grid-cols-1 mobile:gap-[29px]">
+          <div>
+            <Eyebrow dark>L’achat n’est que le début</Eyebrow>
+            <h2
+              id="atelier-title"
+              className="mb-[22px] max-w-[500px] text-[38px] mobile:mb-[17px] mobile:text-[32px]"
+            >
+              Du premier conseil
+              <br />
+              au prochain printemps.
+            </h2>
+            <p className="m-0 max-w-[480px] text-on-dark-muted mobile:text-xs">
+              Forestar vend les robots Husqvarna et prend soin des robots de
+              toutes marques. Installation, entretien ou panne : votre
+              interlocuteur reste ici, à Braine-le-Comte.
+            </p>
+            <Button
+              href="/entretien-reparation"
+              variant="light"
+              className="mt-[27px]"
+            >
+              Découvrir l’atelier
+            </Button>
+          </div>
+          {workshop.length > 0 ? (
+            <ul className="m-0 list-none border-t border-on-dark-line p-0">
+              {workshop.map((offer) => (
+                <li key={offer.id}>
+                  <Link
+                    href="/entretien-reparation"
+                    className="flex items-center justify-between gap-5 border-b border-on-dark-line py-[23px] mobile:py-[18px]"
+                  >
+                    <div>
+                      <h3 className="mb-1 text-lg tracking-[-0.025em] mobile:text-base">
+                        {offer.label}
+                      </h3>
+                      {offer.description ? (
+                        <p className="m-0 text-xs text-on-dark-muted mobile:text-[10px]">
+                          {offer.description}
+                        </p>
+                      ) : null}
+                    </div>
+                    {offer.price !== null ? (
+                      <strong className="text-[23px] whitespace-nowrap mobile:text-[22px]">
+                        {formatEuro(offer.price)}
+                      </strong>
+                    ) : (
+                      <span className="flex items-center gap-2 text-xs whitespace-nowrap text-on-dark-muted">
+                        Sur devis
+                        <Glyph name="arrow" />
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      </section>
+
+      <div className="wrap">
+        <section
+          id="conseils"
+          aria-labelledby="conseils-title"
+          className="py-[68px] mobile:py-[38px]"
+        >
+          <div className="mb-6 mobile:mb-[17px]">
+            <Eyebrow>Conseils &amp; calculateurs</Eyebrow>
+            <h2 id="conseils-title" className="text-[29px] mobile:text-[29px]">
+              Choisir en connaissance de cause.
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 gap-5 mobile:grid-cols-1 mobile:gap-[13px]">
+            {ADVICE.map((card) => (
+              <article
+                key={card.href}
+                className="rounded-card border border-line bg-sage p-7 mobile:p-[23px]"
+              >
+                <Glyph name={card.icon} className="h-[30px] w-[30px]" />
+                <h3 className="mt-[22px] mb-3 text-[22px] mobile:mt-4">
+                  {card.title}
+                </h3>
+                <p className="mb-5 max-w-[420px] text-[13px] text-muted">
+                  {card.text}
+                </p>
+                <TextLink href={card.href}>{card.cta}</TextLink>
+              </article>
+            ))}
+          </div>
+        </section>
+        <ContactBand anchor map />
+      </div>
     </>
   );
-};
-
-export default Home;
+}

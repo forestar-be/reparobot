@@ -34,9 +34,7 @@ export const TURNSTILE_SCRIPT_URL =
 
 /** Les trois refus que forestar-server rend, et eux seuls. */
 export type TurnstileRefusal =
-  | 'turnstile_required'
-  | 'turnstile_failed'
-  | 'turnstile_unavailable';
+  'turnstile_required' | 'turnstile_failed' | 'turnstile_unavailable';
 
 const REFUSALS: readonly string[] = [
   'turnstile_required',

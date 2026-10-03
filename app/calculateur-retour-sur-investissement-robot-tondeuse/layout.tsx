@@ -1,4 +1,5 @@
 // app/calculateur-economie-robot-tondeuse/layout.tsx
+import { SITE_URL } from '../../lib/site';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -23,11 +24,11 @@ export const metadata: Metadata = {
       "Comparez les coûts d'entretien traditionnel (essence, maintenance, service) avec un robot tondeuse. Calculez vos économies potentielles sur plusieurs années.",
     type: 'website',
     locale: 'fr_BE',
-    url: 'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
+    url: `${SITE_URL}/calculateur-retour-sur-investissement-robot-tondeuse`,
     siteName: 'Entretien & Vente Robot Husqvarna Belgique | Forestar',
     images: [
       {
-        url: 'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',
+        url: `${SITE_URL}/images/calculateur-retour-sur-investissement-robot-tondeuse.webp`,
         width: 1200,
         height: 630,
         alt: 'Calculateur Retour sur Investissement Robot Tondeuse',
@@ -40,12 +41,11 @@ export const metadata: Metadata = {
     description:
       "Comparez les coûts d'entretien traditionnel avec un robot tondeuse. Calculez vos économies sur plusieurs années incluant essence, maintenance et services.",
     images: [
-      'https://reparobot.be/images/calculateur-retour-sur-investissement-robot-tondeuse.webp',
+      `${SITE_URL}/images/calculateur-retour-sur-investissement-robot-tondeuse.webp`,
     ],
   },
   alternates: {
-    canonical:
-      'https://reparobot.be/calculateur-retour-sur-investissement-robot-tondeuse',
+    canonical: `${SITE_URL}/calculateur-retour-sur-investissement-robot-tondeuse`,
   },
 };
 
@@ -73,7 +73,7 @@ const structuredData = {
   creator: {
     '@type': 'Organization',
     name: 'Reparobot',
-    url: 'https://reparobot.be',
+    url: SITE_URL,
   },
 };
 

@@ -7,7 +7,15 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   {
-    ignores: ['next.config.js'],
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'public/**',
+      'next-env.d.ts',
+      '*.config.js',
+      '*.config.cjs',
+      '*.config.mjs',
+    ],
   },
   {
     plugins: {

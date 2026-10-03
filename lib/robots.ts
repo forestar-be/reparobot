@@ -7,10 +7,15 @@ export interface RobotCategory {
 
 export interface Robot {
   id: string;
+  /** Adresse de la fiche : `/robots/<slug>` (R003). */
+  slug: string;
+  /** Robot à la une de l'accueil, réglé dans forestar-robot. */
+  isFeatured: boolean;
   name: string;
   category: string;
   description: string;
-  image: string;
+  /** URL absolue de la photo, `null` sans photo (visuel neutre). */
+  image: string | null;
   maxSurface: number;
   maxSlope: number;
   price: number;
@@ -20,20 +25,13 @@ export interface Robot {
   inventoryId: number;
 }
 
-export interface MaintenanceInfo {
-  description: string;
-  price: number;
-}
-
 export interface RobotsCatalog {
   categories: RobotCategory[];
   robots: Robot[];
-  maintenance: MaintenanceInfo;
-  generatedAt: string;
 }
 
 // Fallback data in case API is unavailable (for build time / offline scenarios)
-const FALLBACK_CATALOG: RobotsCatalog = {
+export const FALLBACK_CATALOG: RobotsCatalog = {
   categories: [
     {
       id: 'wired',
@@ -49,12 +47,6 @@ const FALLBACK_CATALOG: RobotsCatalog = {
     },
   ],
   robots: [],
-  maintenance: {
-    description:
-      "Entretien de fin d'année (remise à l'abri, nettoyage complet, mise à jour)",
-    price: 79,
-  },
-  generatedAt: '2026-01-01T00:00:00.000Z',
 };
 
 /**
@@ -110,28 +102,23 @@ export async function getRobotsCatalog(): Promise<RobotsCatalog> {
   }
 }
 
-/**
- * Get robots for a specific category
- */
-export async function getRobotsByCategory(
-  categoryId: string,
-): Promise<Robot[]> {
+/** Un robot par son slug (`/robots/<slug>`, `?robot=<slug>` des formulaires). */
+export async function getRobotBySlug(slug: string): Promise<Robot | undefined> {
   const catalog = await getRobotsCatalog();
-  return catalog.robots.filter((robot) => robot.category === categoryId);
+  return catalog.robots.find((robot) => robot.slug === slug);
+}
+
+/** Robots à la une, dans l'ordre renvoyé par le serveur (`publicOrder`). */
+export async function getFeaturedRobots(): Promise<Robot[]> {
+  const catalog = await getRobotsCatalog();
+  return catalog.robots.filter((robot) => robot.isFeatured);
 }
 
 /**
- * Get a specific robot by ID
+ * Vrai si le catalogue est le repli (API absente ou en erreur), pas la vraie liste :
+ * une fiche introuvable dans un repli n'est pas un 404, c'est une panne — elle ne
+ * doit pas être mise en cache comme « inconnue ».
  */
-export async function getRobotById(id: string): Promise<Robot | undefined> {
-  const catalog = await getRobotsCatalog();
-  return catalog.robots.find((robot) => robot.id === id);
-}
-
-/**
- * Get the total count of robots for SEO structured data
- */
-export async function getRobotsCount(): Promise<number> {
-  const catalog = await getRobotsCatalog();
-  return catalog.robots.length;
+export function isFallbackCatalog(catalog: RobotsCatalog): boolean {
+  return catalog === FALLBACK_CATALOG;
 }

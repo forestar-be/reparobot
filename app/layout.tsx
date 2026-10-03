@@ -1,65 +1,76 @@
-import PageLayout from '../layout/PageLayout';
+import Analytics from '../components/Analytics';
+import CookieBanner from '../components/CookieBanner';
+import MobileBar from '../components/site/MobileBar';
+import SiteFooter from '../components/site/SiteFooter';
+import SiteHeader from '../components/site/SiteHeader';
+import { SITE_URL } from '../lib/site';
+import { getSiteInfo, telHref } from '../lib/site-info';
 import React from 'react';
 import { Metadata } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
 
-// Define your metadata using Next.js Metadata API
+// Manrope (SIL OFL, licence dans ./fonts/OFL.txt) : fichiers de la maquette, conteneur
+// woff2. Le texte courant est en 400, les titres en 600, les prix et actions en 700,
+// la signature en 800.
+const manrope = localFont({
+  src: [
+    { path: './fonts/manrope-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/manrope-600.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/manrope-700.woff2', weight: '700', style: 'normal' },
+    { path: './fonts/manrope-800.woff2', weight: '800', style: 'normal' },
+  ],
+  variable: '--font-manrope',
+  display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
+});
+
+// Métadonnées communes. Chaque page déclare son propre titre, sa description et son
+// canonical (`alternates.canonical`, via `siteUrl`) : aucun canonical global ici, il
+// ferait pointer toutes les pages vers l'accueil.
+const SITE_NAME = 'reparobot par Forestar';
+const DEFAULT_TITLE =
+  'Robots tondeuses Husqvarna, entretien et réparation toutes marques';
+const DEFAULT_DESCRIPTION =
+  'Revendeur agréé Husqvarna à Braine-le-Comte : robots tondeuses Automower®, installation, entretien et réparation de robots de toutes marques.';
+const OG_IMAGE = {
+  url: '/images/og-reparobot.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'Husqvarna Automower 430V NERA dans un jardin, mise en scène',
+};
+// Code de vérification Search Console (balise) : lu dans l'environnement, jamais en dur.
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://reparobot.be'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    template: '%s | Robot Husqvarna Belgique | Forestar',
-    default:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique | Forestar',
+    template: '%s | reparobot',
+    default: `${DEFAULT_TITLE} | reparobot`,
   },
-  description:
-    'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés. Service professionnel garanti.',
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
   icons: {
     icon: '/images/logo/favicon.ico',
     shortcut: '/images/logo/favicon.ico',
     apple: '/images/logo/logo-70x70.png',
   },
-  keywords: [
-    'robot tondeuse Belgique',
-    'Husqvarna Belgique',
-
-    'entretien robot tondeuse',
-    'réparation robot tondeuse',
-    'achat robot tondeuse',
-    'installation robot tondeuse',
-    'maintenance robot tondeuse',
-    'service robot tondeuse Belgique',
-    'robot tondeuse automatique',
-    'tondeuse robotisée',
-    'expert robot tondeuse',
-  ],
-  authors: [{ name: 'Forestar - Reparobot' }],
+  authors: [{ name: 'Forestar' }],
   creator: 'Forestar',
   publisher: 'Forestar',
-  generator: 'Next.js',
   openGraph: {
-    title:
-      'Entretien, Achat et Réparation Robot Tondeuse Husqvarna en Belgique',
-    description:
-      'Spécialiste robot tondeuse Husqvarna en Belgique. Entretien, achat, réparation et installation par des experts certifiés.',
-    url: 'https://reparobot.be',
-    siteName: 'Robot Husqvarna Belgique | Forestar',
+    siteName: SITE_NAME,
     locale: 'fr_BE',
     type: 'website',
-    images: [
-      {
-        url: '/images/robot-tondeuse-husqvarna-belgique.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Robot tondeuse Husqvarna - Entretien et réparation en Belgique',
-      },
-    ],
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Robot Tondeuse Husqvarna Belgique',
-    description:
-      'Entretien, achat et réparation de robots tondeuses par des experts certifiés en Belgique.',
-    images: ['/images/robot-tondeuse-twitter.jpg'],
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,
@@ -72,120 +83,30 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
-  alternates: {
-    canonical: 'https://reparobot.be',
-  },
+  ...(googleVerification
+    ? { verification: { google: googleVerification } }
+    : {}),
   category: 'jardinage',
 };
 
-// Structured Data for SEO
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': 'https://reparobot.be',
-  name: 'Forestar - Entretien Robot Husqvarna',
-  alternateName: 'Reparobot',
-  description:
-    'Spécialiste en entretien, achat et réparation de robots tondeuses Husqvarna en Belgique',
-  image: 'https://reparobot.be/images/logo/logo-70x70.png',
-  logo: 'https://reparobot.be/images/logo/logo-70x70.png',
-  url: 'https://reparobot.be',
-  telephone: '+3267830706',
-  email: 'info@forestar.be',
-  priceRange: '€€',
-  vatID: 'BE0806-685-256',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: "160 Chaussée d'ecaussinnes",
-    addressLocality: 'Braine le comte',
-    postalCode: '7090',
-    addressCountry: 'BE',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 50.6082,
-    longitude: 4.1284,
-  },
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '09:00',
-    closes: '18:00',
-  },
-  serviceArea: {
-    '@type': 'Country',
-    name: 'Belgique',
-  },
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Services Robot Tondeuse',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Entretien Robot Tondeuse',
-          description:
-            "Service professionnel d'entretien de robots tondeuses Husqvarna",
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Réparation Robot Tondeuse',
-          description:
-            'Réparation professionnelle de robots tondeuses toutes marques',
-        },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Achat Robot Tondeuse',
-          description: 'Vente de robots tondeuses Husqvarna avec installation',
-          brand: ['Husqvarna'],
-        },
-      },
-    ],
-  },
-  areaServed: 'Belgique',
-  knowsAbout: [
-    'Robot Tondeuse',
-    'Husqvarna',
-    'Entretien',
-    'Réparation',
-    'Installation',
-  ],
-  slogan: 'Votre spécialiste robot tondeuse en Belgique',
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const info = await getSiteInfo();
   return (
-    <html lang="fr">
-      <head>
-        {/* Preload critical images */}
-        <link
-          rel="preload"
-          as="image"
-          href="/images/hero.webp"
-          type="image/webp"
-        />
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </head>
+    <html lang="fr" className={manrope.variable}>
       <body>
-        <PageLayout>{children}</PageLayout>
+        <a href="#contenu" className="skip-link">
+          Aller au contenu
+        </a>
+        <SiteHeader />
+        <main id="contenu">{children}</main>
+        <SiteFooter />
+        <MobileBar phoneHref={telHref(info)} />
+        <Analytics />
+        <CookieBanner />
       </body>
     </html>
   );

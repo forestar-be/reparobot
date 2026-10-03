@@ -17,13 +17,29 @@ try {
   console.warn('Invalid API_URL format, images from API may not load');
 }
 
+// Hôte du site lui-même (images servies par le site) : suit SITE_URL (lib/site.ts,
+// que ce fichier CommonJS ne peut pas importer ; même valeur par défaut).
+let siteHostname = 'www.reparobot.be';
+try {
+  if (process.env.SITE_URL)
+    siteHostname = new URL(process.env.SITE_URL).hostname;
+} catch (e) {
+  console.warn('Invalid SITE_URL format, default host used for site images');
+}
+
 const nextConfig = {
+  // SITE_URL doit aussi exister dans les composants client (pages en 'use client') :
+  // sans cela, le navigateur retomberait sur la valeur par défaut de lib/site.ts et
+  // la page hydraterait une autre URL que celle rendue par le serveur.
+  env: {
+    SITE_URL: process.env.SITE_URL ?? '',
+  },
   // productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'reparobot.be',
+        hostname: siteHostname,
         port: '',
         pathname: '/**',
       },
@@ -69,6 +85,17 @@ const nextConfig = {
   // },
   experimental: {
     optimizeCss: true,
+  },
+  // Anciennes adresses : 301 vers l'accueil, au bloc contact pour `/contact` (R009), et l'ancien
+  // formulaire de devis vers `/devis`, la chaîne de requête suivant (R006-S04).
+  // `statusCode: 301` et non `permanent: true`, qui répondrait 308 : on garde donc 308 seulement
+  // pour `/devis/demande`.
+  async redirects() {
+    return [
+      { source: '/about', destination: '/', statusCode: 301 },
+      { source: '/contact', destination: '/#contact', statusCode: 301 },
+      { source: '/devis/demande', destination: '/devis', permanent: true },
+    ];
   },
   async headers() {
     return [

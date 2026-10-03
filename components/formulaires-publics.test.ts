@@ -1,43 +1,32 @@
 /**
- * R006-S05 (phase 9.18) — la règle que ni `tsc` ni `eslint` ne voient.
+ * R006-S05 (phase 9.18), reprise en R006/R007 — la règle que ni `tsc` ni `eslint` ne voient.
  *
- * D-13 : `ServiceForm.tsx` appelait l'API **depuis le navigateur**, en lisant
- * `process.env.API_URL` et `process.env.AUTH_TOKEN` dans un composant
- * `'use client'`. Next ne remplace pas ces variables côté client : le bundle
- * publié contenait `fetch("".concat(undefined, "/submit-form"))`, mesuré en 404
- * — le formulaire ne fonctionnait plus du tout. Et si la variable avait porté
- * un préfixe `NEXT_PUBLIC_`, le jeton partagé serait parti dans le bundle.
+ * D-13 : l'ancien formulaire de service appelait l'API **depuis le navigateur**, en lisant
+ * `process.env.API_URL` et `process.env.AUTH_TOKEN` dans un composant `'use client'`. Next ne
+ * remplace pas ces variables côté client : le bundle publié contenait
+ * `fetch("".concat(undefined, "/submit-form"))`, mesuré en 404 — le formulaire ne fonctionnait
+ * plus du tout. Et si la variable avait porté un préfixe `NEXT_PUBLIC_`, le jeton partagé serait
+ * parti dans le bundle.
  *
- * Le contrôle est textuel parce que le défaut est textuel : rien dans le type
- * de `process.env` ne distingue une variable lisible du navigateur d'une autre.
- * Un test de rendu ne l'aurait pas vu non plus — le composant se montait très
- * bien, c'est l'appel qui partait dans le vide.
+ * Le contrôle est textuel parce que le défaut est textuel. Il porte sur **tous** les composants
+ * client des formulaires (dossiers `forms`, `devis`, `rappel`, `entretien`) : un composant ajouté
+ * plus tard est couvert sans qu'on pense à l'inscrire ici. Le comportement (route, corps,
+ * en-tête, jeton, refus) est prouvé par les tests de contrat de chaque formulaire.
  */
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const RACINE = join(__dirname, '..');
-
-/** Les trois formulaires publics du site, et l'action qui les sert. */
-const FORMULAIRES = [
-  { fichier: 'components/ServiceForm.tsx', action: 'submitServiceForm' },
-  {
-    fichier: 'components/RobotContactForm.tsx',
-    action: 'submitRobotReservation',
-  },
-  { fichier: 'components/QuoteRequestForm.tsx', action: 'submitQuoteRequest' },
-] as const;
+const DOSSIERS = ['forms', 'devis', 'rappel', 'entretien'];
 
 function source(fichier: string): string {
   return readFileSync(join(RACINE, fichier), 'utf8');
 }
 
 /**
- * La règle porte sur le **code**, pas sur les commentaires : `ServiceForm.tsx`
- * explique justement en commentaire pourquoi il ne lit plus `API_URL` ni
- * `AUTH_TOKEN`, et ce texte ne part dans aucun bundle. Un contrôle naïf
- * interdirait d'écrire l'explication.
+ * La règle porte sur le **code**, pas sur les commentaires : les commentaires expliquent
+ * justement pourquoi on ne lit plus `API_URL` ni `AUTH_TOKEN`.
  */
 function sansCommentaires(code: string): string {
   return code
@@ -45,51 +34,71 @@ function sansCommentaires(code: string): string {
     .replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
-describe.each(FORMULAIRES)('%s', ({ fichier, action }) => {
-  const brut = source(fichier);
-  const code = sansCommentaires(brut);
+/** Les fichiers `.tsx`/`.ts` du dossier, tests exclus. */
+function fichiersDe(dossier: string): string[] {
+  return readdirSync(join(RACINE, 'components', dossier))
+    .filter((nom) => /\.tsx?$/.test(nom) && !/\.test\./.test(nom))
+    .map((nom) => `components/${dossier}/${nom}`);
+}
 
-  it('est bien un composant client (le contrôle porte sur le bon fichier)', () => {
-    // Pas d'ancrage en début de fichier : `ServiceForm.tsx` porte une ligne
-    // de commentaire avant sa directive, ce qui reste valide.
-    expect(brut).toMatch(/^'use client';$/m);
-  });
+const CLIENTS = DOSSIERS.flatMap(fichiersDe).filter((fichier) =>
+  /^'use client';$/m.test(source(fichier)),
+);
 
-  it('ne lit aucune variable serveur depuis le navigateur (D-13)', () => {
-    const lectures = code.match(/process\.env\.[A-Z0-9_]+/g) ?? [];
-    const interdites = lectures.filter(
-      (lecture) => !lecture.startsWith('process.env.NEXT_PUBLIC_'),
+describe('composants client des formulaires', () => {
+  it('le contrôle couvre bien les formulaires (pas un dossier vide)', () => {
+    expect(CLIENTS).toEqual(
+      expect.arrayContaining([
+        'components/forms/useFormSubmission.ts',
+        'components/devis/QuoteForm.tsx',
+      ]),
     );
-    expect(interdites).toEqual([]);
-    // Nommés explicitement : ce sont les deux qui ont réellement cassé la
-    // production, et `AUTH_TOKEN` est le jeton partagé de forestar-server.
-    expect(code).not.toContain('API_URL');
-    expect(code).not.toContain('AUTH_TOKEN');
   });
 
-  it("n'appelle jamais `fetch` lui-même : il passe par sa server action", () => {
-    expect(code).not.toMatch(/\bfetch\s*\(/);
-    expect(code).toContain(action);
-  });
+  describe.each(CLIENTS)('%s', (fichier) => {
+    const code = sansCommentaires(source(fichier));
 
-  it('monte le widget et lui transmet un jeton neuf après un refus', () => {
-    expect(code).toContain('TurnstileWidget');
-    expect(code).toContain('turnstileToken');
-    // AC-06 — un jeton refusé est consommé : le second essai en exige un neuf.
-    expect(code).toContain('setTurnstileResetSignal');
-    // AC-05 — le refus du serveur devient un message, pas une erreur brute.
-    expect(code).toContain('turnstileMessage');
-  });
+    it('ne lit aucune variable serveur depuis le navigateur (D-13)', () => {
+      const lectures = code.match(/process\.env\.[A-Z0-9_]+/g) ?? [];
+      const interdites = lectures.filter(
+        (lecture) => !lecture.startsWith('process.env.NEXT_PUBLIC_'),
+      );
+      expect(interdites).toEqual([]);
+      // Nommés explicitement : ce sont les deux qui ont réellement cassé la production, et
+      // `AUTH_TOKEN` est le jeton partagé de forestar-server.
+      expect(code).not.toContain('API_URL');
+      expect(code).not.toContain('AUTH_TOKEN');
+    });
 
-  it("n'envoie pas la soumission avant d'avoir le jeton (AC-04)", () => {
-    // La condition exacte du bouton : inactif tant que la protection est en
-    // service et que le widget n'a rien rendu.
+    it("n'appelle jamais `fetch` lui-même : il passe par une server action", () => {
+      expect(code).not.toMatch(/\bfetch\s*\(/);
+    });
+  });
+});
+
+describe('cycle d’envoi commun', () => {
+  const code = sansCommentaires(
+    source('components/forms/useFormSubmission.ts'),
+  );
+
+  it("n'envoie pas avant d'avoir le jeton (AC-04)", () => {
     expect(code).toMatch(/turnstileEnabled\(\)\s*&&\s*!turnstileToken/);
   });
 
-  it('transmet le jeton à son action', () => {
-    const appel = new RegExp(`${action}\\([^)]*turnstileToken`, 's');
-    expect(code).toMatch(appel);
+  it('transmet le jeton à la fonction d’envoi', () => {
+    expect(code).toMatch(/send\(turnstileToken\)/);
+  });
+
+  it('réarme le widget après un refus (AC-06) et traduit le refus (AC-05)', () => {
+    expect(code).toContain('setTurnstileResetSignal');
+    expect(code).toContain('turnstileMessage');
+  });
+
+  it('appelle trackLead exactement une fois, après le refus du serveur, jamais avant (R004, AC-03)', () => {
+    expect(code.match(/trackLead\(/g) ?? []).toHaveLength(1);
+    const refus = code.indexOf('if (!result.success)');
+    expect(refus).toBeGreaterThan(-1);
+    expect(code.indexOf('trackLead(')).toBeGreaterThan(refus);
   });
 });
 
@@ -101,12 +110,27 @@ describe('server actions', () => {
   });
 
   it('le socle commun du widget ne lit que des variables publiques', () => {
-    // `lib/turnstile.ts` est importé par des composants client : une variable
-    // serveur lue ici repartirait dans le bundle du navigateur.
+    // `lib/turnstile.ts` est importé par des composants client : une variable serveur lue ici
+    // repartirait dans le bundle du navigateur.
     const lectures =
       sansCommentaires(source('lib/turnstile.ts')).match(
         /process\.env\.[A-Z0-9_]+/g,
       ) ?? [];
     expect(lectures).toEqual(['process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY']);
   });
+});
+
+/**
+ * Chaque formulaire appelle `useFormSubmission` avec son événement de mesure : le type de lead
+ * n'est pas un détail, c'est ce que la refonte compare (D-06).
+ */
+describe('événements de mesure', () => {
+  it.each([['components/devis/QuoteForm.tsx', 'devis']])(
+    '%s déclare le lead « %s »',
+    (fichier, lead) => {
+      expect(sansCommentaires(source(fichier))).toContain(
+        `useFormSubmission('${lead}')`,
+      );
+    },
+  );
 });
