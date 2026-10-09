@@ -1,4 +1,9 @@
-import { robotShortName, typeLabel, typeOfRobot } from '../../lib/catalogue';
+import {
+  isDiscontinued,
+  robotShortName,
+  typeLabel,
+  typeOfRobot,
+} from '../../lib/catalogue';
 import { formatSurface } from '../../lib/format';
 import type { Robot } from '../../lib/robots';
 import Badge from '../ui/Badge';
@@ -48,6 +53,18 @@ export default function RobotCard({
           >
             {type}
           </Badge>
+          {isDiscontinued(robot) ? (
+            <Badge
+              tone="discontinued"
+              className={`absolute top-[13px] right-3.5 z-10 ${
+                featured
+                  ? 'mobile:top-[9px] mobile:right-[9px] mobile:px-1.5 mobile:py-[3px]'
+                  : ''
+              }`}
+            >
+              Abandonné
+            </Badge>
+          ) : null}
           <div className="relative h-full w-full">
             <RobotImage
               src={robot.image}

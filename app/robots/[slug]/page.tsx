@@ -7,7 +7,10 @@ import Price, { InstallationPrice } from '../../../components/ui/Price';
 import RobotImage from '../../../components/ui/RobotImage';
 import TrustStrip from '../../../components/ui/TrustStrip';
 import {
+  DISCONTINUED_NOTICE,
+  isDiscontinued,
   metaDescription,
+  offerAvailability,
   robotShortName,
   splitDescription,
   typeLabel,
@@ -135,6 +138,9 @@ export default async function RobotPage({ params }: { params: Params }) {
         price: robot.price,
         priceCurrency: 'EUR',
         itemCondition: 'https://schema.org/NewCondition',
+        ...(offerAvailability(robot)
+          ? { availability: offerAvailability(robot) }
+          : {}),
         priceSpecification: {
           '@type': 'UnitPriceSpecification',
           price: robot.price,
@@ -190,6 +196,14 @@ export default async function RobotPage({ params }: { params: Params }) {
               <Badge className="absolute top-[19px] left-[19px] z-10">
                 {typeLabel(type)}
               </Badge>
+              {isDiscontinued(robot) ? (
+                <Badge
+                  tone="discontinued"
+                  className="absolute top-[19px] right-[19px] z-10"
+                >
+                  Abandonné
+                </Badge>
+              ) : null}
               <div className="relative h-full w-full">
                 <RobotImage
                   src={robot.image}
@@ -244,6 +258,11 @@ export default async function RobotPage({ params }: { params: Params }) {
                 <Badge tone="promo" className="mt-3 !text-xs">
                   {robot.promotion}
                 </Badge>
+              ) : null}
+              {isDiscontinued(robot) ? (
+                <p className="mt-3 mb-0 text-sm text-[#7a3a14]">
+                  {DISCONTINUED_NOTICE}
+                </p>
               ) : null}
             </div>
 

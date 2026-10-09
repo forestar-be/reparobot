@@ -11,6 +11,8 @@ export interface Robot {
   slug: string;
   /** Robot à la une de l'accueil, réglé dans forestar-robot. */
   isFeatured: boolean;
+  /** Modèle abandonné par le constructeur (réglé dans forestar-robot). Absent d'une ancienne API. */
+  isDiscontinued?: boolean;
   name: string;
   category: string;
   description: string;

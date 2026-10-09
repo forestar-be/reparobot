@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   catalogueHref,
   countLabel,
+  DISCONTINUED_NOTICE,
   filterRobots,
+  isDiscontinued,
   metaDescription,
+  offerAvailability,
   parseCatalogueFilters,
   robotShortName,
   splitDescription,
@@ -124,5 +127,26 @@ describe('splitDescription / metaDescription', () => {
     expect(d.length).toBeLessThanOrEqual(100);
     expect(d.endsWith('…')).toBe(true);
     expect(metaDescription('Court', 'suite.')).toBe('Court. suite.');
+  });
+});
+
+describe('modèle abandonné', () => {
+  it('ne l’est que si l’API le dit (une ancienne API ne le dit pas)', () => {
+    expect(isDiscontinued({ isDiscontinued: true })).toBe(true);
+    expect(isDiscontinued({ isDiscontinued: false })).toBe(false);
+    expect(isDiscontinued({})).toBe(false);
+  });
+
+  it('publie la disponibilité schema.org Discontinued, jamais un stock', () => {
+    expect(offerAvailability({ isDiscontinued: true })).toBe(
+      'https://schema.org/Discontinued',
+    );
+    expect(offerAvailability({ isDiscontinued: false })).toBeUndefined();
+    expect(offerAvailability({})).toBeUndefined();
+  });
+
+  it('la phrase de la fiche ne parle pas de stock', () => {
+    expect(DISCONTINUED_NOTICE).toMatch(/ne fabrique plus/);
+    expect(DISCONTINUED_NOTICE).not.toMatch(/stock|reste|épuis/i);
   });
 });

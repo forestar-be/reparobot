@@ -11,6 +11,25 @@ export function robotShortName(name: string): string {
 
 export type CatalogueType = 'filaire' | 'sans-fil';
 
+/** Modèle que le constructeur ne fabrique plus : la vitrine l'affiche « Abandonné ». */
+export function isDiscontinued(robot: Pick<Robot, 'isDiscontinued'>): boolean {
+  return robot.isDiscontinued === true;
+}
+
+/**
+ * Disponibilité schema.org d'une offre. Seul l'abandon est publié : le stock est une
+ * information interne qui ne remonte jamais à la vitrine.
+ */
+export function offerAvailability(
+  robot: Pick<Robot, 'isDiscontinued'>,
+): string | undefined {
+  return isDiscontinued(robot) ? 'https://schema.org/Discontinued' : undefined;
+}
+
+/** Phrase de la fiche d'un modèle abandonné (sans dire s'il en reste en magasin). */
+export const DISCONTINUED_NOTICE =
+  'Husqvarna ne fabrique plus ce modèle. Contactez-nous pour connaître sa disponibilité.';
+
 /** Catégorie de l'API → valeur de l'URL. */
 export function typeOfRobot(robot: Pick<Robot, 'category'>): CatalogueType {
   return robot.category === 'wired' ? 'filaire' : 'sans-fil';
