@@ -9,6 +9,7 @@ export const revalidate = 3600;
  * Plan du site : uniquement des pages qui répondent 200 et qu'on veut référencer.
  * `/devis` n'y figure pas (sans robot choisi, il redirige vers `/robots`) ; les pages
  * de formulaire (`/etre-recontacte`) non plus : elles ne valent que depuis une fiche.
+ * `/cookies` reste en ligne et indexable, mais n'est pas à pousser à Google.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const catalog = await getRobotsCatalog();
@@ -35,7 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     { url: siteUrl('/contact'), changeFrequency: 'monthly', priority: 0.6 },
-    { url: siteUrl('/cookies'), changeFrequency: 'yearly', priority: 0.2 },
   ];
   return pages;
 }

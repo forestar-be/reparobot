@@ -7,6 +7,7 @@ import TrustStrip from '../../components/ui/TrustStrip';
 import { baseOffer, getServiceOffers } from '../../lib/service-offers';
 import { siteUrl } from '../../lib/site';
 import { getSiteInfo } from '../../lib/site-info';
+import { buildContactPage, jsonLd } from '../../lib/structured-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -27,6 +28,10 @@ export default async function ContactPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(buildContactPage(info)) }}
+      />
       <Breadcrumb items={[{ label: 'Contact' }]} />
       <div className="wrap">
         <div className="grid grid-cols-[0.95fr_1fr] items-start gap-[75px] pt-7 pb-[55px] tablet:gap-10 mobile:grid-cols-1 mobile:gap-[26px] mobile:pt-[15px] mobile:pb-[30px]">

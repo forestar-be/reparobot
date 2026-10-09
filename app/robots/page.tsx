@@ -10,6 +10,7 @@ import {
   filterRobots,
   parseCatalogueFilters,
 } from '../../lib/catalogue';
+import { OG_IMAGE } from '../../lib/og-image';
 import { getRobotsCatalog } from '../../lib/robots';
 import { siteUrl } from '../../lib/site';
 import type { Metadata } from 'next';
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Robots tondeuses Husqvarna Automower®',
     description:
       'Choisissez votre robot Husqvarna : filaire ou sans fil, selon la surface de votre jardin.',
+    images: [OG_IMAGE],
   },
 };
 

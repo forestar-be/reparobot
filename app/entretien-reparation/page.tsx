@@ -22,6 +22,7 @@ import {
   optionOffers,
 } from '../../lib/service-offers';
 import { getSiteInfo, telHref } from '../../lib/site-info';
+import { buildWorkshopService, jsonLd } from '../../lib/structured-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -94,14 +95,19 @@ export default async function EntretienPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(buildWorkshopService(offers)),
+        }}
+      />
       <Breadcrumb items={[{ label: 'Entretien & réparation' }]} />
       <div className="wrap">
         <section className="grid grid-cols-[1.3fr_1fr] items-center gap-[70px] pt-[25px] pb-[35px] tablet:gap-10 mobile:grid-cols-1 mobile:gap-[23px] mobile:pt-[18px] mobile:pb-6">
           <div>
             <Eyebrow>L’atelier Forestar · toutes marques</Eyebrow>
             <h1 className="mb-[21px] text-[56px] tablet:text-5xl mobile:mb-[18px] mobile:text-[43px]">
-              Votre robot mérite
-              <br />
+              Votre robot mérite <br />
               de bonnes mains.
             </h1>
             <p className="m-0 max-w-[600px] text-[15px] text-muted">

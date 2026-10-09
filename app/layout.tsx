@@ -3,6 +3,7 @@ import CookieBanner from '../components/CookieBanner';
 import MobileBar from '../components/site/MobileBar';
 import SiteFooter from '../components/site/SiteFooter';
 import SiteHeader from '../components/site/SiteHeader';
+import { OG_IMAGE } from '../lib/og-image';
 import { SITE_URL } from '../lib/site';
 import { getSiteInfo, telHref } from '../lib/site-info';
 import React from 'react';
@@ -33,12 +34,6 @@ const DEFAULT_TITLE =
   'Robots tondeuses Husqvarna, entretien et réparation toutes marques';
 const DEFAULT_DESCRIPTION =
   'Revendeur agréé Husqvarna à Braine-le-Comte : robots tondeuses Automower®, installation, entretien et réparation de robots de toutes marques.';
-const OG_IMAGE = {
-  url: '/images/og-reparobot.jpg',
-  width: 1200,
-  height: 630,
-  alt: 'Husqvarna Automower 430V NERA dans un jardin, mise en scène',
-};
 // Code de vérification Search Console (balise) : lu dans l'environnement, jamais en dur.
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 

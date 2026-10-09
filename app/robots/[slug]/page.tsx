@@ -19,6 +19,7 @@ import {
   installationItemsFor,
 } from '../../../lib/installation-content';
 import { getInstallationPrices } from '../../../lib/installation-prices';
+import { OG_IMAGE } from '../../../lib/og-image';
 import {
   getRobotBySlug,
   getRobotsCatalog,
@@ -86,7 +87,7 @@ export async function generateMetadata({
       url,
       title: robot.name,
       description,
-      ...(image ? { images: [{ url: image, alt: robot.name }] } : {}),
+      images: image ? [{ url: image, alt: robot.name }] : [OG_IMAGE],
     },
   };
 }
