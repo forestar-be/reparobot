@@ -15,15 +15,15 @@
     "types:check": "tsc --noEmit --pretty",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run lint && npm run types:check",
-    "fix": "npm run lint:fix && npm run types:check && npm run format:fix",
-    "predev": "npm run check",
+    "check": "pnpm run lint && pnpm run types:check",
+    "fix": "pnpm run lint:fix && pnpm run types:check && pnpm run format:fix",
+    "predev": "pnpm run check",
     "dev": "next dev --port 3005",
-    "prebuild": "npm run check",
+    "prebuild": "pnpm run check",
     "build": "next build",
     "start": "next start",
-    "analyze": "cross-env ANALYZE=true npm run build",
-    "start:prod": "npm run build && npm run start"
+    "analyze": "cross-env ANALYZE=true pnpm run build",
+    "start:prod": "pnpm run build && pnpm run start"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -73,8 +73,5 @@
     "typescript-eslint": "^8.35.1",
     "vitest": "^2.1.9"
   },
-  "overrides": {
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0"
-  }
+  "packageManager": "pnpm@10.33.0"
 }
