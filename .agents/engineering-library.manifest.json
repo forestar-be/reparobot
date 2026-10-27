@@ -49,15 +49,19 @@
       "pack": "memory-node",
       "source": "packs/memory-node/files/tools/agent-memory/impact.ts",
       "upstream_sha256": "0f99ffc4fd483f7a8691d0a685967067225009610abff38f8ee0bfb833e5a26d",
-      "installed_sha256": "0f99ffc4fd483f7a8691d0a685967067225009610abff38f8ee0bfb833e5a26d",
-      "adaptations": []
+      "installed_sha256": "42f983f2481ba9a9c3e92f483a6f7cf8a4c26e2cbe0aedd00b44c953de02b7cf",
+      "adaptations": [
+        "Reformatted by the repository's pre-commit prettier hook"
+      ]
     },
     "tools/agent-memory/lib.ts": {
       "pack": "memory-node",
       "source": "packs/memory-node/files/tools/agent-memory/lib.ts",
       "upstream_sha256": "7b53f292d1fe2d0e323cc79e5ed289bcaf3867a84571c0399a932379ee5c8113",
-      "installed_sha256": "7b53f292d1fe2d0e323cc79e5ed289bcaf3867a84571c0399a932379ee5c8113",
-      "adaptations": []
+      "installed_sha256": "542bb7bf472a3fb8b4412b088eaa656a408d4fc885d0c72006e5fd631640c845",
+      "adaptations": [
+        "Reformatted by the repository's pre-commit prettier hook"
+      ]
     },
     "tools/agent-memory/schema.json": {
       "pack": "memory-node",
