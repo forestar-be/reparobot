@@ -33,3 +33,10 @@ pnpm test          # Vitest (une fois), `pnpm run test:watch` en continu
 ## SEO
 
 Le référencement compte : `app/sitemap.ts`, `app/robots.ts` et `app/metadata.ts` sont à garder cohérents avec les pages créées ou supprimées.
+
+## Mémoire du dépôt (wiki)
+
+Avant un travail non trivial, lire le catalogue `docs/agent-memory/README.md` ; en fin de
+travail, mettre à jour l'entrée concernée ou en créer une (protocole :
+[.agents/guides/memory.md](.agents/guides/memory.md)). Commandes, avec Node ≥ 22.18 :
+`node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/agent-memory/check.ts` et `node tools/agent-memory/impact.ts` (ou `pnpm run memory:check` / `memory:impact`).
