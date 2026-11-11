@@ -1,0 +1,28 @@
+name: agent-memory
+
+on:
+  pull_request:
+    paths:
+      - 'docs/agent-memory/**'
+      - 'tools/agent-memory/**'
+      - 'AGENTS.md'
+  push:
+    branches: [master]
+    paths:
+      - 'docs/agent-memory/**'
+      - 'tools/agent-memory/**'
+      - 'AGENTS.md'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/agent-memory/check.ts

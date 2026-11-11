@@ -22,7 +22,7 @@ pnpm test          # Vitest (une fois), `pnpm run test:watch` en continu
 
 ## Structure
 
-- `app/` : pages, `api/` (routes serveur : `revalidate`), calculateurs, `devis/`, `etre-recontacte/`, `robots/`, `metadata.ts`, `sitemap.ts`, `robots.ts`.
+- `app/` : pages, `api/` (routes serveur : `revalidate`), calculateurs, `devis/`, `etre-recontacte/`, `robots/`, `sitemap.ts`, `robots.ts`.
 - `lib/` : `robots.ts` (catalogue lu depuis l'API, avec données de repli si `API_URL` ou `AUTH_TOKEN` manque), `actions.ts` (actions serveur), `turnstile.ts`, données structurées et analytics. Les tests `*.test.ts(x)` sont à côté du code (`components/`, `lib/`).
 - `components/`, `config/conditions.json`.
 
@@ -32,7 +32,7 @@ pnpm test          # Vitest (une fois), `pnpm run test:watch` en continu
 
 ## SEO
 
-Le référencement compte : `app/sitemap.ts`, `app/robots.ts` et `app/metadata.ts` sont à garder cohérents avec les pages créées ou supprimées.
+Le référencement compte : `app/sitemap.ts`, `app/robots.ts` et les métadonnées de `app/layout.tsx` et de chaque page (`app/metadata.ts` est un fichier vide) sont à garder cohérents avec les pages créées ou supprimées. Règles et pièges : `docs/agent-memory/vitrine-seo-structure-pages.md`.
 
 ## Mémoire du dépôt (wiki)
 
@@ -40,3 +40,7 @@ Avant un travail non trivial, lire le catalogue `docs/agent-memory/README.md` ; 
 travail, mettre à jour l'entrée concernée ou en créer une (protocole :
 [.agents/guides/memory.md](.agents/guides/memory.md)). Commandes, avec Node ≥ 22.18 :
 `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/agent-memory/check.ts` et `node tools/agent-memory/impact.ts` (ou `pnpm run memory:check` / `memory:impact`).
+
+## Déploiement
+
+Vercel déploie depuis la branche par défaut `master` (pas de workflow de déploiement). Le plan Hobby bloque un commit signé `Charles-HL` : terminer la série par un commit vide signé `forestar.be <forestar.shop.atelier@gmail.com>`. `SITE_URL`, `NEXT_PUBLIC_*` sont figées au build. Architecture et cache : `docs/agent-memory/vitrine-flux-donnees-api.md`, `vitrine-cache-revalidation.md`.
