@@ -43,4 +43,4 @@ travail, mettre à jour l'entrée concernée ou en créer une (protocole :
 
 ## Déploiement
 
-Vercel déploie depuis la branche par défaut `master` (pas de workflow de déploiement). Le plan Hobby bloque un commit signé `Charles-HL` : terminer la série par un commit vide signé `forestar.be <forestar.shop.atelier@gmail.com>`. `SITE_URL`, `NEXT_PUBLIC_*` sont figées au build. Architecture et cache : `docs/agent-memory/vitrine-flux-donnees-api.md`, `vitrine-cache-revalidation.md`.
+Vercel déploie depuis la branche par défaut `master` (pas de workflow de déploiement). Le plan Hobby bloque un commit signé `Charles-HL` : terminer la série par un commit signé `forestar.be <forestar.shop.atelier@gmail.com>`. Un commit vide est supprimé par le « rebase merge » de GitHub : le dernier commit d'une PR doit alors porter un vrai changement. `SITE_URL`, `NEXT_PUBLIC_*` sont figées au build. Architecture et cache : `docs/agent-memory/vitrine-flux-donnees-api.md`, `vitrine-cache-revalidation.md`.
