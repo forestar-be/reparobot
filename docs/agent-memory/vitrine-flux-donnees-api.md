@@ -1,16 +1,7 @@
 ---
 id: vitrine-flux-donnees-api
 scope: architecture
-paths:
-  [
-    'lib/robots.ts',
-    'lib/service-offers.ts',
-    'lib/site-info.ts',
-    'lib/accessories.ts',
-    'lib/installation-prices.ts',
-    'lib/actions.ts',
-    'next.config.js',
-  ]
+paths: ['lib/robots.ts', 'lib/service-offers.ts', 'lib/site-info.ts', 'lib/accessories.ts', 'lib/installation-prices.ts', 'lib/actions.ts', 'next.config.js']
 tags: [architecture, api, flux]
 last_reviewed: 2026-11-11
 review_after_days: 180

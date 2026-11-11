@@ -1,13 +1,7 @@
 ---
 id: vitrine-catalogue-repli-seo
 scope: decision
-paths:
-  [
-    'lib/robots.ts',
-    'app/sitemap.ts',
-    'app/robots/[slug]/page.tsx',
-    'app/devis/page.tsx',
-  ]
+paths: ['lib/robots.ts', 'app/sitemap.ts', 'app/robots/[slug]/page.tsx', 'app/devis/page.tsx']
 tags: [seo, resilience, catalogue, sitemap]
 last_reviewed: 2026-11-11
 review_after_days: 180

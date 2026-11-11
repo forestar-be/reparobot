@@ -1,13 +1,7 @@
 ---
 id: vitrine-indexation-oct-2026
 scope: decision
-paths:
-  [
-    'app/sitemap.ts',
-    'lib/og-image.ts',
-    'lib/structured-data.ts',
-    'lib/catalogue.ts',
-  ]
+paths: ['app/sitemap.ts', 'lib/og-image.ts', 'lib/structured-data.ts', 'lib/catalogue.ts']
 tags: [seo, search-console, indexation, historique]
 last_reviewed: 2026-11-11
 review_after_days: 60
