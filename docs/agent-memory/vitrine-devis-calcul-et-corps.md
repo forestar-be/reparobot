@@ -1,14 +1,7 @@
 ---
 id: vitrine-devis-calcul-et-corps
 scope: domain
-paths:
-  [
-    'lib/quote.ts',
-    'lib/installation-prices.ts',
-    'lib/accessories.ts',
-    'components/devis/**',
-    'app/devis/page.tsx',
-  ]
+paths: ['lib/quote.ts', 'lib/installation-prices.ts', 'lib/accessories.ts', 'components/devis/**', 'app/devis/page.tsx']
 tags: [devis, prix, installation]
 last_reviewed: 2026-11-11
 review_after_days: 120

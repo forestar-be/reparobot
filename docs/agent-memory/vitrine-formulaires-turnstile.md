@@ -1,17 +1,7 @@
 ---
 id: vitrine-formulaires-turnstile
 scope: decision
-paths:
-  [
-    'lib/actions.ts',
-    'lib/turnstile.ts',
-    'components/TurnstileWidget.tsx',
-    'components/forms/**',
-    'components/devis/**',
-    'components/contact/**',
-    'components/entretien/**',
-    'components/formulaires-publics.test.ts',
-  ]
+paths: ['lib/actions.ts', 'lib/turnstile.ts', 'components/TurnstileWidget.tsx', 'components/forms/**', 'components/devis/**', 'components/contact/**', 'components/entretien/**', 'components/formulaires-publics.test.ts']
 tags: [formulaires, turnstile, server-actions, securite]
 last_reviewed: 2026-11-11
 review_after_days: 180

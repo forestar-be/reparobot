@@ -1,17 +1,7 @@
 ---
 id: vitrine-cache-revalidation
 scope: decision
-paths:
-  [
-    'app/api/revalidate/route.ts',
-    'lib/robots.ts',
-    'lib/service-offers.ts',
-    'lib/site-info.ts',
-    'lib/accessories.ts',
-    'lib/installation-prices.ts',
-    'app/sitemap.ts',
-    'app/robots/[slug]/page.tsx',
-  ]
+paths: ['app/api/revalidate/route.ts', 'lib/robots.ts', 'lib/service-offers.ts', 'lib/site-info.ts', 'lib/accessories.ts', 'lib/installation-prices.ts', 'app/sitemap.ts', 'app/robots/[slug]/page.tsx']
 tags: [cache, isr, revalidation, next16]
 last_reviewed: 2026-11-11
 review_after_days: 180

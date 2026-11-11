@@ -1,17 +1,7 @@
 ---
 id: vitrine-seo-structure-pages
 scope: domain
-paths:
-  [
-    'app/sitemap.ts',
-    'app/robots.ts',
-    'app/layout.tsx',
-    'lib/og-image.ts',
-    'lib/structured-data.ts',
-    'lib/local-business.ts',
-    'lib/site.ts',
-    'next.config.js',
-  ]
+paths: ['app/sitemap.ts', 'app/robots.ts', 'app/layout.tsx', 'lib/og-image.ts', 'lib/structured-data.ts', 'lib/local-business.ts', 'lib/site.ts', 'next.config.js']
 tags: [seo, sitemap, json-ld, og-image, canonical]
 last_reviewed: 2026-11-11
 review_after_days: 120
